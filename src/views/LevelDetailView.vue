@@ -120,7 +120,7 @@ if (!level.value && !isLoading.value) {
           
           <h3 class="font-bold text-lg mb-2">Learning Objectives</h3>
           <ul class="list-disc list-inside space-y-2 mb-6">
-            <li v-for="(objective, index) in level.objectives" :key="index" class="text-text-secondary">
+            <li v-for="(objective, index) in level.learningObjectives" :key="index" class="text-text-secondary">
               {{ objective }}
             </li>
           </ul>

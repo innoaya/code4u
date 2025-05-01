@@ -60,14 +60,27 @@ export const useGameStore = defineStore('game', () => {
       const levelDoc = await getDoc(doc(db, 'levels', levelId))
       
       if (levelDoc.exists()) {
+        const levelData = levelDoc.data()
+        console.log('Loaded level from Firestore:', levelData)
+        
+        // Ensure learning objectives array exists and is not empty
+        if (!levelData.learningObjectives || levelData.learningObjectives.length === 0) {
+          console.warn('Learning objectives missing in Firestore data, adding default ones')
+          levelData.learningObjectives = getMockLearningObjectives(levelData.number || 1)
+        }
+        
+        console.log('Learning objectives after check:', levelData.learningObjectives)
+        
         currentLevel.value = {
           id: levelDoc.id,
-          ...levelDoc.data()
+          ...levelData
         }
       } else {
+        console.warn(`Level ${levelId} not found in Firestore, using mock data`)
         // Use mock data for development
         const levelNum = parseInt(levelId.split('-')[1], 10) || 1
         currentLevel.value = getMockLevel(levelNum)
+        console.log('Using mock level data:', currentLevel.value)
       }
       
       // Reset game state
@@ -175,7 +188,44 @@ export const useGameStore = defineStore('game', () => {
       difficulty: levelNum <= 3 ? 'Beginner' : levelNum <= 8 ? 'Intermediate' : 'Advanced',
       pointsToEarn: levelNum * 100,
       estimatedTime: '30 minutes',
+      learningObjectives: getMockLearningObjectives(levelNum),
+      realWorldApplications: [
+        `Building websites with ${getLevelCategory(levelNum)}`,
+        `Creating interactive user experiences`
+      ],
+      prerequisites: [],
+      references: [
+        { 
+          title: `MDN Web Docs: ${getLevelCategory(levelNum)}`, 
+          url: `https://developer.mozilla.org/en-US/docs/Web/${getLevelCategory(levelNum)}` 
+        }
+      ],
       tasks: getMockTasks(levelNum)
+    }
+  }
+  
+  // Generate appropriate learning objectives based on level
+  function getMockLearningObjectives(levelNum) {
+    const category = getLevelCategory(levelNum)
+    
+    if (category === 'HTML') {
+      return [
+        `Understand what HTML is and why it's important`,
+        `Learn the basic structure of an HTML document`,
+        `Create headings and paragraphs on a web page`
+      ]
+    } else if (category === 'CSS') {
+      return [
+        `Understand what CSS is and how it styles HTML`,
+        `Learn how to apply colors and fonts`,
+        `Create simple layouts with CSS`
+      ]
+    } else { // JavaScript
+      return [
+        `Understand JavaScript basics and syntax`,
+        `Learn variables and data types`,
+        `Create simple interactive elements`
+      ]
     }
   }
 

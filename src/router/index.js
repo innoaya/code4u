@@ -1,14 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { auth } from '../firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 
-// Navigation guard to check authentication
+// Keep track of the auth initialization state
+let authInitialized = false
+let currentUser = null
+
+// Initialize auth state tracking
+onAuthStateChanged(auth, (user) => {
+  currentUser = user
+  authInitialized = true
+})
+
+// Navigation guard to check authentication - waits for initialization
 const requireAuth = (to, from, next) => {
-  const user = auth.currentUser
-  if (!user) {
-    next({ name: 'login', query: { redirect: to.fullPath } })
+  // If auth isn't initialized yet, wait briefly before checking
+  if (!authInitialized) {
+    const waitForAuthInit = () => {
+      // Check again after a small delay
+      if (authInitialized) {
+        // Now we can properly check the auth state
+        if (currentUser) {
+          next() // User is logged in, proceed
+        } else {
+          next({ name: 'login', query: { redirect: to.fullPath } }) // Not logged in, redirect
+        }
+      } else {
+        // Still not initialized, wait a bit longer
+        setTimeout(waitForAuthInit, 50)
+      }
+    }
+    // Start the waiting process
+    waitForAuthInit()
   } else {
-    next()
+    // Auth is already initialized, check current state
+    if (currentUser) {
+      next() // User is logged in, proceed
+    } else {
+      next({ name: 'login', query: { redirect: to.fullPath } }) // Not logged in, redirect
+    }
   }
 }
 
