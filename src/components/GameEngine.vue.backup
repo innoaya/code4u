@@ -4,12 +4,12 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 const props = defineProps({
   levelId: {
     type: String,
-    required: true,
+    required: true
   },
   onComplete: {
     type: Function,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const emit = defineEmits(['gameLoaded', 'taskCompleted', 'gameCompleted'])
@@ -32,15 +32,12 @@ onUnmounted(() => {
 })
 
 // Watch for level changes to reload the game
-watch(
-  () => props.levelId,
-  () => {
-    if (gameLoaded.value) {
-      disposeGame()
-      initializeGameCanvas()
-    }
-  },
-)
+watch(() => props.levelId, () => {
+  if (gameLoaded.value) {
+    disposeGame()
+    initializeGameCanvas()
+  }
+})
 
 // Initialize interactive game canvas
 const initializeGameCanvas = () => {
@@ -63,49 +60,49 @@ const initializeGameCanvas = () => {
     gameContainer.value.innerHTML = ''
     gameContainer.value.appendChild(canvas)
 
-    // Initialize a 2D context to draw on the canvas
-    const ctx = canvas.getContext('2d')
+      // Initialize a 2D context to draw on the canvas
+      const ctx = canvas.getContext('2d')
 
-    // Determine the game type based on level ID
-    const levelCategory = determineLevelCategory(props.levelId)
-    const gameType = determineGameType(props.levelId)
+      // Determine the game type based on level ID
+      const levelCategory = determineLevelCategory(props.levelId)
+      const gameType = determineGameType(props.levelId)
 
-    // Store reference to the game instance with appropriate game type
-    gameInstance.value = {
-      canvas,
-      ctx,
-      animationFrame: null,
-      startTime: Date.now(),
-      levelId: props.levelId,
-      levelCategory,
-      gameType,
-      progress: 0,
-      interactionState: {
-        buildingBlocks: [],
-        characters: [],
-        elements: [],
-        score: 0,
-        currentStep: 0,
-        messages: [],
-        completed: false,
-      },
-    }
+      // Store reference to the game instance with appropriate game type
+      gameInstance.value = {
+        canvas,
+        ctx,
+        animationFrame: null,
+        startTime: Date.now(),
+        levelId: props.levelId,
+        levelCategory,
+        gameType,
+        progress: 0,
+        interactionState: {
+          buildingBlocks: [],
+          characters: [],
+          elements: [],
+          score: 0,
+          currentStep: 0,
+          messages: [],
+          completed: false
+        }
+      }
 
-    // Initialize specific game type elements
-    initializeGameElements(gameType)
+      // Initialize specific game type elements
+      initializeGameElements(gameType, levelCategory)
 
-    // Draw initial game scene
-    drawGameElements(ctx, canvas.width, canvas.height)
+      // Draw initial game scene
+      drawGameElements(ctx, canvas.width, canvas.height)
 
-    // Add event listeners for user interactions
-    setupGameInteractions(canvas)
+      // Add event listeners for user interactions
+      setupGameInteractions(canvas)
 
-    // Start the game loop
-    startGameLoop()
+      // Start the game loop
+      startGameLoop()
 
-    // Mark game as loaded
-    gameLoaded.value = true
-    emit('gameLoaded')
+      // Mark game as loaded
+      gameLoaded.value = true
+      emit('gameLoaded')
   } catch (error) {
     console.error('Failed to initialize game:', error)
     gameError.value = error.message
@@ -154,43 +151,27 @@ const determineGameType = (levelId) => {
 
   // Different game types based on level
   switch (levelNum) {
-    case 1:
-      return 'buildingBlocks' // HTML structure - building a foundation
-    case 2:
-      return 'textFormatting' // HTML formatting - styling a character
-    case 3:
-      return 'pathFinding' // HTML links - creating paths between locations
-    case 4:
-      return 'treasureHunt' // HTML images - finding and displaying treasures
-    case 5:
-      return 'organizePuzzle' // HTML tables - organizing items in a grid
-    case 6:
-      return 'paintBrush' // CSS basics - painting elements
-    case 7:
-      return 'targetShooter' // CSS selectors - targeting specific elements
-    case 8:
-      return 'boxBuilder' // CSS box model - building containers
-    case 9:
-      return 'colorMixer' // CSS colors - mixing colors for effects
-    case 10:
-      return 'layoutBuilder' // CSS flexbox - arranging items in space
-    case 11:
-      return 'variableCollector' // JS variables - collecting and storing values
-    case 12:
-      return 'logicGates' // JS conditionals - routing through logic gates
-    case 13:
-      return 'functionFactory' // JS functions - assembly line production
-    case 14:
-      return 'arrayOrganizer' // JS arrays - organizing items in containers
-    case 15:
-      return 'domManipulator' // JS DOM - changing elements in a virtual world
-    default:
-      return 'general'
+    case 1: return 'buildingBlocks'  // HTML structure - building a foundation
+    case 2: return 'textFormatting'  // HTML formatting - styling a character
+    case 3: return 'pathFinding'     // HTML links - creating paths between locations
+    case 4: return 'treasureHunt'    // HTML images - finding and displaying treasures
+    case 5: return 'organizePuzzle'  // HTML tables - organizing items in a grid
+    case 6: return 'paintBrush'      // CSS basics - painting elements
+    case 7: return 'targetShooter'   // CSS selectors - targeting specific elements
+    case 8: return 'boxBuilder'      // CSS box model - building containers
+    case 9: return 'colorMixer'      // CSS colors - mixing colors for effects
+    case 10: return 'layoutBuilder'  // CSS flexbox - arranging items in space
+    case 11: return 'variableCollector' // JS variables - collecting and storing values
+    case 12: return 'logicGates'     // JS conditionals - routing through logic gates
+    case 13: return 'functionFactory' // JS functions - assembly line production
+    case 14: return 'arrayOrganizer' // JS arrays - organizing items in containers
+    case 15: return 'domManipulator' // JS DOM - changing elements in a virtual world
+    default: return 'general'
   }
 }
 
 // Initialize game elements based on game type
-const initializeGameElements = (gameType) => {
+const initializeGameElements = (gameType, levelCategory) => {
   if (!gameInstance.value) return
 
   const { interactionState } = gameInstance.value
@@ -203,7 +184,7 @@ const initializeGameElements = (gameType) => {
     y: 150,
     width: 60,
     height: 80,
-    happiness: 0,
+    happiness: 0
   }
   interactionState.messages = []
   interactionState.completed = false
@@ -213,24 +194,16 @@ const initializeGameElements = (gameType) => {
     case 'buildingBlocks': {
       // Create building blocks for HTML structure
       interactionState.buildingBlocks = [
-        {
-          id: 'doctype',
-          name: '<!DOCTYPE html>',
-          placed: false,
-          x: 50,
-          y: 100,
-          width: 120,
-          height: 30,
-        },
+        { id: 'doctype', name: '<!DOCTYPE html>', placed: false, x: 50, y: 100, width: 120, height: 30 },
         { id: 'html', name: '<html>', placed: false, x: 50, y: 140, width: 60, height: 30 },
         { id: 'head', name: '<head>', placed: false, x: 50, y: 180, width: 60, height: 30 },
-        { id: 'body', name: '<body>', placed: false, x: 50, y: 220, width: 60, height: 30 },
+        { id: 'body', name: '<body>', placed: false, x: 50, y: 220, width: 60, height: 30 }
       ]
       interactionState.dropTargets = [
         { id: 'doctype', x: 200, y: 100, width: 120, height: 30, occupied: false },
         { id: 'html', x: 200, y: 140, width: 60, height: 30, occupied: false },
         { id: 'head', x: 200, y: 180, width: 60, height: 30, occupied: false },
-        { id: 'body', x: 200, y: 220, width: 60, height: 30, occupied: false },
+        { id: 'body', x: 200, y: 220, width: 60, height: 30, occupied: false }
       ]
       interactionState.messages.push('Drag the HTML tags to build your page foundation!')
       break
@@ -247,11 +220,7 @@ const initializeGameElements = (gameType) => {
 
     case 'targetShooter': {
       const targetElements = ['#header', '.navigation', '#content', '.footer']
-      interactionState.targets = targetElements.map((selector, index) => ({
-        id: index,
-        selector,
-        hit: false,
-      }))
+      interactionState.targets = targetElements.map((selector, index) => ({ id: index, selector, hit: false }))
       interactionState.messages.push('Target the elements to score points!')
       break
     }
@@ -270,10 +239,8 @@ const setupGameInteractions = (canvas) => {
   // Add event listeners based on game type
   canvas.addEventListener('click', (event) => handleCanvasClick(event, gameType))
   canvas.addEventListener('mousedown', (event) => handleMouseDown(event, gameType))
-  canvas.addEventListener('mousemove', (event) => handleMouseMove(event))
+  canvas.addEventListener('mousemove', (event) => handleMouseMove(event, gameType))
   canvas.addEventListener('mouseup', () => handleMouseUp(gameType))
-}
-
 // Canvas event handlers
 const handleCanvasClick = (event, gameType) => {
   if (!gameInstance.value) return
@@ -290,8 +257,8 @@ const handleCanvasClick = (event, gameType) => {
   switch (gameType) {
     case 'buildingBlocks': {
       // Check if a building block was clicked
-      const block = interactionState.buildingBlocks.find(
-        (b) => x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height,
+      const block = interactionState.buildingBlocks.find(b =>
+        x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height
       )
       if (block && !block.placed) {
         // Logic for placing a building block
@@ -321,8 +288,8 @@ const handleMouseDown = (event, gameType) => {
 
   // Implement drag start logic based on game type
   if (gameType === 'buildingBlocks') {
-    const block = gameInstance.value.interactionState.buildingBlocks.find(
-      (b) => !b.placed && x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height,
+    const block = gameInstance.value.interactionState.buildingBlocks.find(b =>
+      !b.placed && x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height
     )
 
     if (block) {
@@ -332,7 +299,7 @@ const handleMouseDown = (event, gameType) => {
 }
 
 // Mouse move handler for drag operations
-const handleMouseMove = (event) => {
+const handleMouseMove = (event, gameType) => {
   if (!gameInstance.value || !gameInstance.value.interactionState.activeBlock) return
 
   const canvas = event.target
@@ -342,7 +309,7 @@ const handleMouseMove = (event) => {
 
   // Move the active block
   const block = gameInstance.value.interactionState.buildingBlocks.find(
-    (b) => b.id === gameInstance.value.interactionState.activeBlock,
+    b => b.id === gameInstance.value.interactionState.activeBlock
   )
 
   if (block) {
@@ -357,17 +324,16 @@ const handleMouseUp = (gameType) => {
 
   // Check for drop on target
   const block = gameInstance.value.interactionState.buildingBlocks.find(
-    (b) => b.id === gameInstance.value.interactionState.activeBlock,
+    b => b.id === gameInstance.value.interactionState.activeBlock
   )
 
   if (block && gameType === 'buildingBlocks') {
-    const target = gameInstance.value.interactionState.dropTargets.find(
-      (t) =>
-        t.id === block.id &&
-        block.x + block.width / 2 >= t.x &&
-        block.x + block.width / 2 <= t.x + t.width &&
-        block.y + block.height / 2 >= t.y &&
-        block.y + block.height / 2 <= t.y + t.height,
+    const target = gameInstance.value.interactionState.dropTargets.find(t =>
+      t.id === block.id &&
+      block.x + (block.width / 2) >= t.x &&
+      block.x + (block.width / 2) <= t.x + t.width &&
+      block.y + (block.height / 2) >= t.y &&
+      block.y + (block.height / 2) <= t.y + t.height
     )
 
     if (target) {
@@ -395,7 +361,7 @@ const updateGameProgress = () => {
   // Calculate progress based on game type
   switch (gameType) {
     case 'buildingBlocks': {
-      const placedBlocks = interactionState.buildingBlocks.filter((b) => b.placed).length
+      const placedBlocks = interactionState.buildingBlocks.filter(b => b.placed).length
       const totalBlocks = interactionState.buildingBlocks.length
       gameInstance.value.progress = totalBlocks > 0 ? (placedBlocks / totalBlocks) * 100 : 0
 
@@ -462,21 +428,21 @@ const drawGameElements = (ctx, width, height, elapsedTime = 0) => {
       ctx.fillRect(200, 300, 200, 80)
 
       // Draw drop targets
-      interactionState.dropTargets.forEach((target) => {
+      interactionState.dropTargets.forEach(target => {
         ctx.strokeStyle = target.occupied ? '#4ADE80' : '#6B7280'
         ctx.lineWidth = 2
         ctx.strokeRect(target.x, target.y, target.width, target.height)
       })
 
       // Draw building blocks
-      interactionState.buildingBlocks.forEach((block) => {
+      interactionState.buildingBlocks.forEach(block => {
         ctx.fillStyle = block.placed ? '#4ADE80' : '#8B5CF6'
         ctx.fillRect(block.x, block.y, block.width, block.height)
 
         ctx.fillStyle = '#FFFFFF'
         ctx.font = '14px monospace'
         ctx.textAlign = 'center'
-        ctx.fillText(block.name, block.x + block.width / 2, block.y + block.height / 2 + 5)
+        ctx.fillText(block.name, block.x + block.width/2, block.y + block.height/2 + 5)
       })
       break
     }
@@ -487,7 +453,7 @@ const drawGameElements = (ctx, width, height, elapsedTime = 0) => {
       const characterY = height / 2
 
       // Body color based on progress
-      const progressHue = Math.floor(240 - progress * 2.4) // Blue to red based on progress
+      const progressHue = Math.floor(240 - (progress * 2.4)) // Blue to red based on progress
       ctx.fillStyle = `hsl(${progressHue}, 80%, 60%)`
 
       // Character body
@@ -505,15 +471,15 @@ const drawGameElements = (ctx, width, height, elapsedTime = 0) => {
       // Pupils
       ctx.fillStyle = '#000000'
       ctx.beginPath()
-      ctx.arc(characterX - 10 + progress / 50, characterY - 10, 2, 0, Math.PI * 2)
-      ctx.arc(characterX + 10 + progress / 50, characterY - 10, 2, 0, Math.PI * 2)
+      ctx.arc(characterX - 10 + (progress / 50), characterY - 10, 2, 0, Math.PI * 2)
+      ctx.arc(characterX + 10 + (progress / 50), characterY - 10, 2, 0, Math.PI * 2)
       ctx.fill()
 
       // Mouth - smile based on progress
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 2
       ctx.beginPath()
-      const smileProgress = Math.PI - (progress / 100) * Math.PI
+      const smileProgress = Math.PI - ((progress / 100) * Math.PI)
       ctx.arc(characterX, characterY + 5, 15, smileProgress, Math.PI * 2 - smileProgress)
       ctx.stroke()
       break
@@ -535,13 +501,13 @@ const drawGameElements = (ctx, width, height, elapsedTime = 0) => {
   // Show completion message if completed
   if (interactionState.completed) {
     ctx.fillStyle = 'rgba(79, 70, 229, 0.9)' // Semi-transparent purple
-    ctx.fillRect(width / 2 - 150, height / 2 - 50, 300, 100)
+    ctx.fillRect(width/2 - 150, height/2 - 50, 300, 100)
 
     ctx.fillStyle = '#ffffff'
     ctx.font = 'bold 20px Arial'
-    ctx.fillText('Challenge Completed!', width / 2, height / 2 - 20)
+    ctx.fillText('Challenge Completed!', width/2, height/2 - 20)
     ctx.font = '16px Arial'
-    ctx.fillText('Great job! Keep coding!', width / 2, height / 2 + 20)
+    ctx.fillText('Great job! Keep coding!', width/2, height/2 + 20)
   }
 }
 
@@ -601,11 +567,7 @@ const completeGame = () => {
     ctx.fillText('Level Completed!', canvas.width / 2, canvas.height / 2 - 20)
 
     ctx.font = '18px Arial'
-    ctx.fillText(
-      "Great job! You've mastered this challenge.",
-      canvas.width / 2,
-      canvas.height / 2 + 20,
-    )
+    ctx.fillText('Great job! You\'ve mastered this challenge.', canvas.width / 2, canvas.height / 2 + 20)
 
     // Emit event
     emit('gameCompleted')
@@ -615,9 +577,10 @@ const completeGame = () => {
   }
 }
 
+
 defineExpose({
   completeTask,
-  completeGame,
+  completeGame
 })
 </script>
 

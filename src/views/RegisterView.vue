@@ -76,7 +76,7 @@ const goToLogin = () => {
 <template>
   <div class="max-w-md mx-auto">
     <div class="card">
-      <h1 class="text-2xl font-bold text-center mb-6">Join Code Quest</h1>
+      <h1 class="text-2xl font-bold text-center mb-6">Join Code4U</h1>
       
       <form @submit.prevent="register" class="space-y-4">
         <!-- Error message -->

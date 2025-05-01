@@ -1,6 +1,6 @@
-# Code Quest - Interactive Web Development Learning Platform
+# Code4U - Interactive Web Development Learning Platform
 
-Code Quest is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
+Code4U is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
 
 ## Features
 

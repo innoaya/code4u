@@ -32,8 +32,8 @@ function closeMenu() {
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <!-- Logo - visible on all screens -->
         <div class="flex items-center space-x-2">
-          <img alt="Code Quest Logo" class="h-10 w-10" src="@/assets/logo.svg" />
-          <span class="text-xl font-bold text-primary">Code Quest</span>
+          <img alt="Code4U Logo" class="h-10 w-10" src="@/assets/logo.svg" />
+          <span class="text-xl font-bold text-primary">Code4U</span>
         </div>
         
         <!-- Desktop Navigation - hidden on mobile -->
@@ -149,7 +149,7 @@ function closeMenu() {
       <div class="container mx-auto px-4">
         <div class="text-center">
           <p class="text-sm text-text-secondary">
-            © {{ new Date().getFullYear() }} Code Quest - Learn Web Development Through Play
+            © {{ new Date().getFullYear() }} Code4U - Learn Web Development Through Play
           </p>
           <div class="mt-2 flex justify-center space-x-4">
             <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">About</a>
