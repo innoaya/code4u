@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { auth, db } from '../firebase'
-import { doc, getDoc, updateDoc, arrayUnion, increment } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, arrayUnion, increment, collection, getDocs, query, where, orderBy, limit, serverTimestamp, addDoc } from 'firebase/firestore'
 
 export const useGameStore = defineStore('game', () => {
   // State
@@ -122,6 +122,15 @@ export const useGameStore = defineStore('game', () => {
       userProgress.value.points += (currentLevel.value?.pointsToEarn || 100)
       userProgress.value.level += 1
       
+      // Record this activity
+      await recordUserActivity('level_completed', {
+        levelId,
+        levelNumber: currentLevel.value?.number,
+        levelTitle: currentLevel.value?.title,
+        category: currentLevel.value?.category,
+        pointsEarned: currentLevel.value?.pointsToEarn || 100
+      })
+      
       // Check for badges
       await checkForBadges()
     } catch (err) {
@@ -130,24 +139,141 @@ export const useGameStore = defineStore('game', () => {
   }
 
   async function checkForBadges() {
-    // Logic to award badges based on progress
-    // This would be more complex in a real application
+    if (!auth.currentUser) return
     
-    // Example: Award HTML badge after completing 5 HTML levels
-    const htmlLevels = userProgress.value.completedLevels.filter(
-      id => parseInt(id.split('-')[1], 10) <= 5
-    )
-    
-    if (htmlLevels.length >= 5 && !userProgress.value.badges.includes('html-basics')) {
-      try {
-        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-          badges: arrayUnion('html-basics')
-        })
-        userProgress.value.badges.push('html-basics')
-      } catch (err) {
-        console.error('Error awarding badge:', err)
+    try {
+      // Check for individual level badges
+      for (let levelNum = 1; levelNum <= 15; levelNum++) {
+        const levelId = `level-${levelNum}`
+        
+        // Check if level is completed
+        if (userProgress.value.completedLevels.includes(levelId)) {
+          // Determine which badges to check based on level number
+          let badgesToCheck = []
+          
+          if (levelNum <= 5) { // HTML Levels (1-5)
+            if (levelNum === 1) badgesToCheck.push('html-apprentice')
+            if (levelNum === 2) badgesToCheck.push('html-formatter')
+            if (levelNum === 3) badgesToCheck.push('html-navigator')
+            if (levelNum === 4) badgesToCheck.push('html-illustrator')
+            if (levelNum === 5) badgesToCheck.push('html-organizer')
+          } else if (levelNum <= 10) { // CSS Levels (6-10)
+            if (levelNum === 6) badgesToCheck.push('css-stylist')
+            if (levelNum === 7) badgesToCheck.push('css-selector')
+            if (levelNum === 8) badgesToCheck.push('css-layouter')
+            if (levelNum === 9) badgesToCheck.push('css-animator')
+            if (levelNum === 10) badgesToCheck.push('css-master')
+          } else { // JavaScript Levels (11-15)
+            if (levelNum === 11) badgesToCheck.push('js-starter')
+            if (levelNum === 12) badgesToCheck.push('js-logician')
+            if (levelNum === 13) badgesToCheck.push('js-manipulator')
+            if (levelNum === 14) badgesToCheck.push('js-event-handler')
+            if (levelNum === 15) badgesToCheck.push('js-master')
+          }
+          
+          // Award badges not yet earned
+          for (const badgeId of badgesToCheck) {
+            if (!userProgress.value.badges.includes(badgeId)) {
+              await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                badges: arrayUnion(badgeId)
+              })
+              userProgress.value.badges.push(badgeId)
+              
+              // Record badge earned activity with correct name
+              const badgeName = getBadgeName(badgeId)
+              await recordUserActivity('badge_earned', {
+                badgeId,
+                badgeName
+              })
+            }
+          }
+        }
       }
+      
+      // Check for category mastery badges
+      const completedLevelNumbers = userProgress.value.completedLevels.map(
+        id => parseInt(id.split('-')[1], 10)
+      )
+      
+      // HTML Master badge - all HTML levels complete
+      const htmlComplete = [1, 2, 3, 4, 5].every(num => completedLevelNumbers.includes(num))
+      if (htmlComplete && !userProgress.value.badges.includes('html-master')) {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          badges: arrayUnion('html-master')
+        })
+        userProgress.value.badges.push('html-master')
+        await recordUserActivity('badge_earned', {
+          badgeId: 'html-master',
+          badgeName: 'HTML Master'
+        })
+      }
+      
+      // CSS Master badge - all CSS levels complete
+      const cssComplete = [6, 7, 8, 9, 10].every(num => completedLevelNumbers.includes(num))
+      if (cssComplete && !userProgress.value.badges.includes('css-master')) {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          badges: arrayUnion('css-master')
+        })
+        userProgress.value.badges.push('css-master')
+        await recordUserActivity('badge_earned', {
+          badgeId: 'css-master',
+          badgeName: 'CSS Master'
+        })
+      }
+      
+      // JavaScript Master badge - all JS levels complete
+      const jsComplete = [11, 12, 13, 14, 15].every(num => completedLevelNumbers.includes(num))
+      if (jsComplete && !userProgress.value.badges.includes('js-master')) {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          badges: arrayUnion('js-master')
+        })
+        userProgress.value.badges.push('js-master')
+        await recordUserActivity('badge_earned', {
+          badgeId: 'js-master',
+          badgeName: 'JavaScript Master'
+        })
+      }
+      
+      // Web Developer badge - all levels complete
+      const allComplete = completedLevelNumbers.length >= 15
+      if (allComplete && !userProgress.value.badges.includes('web-developer')) {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          badges: arrayUnion('web-developer')
+        })
+        userProgress.value.badges.push('web-developer')
+        await recordUserActivity('badge_earned', {
+          badgeId: 'web-developer',
+          badgeName: 'Web Developer'
+        })
+      }
+    } catch (err) {
+      console.error('Error checking/awarding badges:', err)
     }
+  }
+  
+  // Helper function to get badge name from ID
+  function getBadgeName(badgeId) {
+    const badgeNames = {
+      'html-apprentice': 'HTML Apprentice',
+      'html-formatter': 'Text Wizard',
+      'html-navigator': 'Web Navigator',
+      'html-illustrator': 'Web Illustrator',
+      'html-organizer': 'Data Organizer',
+      'html-master': 'HTML Master',
+      'css-stylist': 'CSS Stylist',
+      'css-selector': 'Element Selector',
+      'css-layouter': 'Layout Designer',
+      'css-animator': 'Animation Creator',
+      'css-master': 'CSS Master',
+      'js-starter': 'JavaScript Starter',
+      'js-logician': 'Logic Master',
+      'js-manipulator': 'DOM Manipulator',
+      'js-event-handler': 'Event Handler',
+      'js-master': 'JavaScript Master',
+      'web-developer': 'Web Developer'
+    }
+    
+    return badgeNames[badgeId] || 'Unknown Badge'
   }
 
   function runCode(code) {
@@ -363,6 +489,146 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
+  // Function to record user activity
+  async function recordUserActivity(activityType, details = {}) {
+    console.log('Recording activity:', activityType, details);
+    if (!auth.currentUser) {
+      console.log('No auth user found, cannot record activity');
+      return;
+    }
+    
+    try {
+      console.log('Adding to Firestore:', activityType, 'for user', auth.currentUser.uid);
+      const docRef = await addDoc(collection(db, 'user_activities'), {
+        userId: auth.currentUser.uid,
+        type: activityType,
+        details,
+        timestamp: serverTimestamp()
+      });
+      console.log('Activity recorded successfully with ID:', docRef.id);
+    } catch (err) {
+      console.error('Error recording user activity:', err);
+    }
+  }
+  
+  // Function to fetch user activities
+  async function fetchUserActivities(limit = 5) {
+    console.log('Fetching user activities with limit:', limit);
+    if (!auth.currentUser) {
+      console.log('No authenticated user, returning empty array');
+      return [];
+    }
+    
+    try {
+      console.log('Current user UID:', auth.currentUser.uid);
+      
+      // Check specific document for debugging
+      if (auth.currentUser.email === 'demo@codequest.edu') {
+        console.log('Checking specific document for demo@codequest.edu');
+        try {
+          const specificDoc = await getDoc(doc(db, 'user_activities', 'UEEpaovuF8jZyTgsFMGX'));
+          if (specificDoc.exists()) {
+            console.log('Found specific document:', specificDoc.id);
+            console.log('Document data:', specificDoc.data());
+          } else {
+            console.log('Specific document not found');
+          }
+        } catch (err) {
+          console.error('Error fetching specific document:', err);
+        }
+      }
+      
+      // General query for all user activities
+      const q = query(
+        collection(db, 'user_activities'),
+        where('userId', '==', auth.currentUser.uid),
+        orderBy('timestamp', 'desc'),
+        limit(limit)
+      );
+      
+      console.log('Executing Firestore query...');
+      const snapshot = await getDocs(q);
+      console.log(`Found ${snapshot.docs.length} activities`);
+      
+      // Debugging query results
+      snapshot.docs.forEach((doc, index) => {
+        console.log(`Document ${index}:`, doc.id);
+        console.log(`Data:`, doc.data());
+      });
+      
+      // Process each document
+      const activities = snapshot.docs.map(doc => {
+        const data = doc.data();
+        const timestamp = data.timestamp;
+        
+        let formattedDate = null;
+        
+        // Handle different timestamp formats
+        if (timestamp && typeof timestamp.toDate === 'function') {
+          // Firestore Timestamp object
+          formattedDate = timestamp.toDate();
+        } else if (timestamp && timestamp._seconds) {
+          // Firestore timestamp in seconds format
+          formattedDate = new Date(timestamp._seconds * 1000);
+        } else if (timestamp) {
+          // Regular date string or timestamp
+          formattedDate = new Date(timestamp);
+        } else {
+          // No timestamp, use current time
+          formattedDate = new Date();
+        }
+        
+        return {
+          id: doc.id,
+          ...data,
+          timestamp: formattedDate,
+          rawTimestamp: timestamp // Keep the original for debugging
+        };
+      });
+      
+      console.log('Processed activities:', activities);
+      return activities;
+    } catch (err) {
+      console.error('Error fetching user activities:', err)
+      return []
+    }
+  }
+  
+  // Calculate progress by category
+  function calculateCategoryProgress() {
+    const totalLevels = {
+      'HTML': 5,  // Levels 1-5
+      'CSS': 5,   // Levels 6-10
+      'JavaScript': 5 // Levels 11-15
+    }
+    
+    // Count completed levels by category
+    const completedCount = {
+      'HTML': 0,
+      'CSS': 0,
+      'JavaScript': 0
+    }
+    
+    userProgress.value.completedLevels.forEach(levelId => {
+      const levelNum = parseInt(levelId.split('-')[1], 10)
+      
+      if (levelNum <= 5) {
+        completedCount['HTML']++
+      } else if (levelNum <= 10) {
+        completedCount['CSS']++
+      } else {
+        completedCount['JavaScript']++
+      }
+    })
+    
+    // Calculate percentages
+    return {
+      HTML: Math.min(100, Math.round((completedCount['HTML'] / totalLevels['HTML']) * 100)),
+      CSS: Math.min(100, Math.round((completedCount['CSS'] / totalLevels['CSS']) * 100)),
+      JavaScript: Math.min(100, Math.round((completedCount['JavaScript'] / totalLevels['JavaScript']) * 100))
+    }
+  }
+
   return {
     // State
     currentLevel,
@@ -385,6 +651,11 @@ export const useGameStore = defineStore('game', () => {
     startGame,
     completeLevel,
     runCode,
-    nextTask
+    nextTask,
+    
+    // Progress tracking
+    recordUserActivity,
+    fetchUserActivities,
+    calculateCategoryProgress
   }
 })

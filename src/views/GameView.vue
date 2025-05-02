@@ -21,6 +21,29 @@ const codeLanguage = computed(() => {
   return 'html' // Default to HTML
 })
 
+// Handle tab key in the code editor
+const handleTabKey = (event) => {
+  if (event.key === 'Tab') {
+    event.preventDefault() // Prevent default tab behavior
+    
+    // Get cursor position
+    const start = event.target.selectionStart
+    const end = event.target.selectionEnd
+    
+    // Insert 2 spaces at cursor position
+    const spaces = '  '
+    const newValue = gameStore.userCode.substring(0, start) + spaces + gameStore.userCode.substring(end)
+    
+    // Update the textarea value
+    gameStore.userCode = newValue
+    
+    // Move cursor after inserted spaces
+    setTimeout(() => {
+      event.target.selectionStart = event.target.selectionEnd = start + spaces.length
+    }, 0)
+  }
+}
+
 // Game methods
 const runCode = () => {
   // Use the gameStore to run the code
@@ -260,91 +283,55 @@ onUnmounted(() => {
 
       <!-- Game and Coding interface -->
       <div class="lg:col-span-2">
-        <!-- Learning activity card -->
-        <div class="card mb-6 p-4 bg-primary/10 rounded-lg">
-          <h3 class="font-bold mb-3">Learning Activity</h3>
-          <p class="mb-4">{{ gameStore.currentLevel?.title }}</p>
-
-          <!-- Learning objectives -->
-          <div class="mb-4">
-            <h4 class="font-semibold text-sm uppercase tracking-wide text-text-secondary mb-2">
-              Learning Objectives
-            </h4>
-            
-            <ul class="list-disc pl-5 space-y-1">
-              <template v-if="gameStore.currentLevel && Array.isArray(gameStore.currentLevel.learningObjectives)">
-                <li
-                  v-for="(objective, index) in gameStore.currentLevel.learningObjectives"
-                  :key="index"
-                  class="text-sm"
-                >
-                  {{ objective }}
-                </li>
-              </template>
-              <li v-else class="text-sm text-red-500">
-                Loading learning objectives...
-              </li>
-            </ul>
-          </div>
-
-          <!-- Real-world applications -->
-          <div v-if="gameStore.currentLevel?.realWorldApplications?.length" class="mb-4">
-            <h4 class="font-semibold text-sm uppercase tracking-wide text-text-secondary mb-2">
-              Real-World Applications
-            </h4>
-            <ul class="list-disc pl-5 space-y-1">
-              <li
-                v-for="application in gameStore.currentLevel?.realWorldApplications"
-                :key="application"
-                class="text-sm"
-              >
-                {{ application }}
-              </li>
-            </ul>
-          </div>
-
-          <!-- Category and difficulty badge -->
-          <div class="flex flex-wrap gap-2 mt-3">
-            <span class="badge bg-blue-100 text-blue-800 px-2 py-1 text-xs rounded-full">
-              {{ gameStore.currentLevel?.category }}
-            </span>
-            <span class="badge bg-purple-100 text-purple-800 px-2 py-1 text-xs rounded-full">
-              {{ gameStore.currentLevel?.difficulty }}
-            </span>
-            <span class="badge bg-green-100 text-green-800 px-2 py-1 text-xs rounded-full">
-              {{ gameStore.currentLevel?.estimatedTime }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Code Editor and Preview Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <!-- Code Editor -->
-          <div class="card">
-            <h3 class="font-bold mb-3">Code Editor</h3>
-            <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm">
-              <textarea
-                v-model="gameStore.userCode"
-                class="w-full bg-transparent outline-none resize-y min-h-[300px]"
-                spellcheck="false"
-                :placeholder="`Write your ${codeLanguage} code here...`"
-              ></textarea>
+        <!-- Top section with Live Preview -->
+        <div class="mb-6">
+          <div class="card flex flex-col h-[350px]">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold">Live Preview</h3>
+              <div class="flex items-center gap-2">
+                <span class="badge bg-blue-100 text-blue-800 px-2 py-1 text-xs rounded-full">
+                  {{ gameStore.currentLevel?.category }}
+                </span>
+                <span class="text-xs text-gray-500">{{ codeLanguage.toUpperCase() }}</span>
+              </div>
             </div>
-          </div>
-
-          <!-- Code Preview -->
-          <div class="card">
-            <h3 class="font-bold mb-3">Live Preview</h3>
-            <div class="bg-white rounded-lg overflow-hidden border border-gray-200">
+            <div class="bg-white rounded-lg overflow-hidden border border-gray-200 flex-grow">
               <CodePreview :code="gameStore.userCode" :language="codeLanguage" />
             </div>
           </div>
         </div>
 
-        <!-- Output -->
+        <!-- Code Editor (full width) -->
+        <div class="card mb-6 h-[350px] flex flex-col">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold">Code Editor</h3>
+            <div class="text-xs text-gray-500">{{ codeLanguage.toUpperCase() }}</div>
+          </div>
+          <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm flex-grow overflow-hidden">
+            <textarea
+              v-model="gameStore.userCode"
+              class="w-full h-full bg-transparent outline-none resize-none"
+              spellcheck="false"
+              :placeholder="`Write your ${codeLanguage} code here...`"
+              @keydown="handleTabKey"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Console Output -->
         <div class="card">
-          <h3 class="font-bold mb-3">Console Output</h3>
-          <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm min-h-[100px]">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold">Console Output</h3>
+            <div class="flex gap-2">
+              <button 
+                @click="runCode"
+                class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-md transition"
+              >
+                Run Code
+              </button>
+            </div>
+          </div>
+          <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm h-[120px] overflow-auto">
             <pre>{{ gameStore.codeOutput || 'Your console output will appear here...' }}</pre>
           </div>
         </div>

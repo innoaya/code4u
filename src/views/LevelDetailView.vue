@@ -125,6 +125,14 @@ if (!level.value && !isLoading.value) {
             </li>
           </ul>
           
+          <!-- Real-world Applications -->
+          <h3 class="font-bold text-lg mb-2" v-if="level.realWorldApplications?.length">Real-world Applications</h3>
+          <ul class="list-disc list-inside space-y-2 mb-6" v-if="level.realWorldApplications?.length">
+            <li v-for="(application, index) in level.realWorldApplications" :key="index" class="text-text-secondary">
+              {{ application }}
+            </li>
+          </ul>
+          
           <h3 class="font-bold text-lg mb-2">Prerequisites</h3>
           <div class="flex flex-wrap gap-2 mb-6">
             <span 
