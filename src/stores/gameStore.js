@@ -512,8 +512,8 @@ export const useGameStore = defineStore('game', () => {
   }
   
   // Function to fetch user activities
-  async function fetchUserActivities(limit = 5) {
-    console.log('Fetching user activities with limit:', limit);
+  async function fetchUserActivities(resultLimit = 5) {
+    console.log('Fetching user activities with limit:', resultLimit);
     if (!auth.currentUser) {
       console.log('No authenticated user, returning empty array');
       return [];
@@ -543,7 +543,7 @@ export const useGameStore = defineStore('game', () => {
         collection(db, 'user_activities'),
         where('userId', '==', auth.currentUser.uid),
         orderBy('timestamp', 'desc'),
-        limit(limit)
+        limit(resultLimit)
       );
       
       console.log('Executing Firestore query...');
