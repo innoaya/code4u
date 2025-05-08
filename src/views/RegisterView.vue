@@ -2,8 +2,9 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebase'
+import { uploadProfilePictureFromUrl } from '../firebase/storage-utils'
 
 const router = useRouter()
 const route = useRoute()
@@ -30,20 +31,20 @@ const isFormValid = computed(() => {
 // Register function
 const register = async () => {
   if (!isFormValid.value) return
-  
+
   try {
     isLoading.value = true
     errorMessage.value = ''
-    
+
     // Create user
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
     const user = userCredential.user
-    
+
     // Update profile
     await updateProfile(user, {
       displayName: displayName.value
     })
-    
+
     // Create user document in Firestore
     await setDoc(doc(db, 'users', user.uid), {
       displayName: displayName.value,
@@ -54,7 +55,7 @@ const register = async () => {
       completedLevels: [],
       badges: []
     })
-    
+
     router.push(redirectPath.value)
   } catch (error) {
     console.error('Registration error:', error)
@@ -69,27 +70,46 @@ const signInWithGoogle = async () => {
   try {
     isLoading.value = true
     errorMessage.value = ''
-    
+
     const provider = new GoogleAuthProvider()
     const result = await signInWithPopup(auth, provider)
     const user = result.user
-    
+
+    let photoURL = user.photoURL
+
+    // If user has a Google profile picture, upload it to Firebase Storage
+    if (photoURL) {
+      try {
+        // Upload the profile picture to Firebase Storage
+        photoURL = await uploadProfilePictureFromUrl(user.uid, photoURL)
+      } catch (uploadError) {
+        console.error('Error uploading Google profile picture:', uploadError)
+        // Continue with Google sign-in even if image upload fails
+      }
+    }
+
     // Check if user document already exists
     const userDoc = await getDoc(doc(db, 'users', user.uid))
-    
+
     // If user document doesn't exist, create it
     if (!userDoc.exists()) {
       await setDoc(doc(db, 'users', user.uid), {
-        displayName: user.displayName || 'Code4U User',
+        displayName: user.displayName || 'code4u User',
         email: user.email,
+        photoURL: photoURL, // Include the Firebase Storage URL or original Google URL
         createdAt: serverTimestamp(),
         level: 1,
         points: 0,
         completedLevels: [],
         badges: []
       })
+    } else if (photoURL) {
+      // Update the existing user document with the new photo URL
+      await updateDoc(doc(db, 'users', user.uid), {
+        photoURL: photoURL
+      })
     }
-    
+
     router.push(redirectPath.value)
   } catch (error) {
     console.error('Google Sign-in error:', error)
@@ -111,14 +131,14 @@ const goToLogin = () => {
 <template>
   <div class="max-w-md mx-auto">
     <div class="card">
-      <h1 class="text-2xl font-bold text-center mb-6">Join Code4U</h1>
-      
+      <h1 class="text-2xl font-bold text-center mb-6">Join code4u</h1>
+
       <form @submit.prevent="register" class="space-y-4">
         <!-- Error message -->
         <div v-if="errorMessage" class="bg-danger/10 border-l-4 border-danger p-4 text-danger">
           {{ errorMessage }}
         </div>
-        
+
         <!-- Display name field -->
         <div>
           <label for="displayName" class="block text-sm font-medium text-text-primary mb-1">
@@ -136,7 +156,7 @@ const goToLogin = () => {
             Display name must be at least 3 characters
           </p>
         </div>
-        
+
         <!-- Email field -->
         <div>
           <label for="email" class="block text-sm font-medium text-text-primary mb-1">Email</label>
@@ -149,7 +169,7 @@ const goToLogin = () => {
             required
           />
         </div>
-        
+
         <!-- Password field -->
         <div>
           <label for="password" class="block text-sm font-medium text-text-primary mb-1">Password</label>
@@ -165,7 +185,7 @@ const goToLogin = () => {
             Password must be at least 6 characters
           </p>
         </div>
-        
+
         <!-- Confirm password field -->
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-1">
@@ -183,7 +203,7 @@ const goToLogin = () => {
             Passwords don't match
           </p>
         </div>
-        
+
         <!-- Terms acceptance -->
         <div class="flex items-start">
           <div class="flex items-center h-5">
@@ -201,7 +221,7 @@ const goToLogin = () => {
             <a href="#" class="text-primary hover:underline">Privacy Policy</a>
           </label>
         </div>
-        
+
         <!-- Register button -->
         <button
           type="submit"
@@ -212,7 +232,7 @@ const goToLogin = () => {
           {{ isLoading ? 'Creating account...' : 'Create account' }}
         </button>
       </form>
-      
+
       <!-- OR divider -->
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center">
@@ -222,10 +242,10 @@ const goToLogin = () => {
           <span class="px-2 bg-white text-gray-500">Or continue with</span>
         </div>
       </div>
-      
+
       <!-- Google sign-in button -->
-      <button 
-        @click="signInWithGoogle" 
+      <button
+        @click="signInWithGoogle"
         type="button"
         class="w-full flex justify-center items-center gap-2 bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         :disabled="isLoading"
@@ -240,7 +260,7 @@ const goToLogin = () => {
         </svg>
         Sign up with Google
       </button>
-      
+
       <!-- Login option -->
       <div class="mt-6 text-center">
         <p class="text-text-secondary">

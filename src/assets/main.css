@@ -6,7 +6,7 @@
 @layer base {
   body {
     @apply bg-background text-text-primary;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto Mono', monospace;
   }
 }
 
@@ -14,19 +14,19 @@
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
   }
-  
+
   .btn-primary {
     @apply bg-primary text-white hover:bg-primary/90;
   }
-  
+
   .btn-secondary {
     @apply bg-secondary text-white hover:bg-secondary/90;
   }
-  
+
   .card {
     @apply bg-white rounded-xl shadow-md p-6;
   }
-  
+
   .input {
     @apply w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none;
   }

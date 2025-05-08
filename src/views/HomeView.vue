@@ -19,7 +19,7 @@ const startLearning = () => {
   <div class="py-12">
     <!-- Hero Section -->
     <div class="text-center mb-16">
-      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">Welcome to Code4U</h1>
+      <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">Welcome to code4u</h1>
       <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-8">
         Embark on an exciting journey to master HTML, CSS, and JavaScript through interactive
         challenges and fun coding games!
@@ -70,7 +70,7 @@ const startLearning = () => {
 
     <!-- How It Works Section -->
     <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center mb-8">How Code4U Works</h2>
+      <h2 class="text-3xl font-bold text-center mb-8">How code4u Works</h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div class="text-center">
           <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
@@ -110,7 +110,7 @@ const startLearning = () => {
             </div>
           </div>
           <p class="text-text-secondary italic">
-            "Code4U made learning HTML and CSS so much fun! I built my first website in just a week!"
+            "code4u made learning HTML and CSS so much fun! I built my first website in just a week!"
           </p>
         </div>
         <div class="card">

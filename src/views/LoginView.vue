@@ -2,7 +2,9 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { uploadProfilePictureFromUrl } from '../firebase/storage-utils'
 
 const router = useRouter()
 const route = useRoute()
@@ -22,11 +24,11 @@ const isFormValid = computed(() => {
 // Login function
 const login = async () => {
   if (!isFormValid.value) return
-  
+
   try {
     isLoading.value = true
     errorMessage.value = ''
-    
+
     await signInWithEmailAndPassword(auth, email.value, password.value)
     router.push(redirectPath.value)
   } catch (error) {
@@ -42,9 +44,46 @@ const signInWithGoogle = async () => {
   try {
     isLoading.value = true
     errorMessage.value = ''
-    
+
     const provider = new GoogleAuthProvider()
-    await signInWithPopup(auth, provider)
+    const result = await signInWithPopup(auth, provider)
+    const user = result.user
+
+    let photoURL = user.photoURL
+
+    // If user has a Google profile picture, upload it to Firebase Storage
+    if (photoURL) {
+      try {
+        // Upload the profile picture to Firebase Storage
+        photoURL = await uploadProfilePictureFromUrl(user.uid, photoURL)
+      } catch (uploadError) {
+        console.error('Error uploading Google profile picture:', uploadError)
+        // Continue with Google sign-in even if image upload fails
+      }
+    }
+
+    // Check if user document already exists
+    const userDoc = await getDoc(doc(db, 'users', user.uid))
+
+    // If user document doesn't exist, create it
+    if (!userDoc.exists()) {
+      await setDoc(doc(db, 'users', user.uid), {
+        displayName: user.displayName || 'code4u User',
+        email: user.email,
+        photoURL: photoURL, // Include the Firebase Storage URL or original Google URL
+        createdAt: serverTimestamp(),
+        level: 1,
+        points: 0,
+        completedLevels: [],
+        badges: []
+      })
+    } else if (photoURL) {
+      // Update the existing user document with the new photo URL
+      await updateDoc(doc(db, 'users', user.uid), {
+        photoURL: photoURL
+      })
+    }
+
     router.push(redirectPath.value)
   } catch (error) {
     console.error('Google Sign-in error:', error)
@@ -67,13 +106,13 @@ const goToRegister = () => {
   <div class="max-w-md mx-auto">
     <div class="card">
       <h1 class="text-2xl font-bold text-center mb-6">Welcome back, Coder!</h1>
-      
+
       <form @submit.prevent="login" class="space-y-4">
         <!-- Error message -->
         <div v-if="errorMessage" class="bg-danger/10 border-l-4 border-danger p-4 text-danger">
           {{ errorMessage }}
         </div>
-        
+
         <!-- Email field -->
         <div>
           <label for="email" class="block text-sm font-medium text-text-primary mb-1">Email</label>
@@ -86,7 +125,7 @@ const goToRegister = () => {
             required
           />
         </div>
-        
+
         <!-- Password field -->
         <div>
           <label for="password" class="block text-sm font-medium text-text-primary mb-1">Password</label>
@@ -99,7 +138,7 @@ const goToRegister = () => {
             required
           />
         </div>
-        
+
         <!-- Remember me & Forgot password -->
         <div class="flex justify-between items-center text-sm">
           <div class="flex items-center">
@@ -108,7 +147,7 @@ const goToRegister = () => {
           </div>
           <a href="#" class="text-primary hover:underline">Forgot password?</a>
         </div>
-        
+
         <!-- Login button -->
         <button
           type="submit"
@@ -119,7 +158,7 @@ const goToRegister = () => {
           {{ isLoading ? 'Logging in...' : 'Log in' }}
         </button>
       </form>
-      
+
       <!-- OR divider -->
       <div class="relative my-6">
         <div class="absolute inset-0 flex items-center">
@@ -129,10 +168,10 @@ const goToRegister = () => {
           <span class="px-2 bg-white text-gray-500">Or continue with</span>
         </div>
       </div>
-      
+
       <!-- Google sign-in button -->
-      <button 
-        @click="signInWithGoogle" 
+      <button
+        @click="signInWithGoogle"
         type="button"
         class="w-full flex justify-center items-center gap-2 bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         :disabled="isLoading"
@@ -147,7 +186,7 @@ const goToRegister = () => {
         </svg>
         Sign in with Google
       </button>
-      
+
       <!-- Register option -->
       <div class="mt-6 text-center">
         <p class="text-text-secondary">
@@ -156,20 +195,6 @@ const goToRegister = () => {
         </p>
       </div>
     </div>
-    
-    <!-- Demo credentials info -->
-    <div class="mt-6 p-4 bg-info/10 rounded-lg">
-      <h3 class="font-medium text-info mb-2">Demo Credentials</h3>
-      <p class="text-sm text-text-secondary mb-2">
-        Feel free to use these demo credentials to explore the app:
-      </p>
-      <div class="bg-white p-2 rounded border border-info/20 text-sm">
-        <div><strong>Email:</strong> demo@codequest.edu</div>
-        <div><strong>Password:</strong> Demo123</div>
-      </div>
-      <p class="text-xs text-text-secondary mt-2">
-        Note: This is for demonstration purposes only. In a real application, you should never expose credentials.
-      </p>
-    </div>
+
   </div>
 </template>

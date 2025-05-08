@@ -1,5 +1,5 @@
 /**
- * Firebase initialization script for Code4U
+ * Firebase initialization script for code4u
  * This file contains sample data that would be used to populate the Firestore database
  * Run this file once to set up your initial data structure
  */
@@ -61,7 +61,7 @@ const htmlLevels = [
         initialCode: '<!DOCTYPE html>\n<html>\n<head>\n  <title>My Page</title>\n</head>\n<body>\n  <h1>My First Web Page</h1>\n  <!-- Add your paragraph here -->\n  \n</body>\n</html>',
         solution: '<p>',
         expectedOutput: 'Paragraph added successfully!',
-        errorHint: 'Your page needs a <p> paragraph element. Try adding <p>I am learning HTML with Code4U!</p>'
+        errorHint: 'Your page needs a <p> paragraph element. Try adding <p>I am learning HTML with code4u!</p>'
       }
     ]
   },
@@ -493,13 +493,13 @@ const cssLevels = [
     body {
       font-family: Arial, sans-serif;
     }
-    
+
     /* Style the container for cards */
     .card-container {
       /* Add flexbox properties here */
-      
+
     }
-    
+
     /* Style individual cards */
     .card {
       border: 1px solid #ddd;
@@ -507,29 +507,29 @@ const cssLevels = [
       padding: 15px;
       margin: 10px;
       /* Set width for cards */
-      
+
     }
   </style>
 </head>
 <body>
   <h1>Awesome Games</h1>
-  
+
   <div class="card-container">
     <div class="card">
       <h2>Minecraft</h2>
       <p>Build and explore your own virtual world!</p>
     </div>
-    
+
     <div class="card">
       <h2>Roblox</h2>
       <p>Play thousands of different games created by users.</p>
     </div>
-    
+
     <div class="card">
       <h2>Fortnite</h2>
       <p>Battle against others to be the last one standing!</p>
     </div>
-    
+
     <div class="card">
       <h2>Among Us</h2>
       <p>Find the imposter before it's too late!</p>
@@ -830,7 +830,7 @@ const badges = [
     requirements: ['level-1', 'level-2', 'level-3', 'level-4', 'level-5'],
     icon: '🏆'
   },
-  
+
   // CSS Badges
   {
     id: 'css-stylist',
@@ -880,7 +880,7 @@ const badges = [
     requirements: ['level-6', 'level-7', 'level-8', 'level-9', 'level-10'],
     icon: '🏆'
   },
-  
+
   // JavaScript Badges
   {
     id: 'js-rookie',
@@ -930,7 +930,7 @@ const badges = [
     requirements: ['level-11', 'level-12', 'level-13', 'level-14', 'level-15'],
     icon: '🏆'
   },
-  
+
   // Special Badges
   {
     id: 'web-developer',
@@ -989,7 +989,7 @@ export async function createDemoUser() {
   try {
     const email = 'demo@codequest.edu';
     const password = 'demo123';
-    
+
     // First, create the authentication user
     let userCredential;
     try {
@@ -1006,10 +1006,10 @@ export async function createDemoUser() {
         throw authError;
       }
     }
-    
+
     // Get the user UID from the authentication
     const uid = userCredential.user.uid;
-    
+
     // Then create/update the user document in Firestore
     const userRef = doc(collection(db, 'users'), uid);
     await setDoc(userRef, {

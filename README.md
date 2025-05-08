@@ -1,6 +1,6 @@
-# Code4U - Interactive Web Development Learning Platform
+# code4u - Interactive Web Development Learning Platform
 
-Code4U is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
+code4u is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
 
 ## Features
 
@@ -22,7 +22,7 @@ Code4U is an interactive educational web application designed to teach middle an
 ## Project Structure
 
 ```
-edugame/
+code4u/
 ├── public/                 # Static assets
 ├── src/
 │   ├── assets/             # CSS, images, and other assets

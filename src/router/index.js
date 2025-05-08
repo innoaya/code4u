@@ -93,6 +93,12 @@ const router = createRouter({
       beforeEnter: requireAuth
     },
     {
+      path: '/profile/edit',
+      name: 'edit-profile',
+      component: () => import('../views/EditProfileView.vue'),
+      beforeEnter: requireAuth
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),

@@ -110,17 +110,31 @@ export const useGameStore = defineStore('game', () => {
     if (!auth.currentUser) return
     
     try {
+      // Extract level number from levelId (e.g., 'level-1' => 1)
+      const completedLevelNum = parseInt(levelId.split('-')[1], 10) || 0
+      
+      // Get current user data to determine the correct next level
+      const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
+      const userData = userDoc.exists() ? userDoc.data() : { level: 1 }
+      
+      // Determine the new level - should be the next sequential level
+      // Only update level if the completed level is the current level
+      // This prevents skipping levels if a user completes them out of order
+      const newLevel = (completedLevelNum === userData.level) ? 
+                      completedLevelNum + 1 : 
+                      Math.max(userData.level, completedLevelNum)
+      
       // Update user progress in Firestore
       await updateDoc(doc(db, 'users', auth.currentUser.uid), {
         completedLevels: arrayUnion(levelId),
         points: increment(currentLevel.value?.pointsToEarn || 100),
-        level: increment(1)
+        level: newLevel
       })
       
       // Update local state
       userProgress.value.completedLevels.push(levelId)
       userProgress.value.points += (currentLevel.value?.pointsToEarn || 100)
-      userProgress.value.level += 1
+      userProgress.value.level = newLevel
       
       // Record this activity
       await recordUserActivity('level_completed', {

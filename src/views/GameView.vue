@@ -288,11 +288,10 @@ onUnmounted(() => {
           <div class="card flex flex-col h-[350px]">
             <div class="flex justify-between items-center mb-3">
               <h3 class="font-bold">Live Preview</h3>
-              <div class="flex items-center gap-2">
+              <div>
                 <span class="badge bg-blue-100 text-blue-800 px-2 py-1 text-xs rounded-full">
                   {{ gameStore.currentLevel?.category }}
                 </span>
-                <span class="text-xs text-gray-500">{{ codeLanguage.toUpperCase() }}</span>
               </div>
             </div>
             <div class="bg-white rounded-lg overflow-hidden border border-gray-200 flex-grow">
@@ -305,7 +304,15 @@ onUnmounted(() => {
         <div class="card mb-6 h-[350px] flex flex-col">
           <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold">Code Editor</h3>
-            <div class="text-xs text-gray-500">{{ codeLanguage.toUpperCase() }}</div>
+            <div class="flex items-center gap-3">
+              <div class="text-xs text-gray-500">{{ codeLanguage.toUpperCase() }}</div>
+              <button 
+                @click="runCode"
+                class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-md transition"
+              >
+                Run Code
+              </button>
+            </div>
           </div>
           <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm flex-grow overflow-hidden">
             <textarea
@@ -322,14 +329,6 @@ onUnmounted(() => {
         <div class="card">
           <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold">Console Output</h3>
-            <div class="flex gap-2">
-              <button 
-                @click="runCode"
-                class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-md transition"
-              >
-                Run Code
-              </button>
-            </div>
           </div>
           <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm h-[120px] overflow-auto">
             <pre>{{ gameStore.codeOutput || 'Your console output will appear here...' }}</pre>
