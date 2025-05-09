@@ -31,9 +31,11 @@ function closeMenu() {
     <nav class="bg-white shadow-md relative z-10">
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <!-- Logo - visible on all screens -->
-        <div class="flex items-center space-x-2">
-          <img alt="code4u Logo" class="h-10 w-10" src="@/assets/logo.svg" />
-          <span class="text-xl font-bold text-primary">code4u</span>
+        <div class="flex items-center space-x-0">
+          <!-- <div class="h-10 w-16 relative overflow-visible">
+            <img alt="Code4U Logo" class="absolute -top-2 -left-1 h-16 w-16" src="@/assets/logo.svg" />
+          </div> -->
+          <span class="text-2xl font-bold text-primary -ml-1">Code4U</span>
         </div>
 
         <!-- Desktop Navigation - hidden on mobile -->
@@ -149,12 +151,12 @@ function closeMenu() {
       <div class="container mx-auto px-4">
         <div class="text-center">
           <p class="text-sm text-text-secondary">
-            © {{ new Date().getFullYear() }} code4u - Learn Web Development Through Play
+            © {{ new Date().getFullYear() }} Code4U - Learn Coding Through Play
           </p>
           <div class="mt-2 flex justify-center space-x-4">
-            <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">About</a>
-            <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">Privacy</a>
-            <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">Terms</a>
+            <RouterLink to="/about" class="text-text-secondary hover:text-primary transition-colors duration-200">About</RouterLink>
+            <RouterLink to="/privacy" class="text-text-secondary hover:text-primary transition-colors duration-200">Privacy Policy</RouterLink>
+            <RouterLink to="/terms" class="text-text-secondary hover:text-primary transition-colors duration-200">Terms of Service</RouterLink>
             <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">Contact</a>
           </div>
         </div>

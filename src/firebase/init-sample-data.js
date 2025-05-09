@@ -1,5 +1,5 @@
 /**
- * Firebase initialization script for code4u
+ * Firebase initialization script for Code4U
  * This file contains sample data that would be used to populate the Firestore database
  * Run this file once to set up your initial data structure
  */
@@ -61,7 +61,7 @@ const htmlLevels = [
         initialCode: '<!DOCTYPE html>\n<html>\n<head>\n  <title>My Page</title>\n</head>\n<body>\n  <h1>My First Web Page</h1>\n  <!-- Add your paragraph here -->\n  \n</body>\n</html>',
         solution: '<p>',
         expectedOutput: 'Paragraph added successfully!',
-        errorHint: 'Your page needs a <p> paragraph element. Try adding <p>I am learning HTML with code4u!</p>'
+        errorHint: 'Your page needs a <p> paragraph element. Try adding <p>I am learning HTML with Code4U!</p>'
       }
     ]
   },

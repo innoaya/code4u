@@ -81,11 +81,7 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/LoginView.vue')
     },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue')
-    },
+    // Register route removed - using Google SSO only
     {
       path: '/profile',
       name: 'profile',
@@ -102,6 +98,16 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: () => import('../views/TermsOfServiceView.vue'),
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: () => import('../views/PrivacyPolicyView.vue'),
     },
   ],
 })

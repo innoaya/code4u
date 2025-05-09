@@ -225,7 +225,7 @@ onMounted(async () => {
       user.value = {
         uid: auth.currentUser.uid,
         email: auth.currentUser.email,
-        displayName: auth.currentUser.displayName || 'code4u User',
+        displayName: auth.currentUser.displayName || 'Code4U User',
         photoURL: auth.currentUser.photoURL,
         level: 1,
         points: 0,

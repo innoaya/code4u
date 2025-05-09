@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, db } from '../firebase'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
+import { trackPathSelected, trackLevelStarted } from '../firebase/analytics-utils'
 
 const router = useRouter()
 const levels = ref([])
@@ -16,17 +17,17 @@ const isLoading = ref(true)
 onMounted(async () => {
   try {
     isLoading.value = true
-    
+
     // Get levels from Firestore
     const levelsSnapshot = await getDocs(collection(db, 'levels'))
     const levelsData = levelsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }))
-    
+
     // Sort levels by number
     levels.value = levelsData.sort((a, b) => a.number - b.number)
-    
+
     // Get user progress
     if (auth.currentUser) {
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
@@ -51,6 +52,10 @@ const goToLevel = (level) => {
     return
   }
   
+  // Track level start in analytics
+  const levelCategory = level.number <= 5 ? 'HTML' : level.number <= 10 ? 'CSS' : 'JavaScript';
+  trackLevelStarted(level.id, level.number, levelCategory);
+  
   router.push({
     name: 'level-detail',
     params: { id: level.id }
@@ -62,11 +67,11 @@ const getLevelStatus = (level) => {
   if (userProgress.value.completedLevels.includes(level.id)) {
     return 'completed'
   }
-  
+
   if (level.number <= userProgress.value.currentLevel) {
     return 'unlocked'
   }
-  
+
   return 'locked'
 }
 </script>
@@ -74,11 +79,11 @@ const getLevelStatus = (level) => {
 <template>
   <div>
     <h1 class="text-3xl font-bold mb-8">Learning Paths</h1>
-    
+
     <div v-if="isLoading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
     </div>
-    
+
     <div v-else>
       <!-- Learning Paths -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
@@ -90,14 +95,14 @@ const getLevelStatus = (level) => {
               </svg>
             </div>
             <div>
-              <h3 class="text-xl font-bold">HTML Fundamentals</h3>
+              <h3 class="text-xl font-bold">HTML</h3>
               <p class="text-text-secondary">Levels 1-5</p>
             </div>
           </div>
-          <p class="text-text-secondary mb-4">Learn the building blocks of web pages with HTML tags, structure, and semantics.</p>
-          <button @click="goToLevel({ id: 'level-1', number: 1 })" class="btn btn-primary w-full">Start Learning</button>
+          <p class="text-text-secondary mb-4">Learn the fundamentals of HTML tags, structure, and document organization.</p>
+          <button @click="() => { trackPathSelected('HTML'); goToLevel({ id: 'level-1', number: 1 }); }" class="btn btn-primary w-full">Start Learning</button>
         </div>
-        
+
         <div class="card border-t-4 border-secondary hover:shadow-lg transition-shadow duration-300">
           <div class="flex items-center mb-4">
             <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mr-4 text-secondary">
@@ -106,14 +111,14 @@ const getLevelStatus = (level) => {
               </svg>
             </div>
             <div>
-              <h3 class="text-xl font-bold">CSS Styling</h3>
+              <h3 class="text-xl font-bold">CSS</h3>
               <p class="text-text-secondary">Levels 6-10</p>
             </div>
           </div>
           <p class="text-text-secondary mb-4">Transform plain HTML into beautiful designs with CSS properties, layouts, and animations.</p>
-          <button @click="goToLevel({ id: 'level-6', number: 6 })" class="btn btn-secondary w-full">Start Learning</button>
+          <button @click="() => { trackPathSelected('CSS'); goToLevel({ id: 'level-6', number: 6 }); }" class="btn btn-secondary w-full">Start Learning</button>
         </div>
-        
+
         <div class="card border-t-4 border-accent hover:shadow-lg transition-shadow duration-300">
           <div class="flex items-center mb-4">
             <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mr-4 text-accent">
@@ -122,18 +127,18 @@ const getLevelStatus = (level) => {
               </svg>
             </div>
             <div>
-              <h3 class="text-xl font-bold">JavaScript Basics</h3>
+              <h3 class="text-xl font-bold">JavaScript</h3>
               <p class="text-text-secondary">Levels 11-15</p>
             </div>
           </div>
           <p class="text-text-secondary mb-4">Add interactivity to your websites with JavaScript variables, functions, and DOM manipulation.</p>
-          <button @click="goToLevel({ id: 'level-11', number: 11 })" class="btn bg-accent text-white hover:bg-accent/90 w-full">Start Learning</button>
+          <button @click="() => { trackPathSelected('JavaScript'); goToLevel({ id: 'level-11', number: 11 }); }" class="btn bg-accent text-white hover:bg-accent/90 w-full">Start Learning</button>
         </div>
       </div>
-      
+
       <!-- Level Progress -->
       <h2 class="text-2xl font-bold mb-6">Your Learning Journey</h2>
-      
+
       <!-- Levels grid -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div
@@ -142,7 +147,7 @@ const getLevelStatus = (level) => {
           class="relative"
           @click="goToLevel({ id: `level-${n}`, number: n, locked: n > userProgress.currentLevel })"
         >
-          <div 
+          <div
             class="card p-4 text-center cursor-pointer hover:shadow-md transition-shadow duration-300"
             :class="{
               'bg-success/10 border-success': getLevelStatus({ id: `level-${n}`, number: n }) === 'completed',
@@ -150,7 +155,7 @@ const getLevelStatus = (level) => {
               'bg-gray-100 border-gray-300': getLevelStatus({ id: `level-${n}`, number: n }) === 'locked'
             }"
           >
-            <div 
+            <div
               class="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold"
               :class="{
                 'bg-success': getLevelStatus({ id: `level-${n}`, number: n }) === 'completed',
@@ -164,7 +169,7 @@ const getLevelStatus = (level) => {
             <p class="text-xs text-text-secondary">
               {{ n <= 5 ? 'HTML' : n <= 10 ? 'CSS' : 'JavaScript' }}
             </p>
-            
+
             <!-- Status indicator -->
             <span
               v-if="getLevelStatus({ id: `level-${n}`, number: n }) === 'completed'"
@@ -175,7 +180,7 @@ const getLevelStatus = (level) => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </span>
-            
+
             <span
               v-if="getLevelStatus({ id: `level-${n}`, number: n }) === 'locked'"
               class="absolute top-2 right-2 text-gray-400"

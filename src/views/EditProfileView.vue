@@ -35,7 +35,7 @@ onMounted(async () => {
       user.value = {
         uid: auth.currentUser.uid,
         email: auth.currentUser.email,
-        displayName: userDoc.data().displayName || auth.currentUser.displayName || 'code4u User',
+        displayName: userDoc.data().displayName || auth.currentUser.displayName || 'Code4U User',
         photoURL: userDoc.data().photoURL || auth.currentUser.photoURL,
         ...userDoc.data()
       }
@@ -48,7 +48,7 @@ onMounted(async () => {
       user.value = {
         uid: auth.currentUser.uid,
         email: auth.currentUser.email,
-        displayName: auth.currentUser.displayName || 'code4u User',
+        displayName: auth.currentUser.displayName || 'Code4U User',
         photoURL: auth.currentUser.photoURL
       }
 

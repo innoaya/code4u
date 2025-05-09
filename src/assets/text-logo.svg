@@ -1,0 +1,15 @@
+<svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7f6cff"/>
+      <stop offset="100%" stop-color="#5143dc"/>
+    </linearGradient>
+  </defs>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Courier New, monospace"
+        font-size="32"
+        font-weight="bold"
+        fill="url(#logoGradient)">
+    Code4U
+  </text>
+</svg>

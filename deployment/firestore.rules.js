@@ -42,5 +42,11 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow write: if false; // Should be updated by server functions
     }
+
+    // Legal content - public read access, admin-only write access
+    match /legal_content/{documentId} {
+      allow read: if true; // Allow everyone to read legal documents
+      allow write: if false; // Only admins should update legal content
+    }
   }
 }
