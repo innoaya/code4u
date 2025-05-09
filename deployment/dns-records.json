@@ -1,0 +1,17 @@
+{
+    "Changes": [
+      {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+          "Name": "code4u.innoaya.org",
+          "Type": "A",
+          "AliasTarget": {
+            "HostedZoneId": "Z2FDTNDATAQYW2",
+            "DNSName": "d9m6g9wzp7avr.cloudfront.net.",
+            "EvaluateTargetHealth": false
+          }
+        }
+      }
+    ]
+  }
+  
