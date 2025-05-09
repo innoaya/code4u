@@ -1,11 +1,14 @@
 {
-  "name": "Code4U",
+  "name": "code4u",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "deploy": "npm run build && npm run sync-to-s3 && npm run invalidate-cloudfront",
     "build": "vite build",
+    "sync-to-s3": "aws s3 sync dist/ s3://code4u.innoaya.org/ --delete",
+    "invalidate-cloudfront": "aws cloudfront create-invalidation --distribution-id E2GFBUCWIF2RUF --paths '/*'",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"

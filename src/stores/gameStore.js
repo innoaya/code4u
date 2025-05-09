@@ -512,11 +512,19 @@ export const useGameStore = defineStore('game', () => {
     }
     
     try {
-      console.log('Adding to Firestore:', activityType, 'for user', auth.currentUser.uid);
+      // Get current user data to include display name
+      const currentUser = auth.currentUser;
+      const userDisplayName = currentUser.displayName || 'Anonymous User';
+      
+      console.log('Adding to Firestore:', activityType, 'for user', currentUser.uid);
       const docRef = await addDoc(collection(db, 'user_activities'), {
-        userId: auth.currentUser.uid,
+        userId: currentUser.uid,
         type: activityType,
-        details,
+        userDisplayName: userDisplayName, // Add display name directly to activity
+        details: {
+          ...details,
+          displayName: userDisplayName // Add as backup in details too
+        },
         timestamp: serverTimestamp()
       });
       console.log('Activity recorded successfully with ID:', docRef.id);

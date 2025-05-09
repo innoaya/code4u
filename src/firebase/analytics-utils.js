@@ -71,6 +71,15 @@ export const trackContentView = (contentType, contentId) => {
   });
 };
 
+// Page view tracking
+export const trackPageView = (pageName) => {
+  logAnalyticsEvent('page_view', {
+    page_name: pageName,
+    page_location: window.location.href,
+    page_path: window.location.pathname
+  });
+};
+
 // Legal document events
 export const trackLegalDocumentView = (documentType) => {
   logAnalyticsEvent('legal_document_view', {

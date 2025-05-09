@@ -1,17 +1,20 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { auth, db } from '../firebase'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { updateProfile } from 'firebase/auth'
 import { uploadProfilePicture, deleteProfilePicture } from '../firebase/storage-utils'
+import { trackProfileUpdate } from '../firebase/analytics-utils'
 
 const router = useRouter()
+const route = useRoute()
 const user = ref(null)
 const isLoading = ref(true)
 const isSaving = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
+const isFirstLogin = ref(route.query.firstLogin === 'true')
 
 // Form data
 const displayName = ref('')
@@ -154,17 +157,36 @@ const saveProfile = async () => {
       photoURL = await uploadProfilePicture(userId, selectedFile.value)
     }
 
-    // Update Firestore document
-    await updateDoc(doc(db, 'users', userId), {
+    const updateData = {
       displayName: displayName.value,
       photoURL: photoURL
-    })
+    }
 
-    // Update Firebase Auth profile
-    await updateProfile(auth.currentUser, {
-      displayName: displayName.value,
-      photoURL: photoURL
-    })
+    // Save profile changes to Firestore
+    try {
+      const userDocRef = doc(db, 'users', auth.currentUser.uid)
+      
+      // If this is a first login, also remove the isFirstLogin flag
+      if (isFirstLogin.value) {
+        updateData.isFirstLogin = false
+      }
+      
+      // Update Firestore document
+      await updateDoc(userDocRef, updateData)
+      
+      // Track profile update in analytics
+      trackProfileUpdate(isFirstLogin.value ? 'initial_setup' : 'profile_edit')
+      
+      // Update authentication profile if name changed
+      if (displayName.value !== user.value.displayName) {
+        await updateProfile(auth.currentUser, {
+          displayName: displayName.value
+        })
+      }
+    } catch (error) {
+      console.error('Error updating Firestore document:', error)
+      throw error
+    }
 
     // Update local user object
     user.value = {
@@ -205,6 +227,16 @@ const cancelEdit = () => {
     </div>
 
     <div v-else class="max-w-2xl mx-auto">
+      <!-- Welcome message for first-time users -->
+      <div v-if="isFirstLogin" class="mb-6 p-4 bg-primary/10 border-l-4 border-primary rounded-lg">
+        <h2 class="text-lg font-bold text-primary mb-2">Welcome to Code4U! 👋</h2>
+        <p class="mb-2">Please take a moment to personalize your profile before you start your coding journey.</p>
+        <ul class="list-disc list-inside ml-2 text-text-secondary">
+          <li>Add a profile picture to make your profile more personal</li>
+          <li>Update your display name if you'd like</li>
+        </ul>
+      </div>
+      
       <!-- Success message -->
       <div v-if="successMessage" class="mb-6 p-4 bg-success/10 text-success rounded-lg">
         {{ successMessage }}

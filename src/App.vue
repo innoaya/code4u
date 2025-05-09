@@ -31,12 +31,12 @@ function closeMenu() {
     <nav class="bg-white shadow-md relative z-10">
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <!-- Logo - visible on all screens -->
-        <div class="flex items-center space-x-0">
-          <!-- <div class="h-10 w-16 relative overflow-visible">
+        <RouterLink to="/" class="flex items-center space-x-0 hover:opacity-90 transition-opacity">
+          <div class="h-10 w-16 relative overflow-visible">
             <img alt="Code4U Logo" class="absolute -top-2 -left-1 h-16 w-16" src="@/assets/logo.svg" />
-          </div> -->
+          </div>
           <span class="text-2xl font-bold text-primary -ml-1">Code4U</span>
-        </div>
+        </RouterLink>
 
         <!-- Desktop Navigation - hidden on mobile -->
         <div class="hidden md:flex md:space-x-6">
@@ -48,6 +48,9 @@ function closeMenu() {
           </RouterLink>
           <RouterLink @click="closeMenu" to="/leaderboard" class="text-text-primary hover:text-primary transition-colors duration-200">
             Leaderboard
+          </RouterLink>
+          <RouterLink @click="closeMenu" to="/activities" class="text-text-primary hover:text-primary transition-colors duration-200">
+            Activities
           </RouterLink>
           <RouterLink v-if="!user" @click="closeMenu" to="/login" class="text-text-primary hover:text-primary transition-colors duration-200">
             Login
@@ -117,6 +120,13 @@ function closeMenu() {
             class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:text-primary hover:bg-gray-50"
           >
             Leaderboard
+          </RouterLink>
+          <RouterLink
+            @click="closeMenu"
+            to="/activities"
+            class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:text-primary hover:bg-gray-50"
+          >
+            Activities
           </RouterLink>
           <RouterLink
             v-if="!user"

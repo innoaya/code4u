@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../firebase'
+import ActivityFeed from '../components/ActivityFeed.vue'
 
 const router = useRouter()
 const isLoggedIn = ref(!!auth.currentUser)
@@ -18,7 +19,7 @@ const startLearning = () => {
 <template>
   <div class="py-0">
     <!-- Hero Section -->
-    <div class="text-center mb-16">
+    <div class="text-center mb-12">
       <div class="flex justify-center mb-6">
         <img src="@/assets/logo.svg" alt="Code4U Logo" class="w-64 h-64" />
       </div>
@@ -98,49 +99,46 @@ const startLearning = () => {
       </div>
     </div>
 
-    <!-- Testimonials Section -->
-    <div class="mb-16">
-      <h2 class="text-3xl font-bold text-center mb-8">What Our Students Say</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="card">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mr-4">
-              <span class="text-primary font-bold">ND</span>
-            </div>
-            <div>
-              <h4 class="font-semibold">Nadi Han Thit</h4>
-              <p class="text-sm text-text-secondary">8th Grade Student</p>
-            </div>
-          </div>
-          <p class="text-text-secondary italic">
-            "Code4U made learning HTML and CSS so much fun! I built my first website in just a week!"
-          </p>
-        </div>
-        <div class="card">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mr-4">
-              <span class="text-secondary font-bold">AM</span>
-            </div>
-            <div>
-              <h4 class="font-semibold">Aung Kyaw Minn</h4>
-              <p class="text-sm text-text-secondary">A Dad</p>
+    <!-- Activity Feed Section -->
+    <div class="mb-16 bg-white/50 py-10 -mx-4">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- CTA Column -->
+          <div class="lg:col-span-1">
+            <div class="text-center lg:text-left">
+              <h2 class="text-3xl font-bold mb-4">Join Code4U</h2>
+              <p class="text-text-secondary mb-6">See who’s learning to code and having fun! Maybe your friends are here too — or you can make new ones. Let’s learn and play together!</p>
+              <button @click="startLearning" class="btn btn-primary text-lg px-6 py-3">
+                Let’s Go!
+              </button>
             </div>
           </div>
-          <p class="text-text-secondary italic">
-            "I never thought my daughter enjoy coding, but the challenge-based approach made her easy to understand the concepts."
-          </p>
+
+          <!-- Activity Feed Column -->
+          <div class="lg:col-span-2">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-bold">Latest Activity</h3>
+              <router-link to="/activities" class="text-primary hover:text-primary-dark text-sm flex items-center">
+                View All Activities
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </router-link>
+            </div>
+            <ActivityFeed :maxItems="6" :showTitle="false" />
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Call to Action -->
-    <div class="text-center">
+    <div class="text-center bg-gray-50 py-12 -mx-4 px-4 rounded-lg">
       <h2 class="text-3xl font-bold mb-4">Ready to Start Your Coding Journey?</h2>
       <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-8">
-        Join thousands of students who are learning to code while having fun!
+        Join thousands of buddies who are learning to code while having fun!
       </p>
       <button @click="startLearning" class="btn btn-primary text-lg px-8 py-3">
-        Begin Your Adventure
+        Jump In!
       </button>
     </div>
   </div>

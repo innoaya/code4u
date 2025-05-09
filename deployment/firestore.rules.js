@@ -10,12 +10,17 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // User profiles - users can read and update only their own data
+    // User profiles - public read access for leaderboard functionality
     match /users/{userId} {
-      allow read: if isSignedIn();
+      // Allow public read access for all users to support leaderboard
+      allow read: if true;
+      
+      // But only allow users to create/update their own data
       allow create: if isSignedIn() && request.auth.uid == userId;
-      allow update: if isOwner(userId);
-      allow delete: if false; // Don't allow user deletion through client
+      allow update: if isSignedIn() && request.auth.uid == userId && 
+                      request.resource.data.diff(resource.data).affectedKeys()
+                      .hasOnly(['displayName', 'photoURL', 'level', 'points', 'badges', 'completedLevels', 'lastLogin']);
+      allow delete: if false;
     }
 
     // Level data - all authenticated users can read, only admins can modify
@@ -24,9 +29,9 @@ service cloud.firestore {
       allow write: if false; // Restrict level creation/modification to admin tools or server
     }
 
-    // User activities - users can only read their own activities
+    // User activities - public read access for activity feed, restricted write
     match /user_activities/{activityId} {
-      allow read: if isSignedIn();
+      allow read: if true; // Public read access for activity feed
       allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
@@ -37,9 +42,9 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Leaderboard data - all authenticated users can read
+    // Leaderboard data - public read access
     match /leaderboard/{entryId} {
-      allow read: if isSignedIn();
+      allow read: if true; // Allow everyone to read leaderboard data
       allow write: if false; // Should be updated by server functions
     }
 

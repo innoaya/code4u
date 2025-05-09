@@ -51,11 +51,13 @@ const signInWithGoogle = async () => {
 
     // If user document doesn't exist, create it (this is registration)
     if (!userDoc.exists()) {
+      // Set up new user document with initial values
       await setDoc(doc(db, 'users', user.uid), {
         displayName: user.displayName || 'Code4U User',
         email: user.email,
         photoURL: photoURL, // Include the Firebase Storage URL or original Google URL
         createdAt: serverTimestamp(),
+        isFirstLogin: true, // Flag for first-time users
         level: 1,
         points: 0,
         badges: [],
@@ -64,6 +66,13 @@ const signInWithGoogle = async () => {
 
       // Track new user sign up with analytics
       trackSignUp('google')
+      
+      // Redirect first-time users to the profile edit page
+      router.push({
+        path: '/profile/edit',
+        query: { firstLogin: 'true' } // Pass a query parameter to trigger welcome message
+      })
+      return // End function execution here to prevent default redirect
     } else {
       // Update the existing user's last login time
       await updateDoc(doc(db, 'users', user.uid), {
@@ -72,9 +81,10 @@ const signInWithGoogle = async () => {
 
       // Track returning user login with analytics
       trackLogin('google')
+      
+      // Regular redirect for returning users
+      router.push(redirectPath.value)
     }
-
-    router.push(redirectPath.value)
   } catch (error) {
     console.error('Google Sign-in error:', error)
     errorMessage.value = error.message || 'Failed to sign in with Google. Please try again.'
