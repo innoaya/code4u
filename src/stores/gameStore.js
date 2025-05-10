@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { auth, db } from '../firebase'
 import { doc, getDoc, updateDoc, arrayUnion, increment, collection, getDocs, query, where, orderBy, limit, serverTimestamp, addDoc } from 'firebase/firestore'
+import { useFeedbackStore } from './feedbackStore'
 
 export const useGameStore = defineStore('game', () => {
   // State
@@ -144,6 +145,16 @@ export const useGameStore = defineStore('game', () => {
         category: currentLevel.value?.category,
         pointsEarned: currentLevel.value?.pointsToEarn || 100
       })
+      
+      // Check if we should prompt for feedback after this level completion
+      const feedbackStore = useFeedbackStore()
+      if (currentLevel.value) {
+        feedbackStore.showFeedbackFor(
+          levelId, 
+          currentLevel.value.number, 
+          currentLevel.value.category
+        )
+      }
       
       // Check for badges
       await checkForBadges()

@@ -19,7 +19,7 @@ service cloud.firestore {
       allow create: if isSignedIn() && request.auth.uid == userId;
       allow update: if isSignedIn() && request.auth.uid == userId && 
                       request.resource.data.diff(resource.data).affectedKeys()
-                      .hasOnly(['displayName', 'photoURL', 'level', 'points', 'badges', 'completedLevels', 'lastLogin']);
+                      .hasOnly(['displayName', 'photoURL', 'level', 'points', 'badges', 'completedLevels', 'lastLogin', 'isFirstLogin']);
       allow delete: if false;
     }
 
@@ -48,10 +48,17 @@ service cloud.firestore {
       allow write: if false; // Should be updated by server functions
     }
 
+    // Feedback collection - allow users to submit and read their own feedback
+    match /feedback/{feedbackId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
+      allow create: if true; // Allow both signed-in and anonymous feedback
+      allow update, delete: if false; // No updating or deleting feedback once submitted
+    }
+
     // Legal content - public read access, admin-only write access
     match /legal_content/{documentId} {
       allow read: if true; // Allow everyone to read legal documents
-      allow write: if false; // Only admins should update legal content
+      allow write: if false; // Restrict writing to admin tools or server
     }
   }
 }

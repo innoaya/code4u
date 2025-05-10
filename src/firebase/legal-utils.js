@@ -1,11 +1,10 @@
 import { db } from './index'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { auth } from './index'
+import { doc, getDoc } from 'firebase/firestore'
 
 // Collection name for legal documents
 const LEGAL_COLLECTION = 'legal_content'
 
-// Default content for Terms of Service
+// Default content for Terms of Service - copied here to avoid circular imports
 const DEFAULT_TERMS = {
   title: 'Terms of Service',
   content: [
@@ -45,7 +44,7 @@ const DEFAULT_TERMS = {
   lastUpdated: new Date().toISOString().split('T')[0]
 }
 
-// Default content for Privacy Policy
+// Default content for Privacy Policy - copied here to avoid circular imports
 const DEFAULT_PRIVACY = {
   title: 'Privacy Policy',
   content: [
@@ -91,32 +90,6 @@ const DEFAULT_PRIVACY = {
     }
   ],
   lastUpdated: new Date().toISOString().split('T')[0]
-}
-
-/**
- * Initialize default legal documents in Firestore if they don't exist and user is authenticated
- */
-export async function initializeLegalDocuments() {
-  // Only try to initialize if user is authenticated
-  if (!auth.currentUser) return;
-
-  try {
-    // Terms of Service initialization
-    const termsDoc = await getDoc(doc(db, LEGAL_COLLECTION, 'terms_of_service'))
-    if (!termsDoc.exists()) {
-      await setDoc(doc(db, LEGAL_COLLECTION, 'terms_of_service'), DEFAULT_TERMS)
-    }
-
-    // Privacy Policy initialization
-    const privacyDoc = await getDoc(doc(db, LEGAL_COLLECTION, 'privacy_policy'))
-    if (!privacyDoc.exists()) {
-      await setDoc(doc(db, LEGAL_COLLECTION, 'privacy_policy'), DEFAULT_PRIVACY)
-    }
-  } catch (error) {
-    console.error('Error initializing legal documents:', error)
-    // We'll proceed without initialization if there's an error
-    // The getLegalDocument function will fall back to defaults
-  }
 }
 
 /**

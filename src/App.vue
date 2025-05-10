@@ -3,6 +3,8 @@ import { RouterLink, RouterView } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { auth } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import FloatingFeedbackButton from './components/FloatingFeedbackButton.vue'
+import AutoFeedbackPrompt from './components/AutoFeedbackPrompt.vue'
 
 const user = ref(null)
 const isLoading = ref(true)
@@ -161,16 +163,18 @@ function closeMenu() {
       <div class="container mx-auto px-4">
         <div class="text-center">
           <p class="text-sm text-text-secondary">
-            © {{ new Date().getFullYear() }} Code4U - Learn Coding Through Play
+            {{ new Date().getFullYear() }} Code4U - Learn Coding Through Play
           </p>
           <div class="mt-2 flex justify-center space-x-4">
             <RouterLink to="/about" class="text-text-secondary hover:text-primary transition-colors duration-200">About</RouterLink>
-            <RouterLink to="/privacy" class="text-text-secondary hover:text-primary transition-colors duration-200">Privacy Policy</RouterLink>
             <RouterLink to="/terms" class="text-text-secondary hover:text-primary transition-colors duration-200">Terms of Service</RouterLink>
-            <a href="#" class="text-text-secondary hover:text-primary transition-colors duration-200">Contact</a>
+            <RouterLink to="/privacy" class="text-text-secondary hover:text-primary transition-colors duration-200">Privacy Policy</RouterLink>
           </div>
         </div>
       </div>
     </footer>
+    <!-- Feedback Components -->
+    <FloatingFeedbackButton v-if="!isLoading" />
+    <AutoFeedbackPrompt v-if="!isLoading" />
   </div>
 </template>

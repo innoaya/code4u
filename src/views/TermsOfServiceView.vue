@@ -36,7 +36,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getLegalDocument, initializeLegalDocuments } from '../firebase/legal-utils'
+import { getLegalDocument } from '../firebase/legal-utils'
 import { auth } from '../firebase'
 import { trackLegalDocumentView } from '../firebase/analytics-utils'
 
@@ -50,9 +50,6 @@ async function fetchTerms() {
   error.value = false
   
   try {
-    // Initialize legal documents if they don't exist
-    await initializeLegalDocuments()
-    
     // Fetch terms of service
     const termsData = await getLegalDocument('terms_of_service')
     

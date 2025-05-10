@@ -1,0 +1,46 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Allow authenticated users to upload to screenshots folder
+    match /screenshots/{fileName} {
+      // Allow anyone to read screenshot images
+      allow read: if true;
+      
+      // Allow authenticated users to create images, with size and type constraints
+      allow create: if isSignedIn() || true; // Allow both authenticated and anonymous uploads for feedback
+      
+      // Validate file is an image and under 5MB
+      allow create: if request.resource.contentType.matches('image/.*') 
+                    && request.resource.size < 5 * 1024 * 1024;
+      
+      // No updating or deleting images
+      allow update, delete: if false;
+    }
+
+    // Profile pictures - different rules than screenshots
+    match /profile-pictures/{userId}/{filename} {
+      // Public read access (for profile display)
+      allow read: if true;
+      
+      // Only allow users to upload their own profile picture
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      
+      // Allow users to delete their own profile picture
+      allow delete: if isSignedIn() && request.auth.uid == userId;
+      
+      // Validate file is an image and under 2MB
+      allow create, update: if request.resource.contentType.matches('image/.*') 
+                           && request.resource.size < 2 * 1024 * 1024;
+    }
+
+    // Restrict access to all other files
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
