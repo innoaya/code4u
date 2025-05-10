@@ -1,5 +1,7 @@
 # Code4U - Interactive Web Development Learning Platform
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-green.svg)](https://github.com/innoaya/code4u)
+
 Code4U is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
 
 ## Features
@@ -289,9 +291,20 @@ Code4U/
 - **Achievement Sharing**: Social media integration for sharing accomplishments
 - **Mobile App**: Native mobile application for iOS and Android
 
+## Contributing
+
+We welcome contributions to Code4U! Whether you're fixing bugs, improving the documentation, or proposing new features, your help is appreciated.
+
+1. **Fork the repository**: https://github.com/innoaya/code4u
+2. **Create a branch**: `git checkout -b feature-name`
+3. **Make your changes**
+4. **Submit a pull request**
+
+Please make sure to update tests as appropriate and adhere to the existing coding style. For major changes, please open an issue first to discuss what you would like to change.
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE.md) file for details.
 
 ## Acknowledgments
 
