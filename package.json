@@ -8,7 +8,7 @@
     "deploy": "npm run build && npm run sync-to-s3 && npm run invalidate-cloudfront",
     "build": "vite build",
     "sync-to-s3": "aws s3 sync dist/ s3://code4u.innoaya.org/ --delete",
-    "invalidate-cloudfront": "aws cloudfront create-invalidation --distribution-id E1CT62X5SD8JRU --paths '/*'",
+    "invalidate-cloudfront": "aws cloudfront create-invalidation --distribution-id E1CT62X5SD8JRU --paths /*",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
