@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, db } from '../firebase'
 import { signOut } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { useGameStore } from '../stores/gameStore'
 
 const router = useRouter()
@@ -13,6 +13,7 @@ const userProgress = ref(null)
 const isLoading = ref(true)
 const badges = ref([])
 const recentActivities = ref([])
+const allBadges = ref({}) // Store all badges from Firestore
 const categoryProgress = ref({
   HTML: 0,
   CSS: 0,
@@ -108,12 +109,37 @@ const getActivityInfo = (activity) => {
   }
 }
 
+// Fetch badges from Firestore
+async function fetchBadges() {
+  try {
+    const badgesSnapshot = await getDocs(collection(db, 'badges'))
+    
+    // Create a map of badge ID to badge object for quick lookups
+    const badgesMap = {}
+    badgesSnapshot.docs.forEach(doc => {
+      badgesMap[doc.id] = {
+        id: doc.id,
+        ...doc.data()
+      }
+    })
+    
+    allBadges.value = badgesMap
+    return badgesMap
+  } catch (err) {
+    console.error('Error fetching badges:', err)
+    return {}
+  }
+}
+
 // Fetch user data
 onMounted(async () => {
   if (!auth.currentUser) {
     router.push('/login')
     return
   }
+  
+  // Fetch badges first
+  await fetchBadges()
 
   try {
     isLoading.value = true
@@ -142,38 +168,27 @@ onMounted(async () => {
 
       console.log('User badges from Firestore:', userDoc.data().badges);
 
-      // Set badges - using predefined badge data
-      const badgeDefinitions = [
-        // HTML Badges
-        { id: 'html-apprentice', name: 'HTML Apprentice', description: 'Completed your first HTML page', category: 'HTML', icon: '📄' },
-        { id: 'html-formatter', name: 'Text Wizard', description: 'Mastered HTML text formatting', category: 'HTML', icon: '✏️' },
-        { id: 'html-navigator', name: 'Web Navigator', description: 'Connected pages with HTML links', category: 'HTML', icon: '🔗' },
-        { id: 'html-illustrator', name: 'Web Illustrator', description: 'Added images to make your pages come alive', category: 'HTML', icon: '🖼️' },
-        { id: 'html-organizer', name: 'Data Organizer', description: 'Created tables to organize information', category: 'HTML', icon: '📊' },
-        { id: 'html-master', name: 'HTML Master', description: 'Completed all HTML levels', category: 'HTML', icon: '🏆' },
-
-        // CSS Badges
-        { id: 'css-stylist', name: 'CSS Stylist', description: 'Added your first CSS styles', category: 'CSS', icon: '🎨' },
-        { id: 'css-selector', name: 'Element Selector', description: 'Mastered CSS selectors', category: 'CSS', icon: '🎯' },
-        { id: 'css-layouter', name: 'Layout Designer', description: 'Created complex layouts with CSS', category: 'CSS', icon: '📐' },
-        { id: 'css-animator', name: 'Animation Creator', description: 'Added animations to your web pages', category: 'CSS', icon: '✨' },
-        { id: 'css-master', name: 'CSS Master', description: 'Completed all CSS levels', category: 'CSS', icon: '🏆' },
-
-        // JavaScript Badges
-        { id: 'js-starter', name: 'JavaScript Starter', description: 'Wrote your first JavaScript code', category: 'JavaScript', icon: '🚀' },
-        { id: 'js-logician', name: 'Logic Master', description: 'Mastered conditionals and loops', category: 'JavaScript', icon: '🧠' },
-        { id: 'js-manipulator', name: 'DOM Manipulator', description: 'Learned to manipulate the DOM', category: 'JavaScript', icon: '🔧' },
-        { id: 'js-event-handler', name: 'Event Handler', description: 'Created interactive features with event listeners', category: 'JavaScript', icon: '👆' },
-        { id: 'js-master', name: 'JavaScript Master', description: 'Completed all JavaScript levels', category: 'JavaScript', icon: '🏆' },
-
-        // Achievement badges
-        { id: 'web-developer', name: 'Web Developer', description: 'Completed all levels in HTML, CSS, and JavaScript', category: 'Achievement', icon: '👨‍💻' }
-      ];
-
-      // Filter to only badges the user has earned
-      badges.value = badgeDefinitions.filter(badge =>
-        user.value.badges?.includes(badge.id)
-      )
+      // Map user badges to full badge objects
+      if (userDoc.exists() && userDoc.data().badges) {
+        // Map badge IDs to full badge objects from Firestore
+        badges.value = (userDoc.data().badges || []).map(badgeId => {
+          // If we have this badge in our collection, use it
+          if (allBadges.value[badgeId]) {
+            return allBadges.value[badgeId];
+          }
+          
+          // Fallback for any badges not found in collection
+          return {
+            id: badgeId,
+            name: badgeId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+            description: 'Achievement',
+            category: badgeId.includes('html') ? 'HTML' : 
+                      badgeId.includes('css') ? 'CSS' : 
+                      badgeId.includes('js') ? 'JavaScript' : 'Achievement',
+            icon: '🎕' // Default icon
+          };
+        })
+      }
 
       // Fetch recent activities
       console.log('Fetching user activities...');

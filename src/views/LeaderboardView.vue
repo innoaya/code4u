@@ -4,14 +4,38 @@ import { db } from '../firebase'
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore'
 
 const users = ref([])
+const allBadges = ref({})
 const isLoading = ref(true)
 const error = ref(null)
 const timeframe = ref('all-time') // all-time, weekly, monthly
 
-// Fetch leaderboard data
+// Fetch badge data and leaderboard data
 onMounted(async () => {
+  await fetchBadges()
   await fetchLeaderboard()
 })
+
+// Fetch all badges from Firestore
+const fetchBadges = async () => {
+  try {
+    const badgesSnapshot = await getDocs(collection(db, 'badges'))
+    
+    // Create a map of badge ID to badge object for quick lookups
+    const badgesMap = {}
+    badgesSnapshot.docs.forEach(doc => {
+      badgesMap[doc.id] = {
+        id: doc.id,
+        ...doc.data()
+      }
+    })
+    
+    allBadges.value = badgesMap
+  } catch (err) {
+    console.error('Error fetching badges:', err)
+    // Fall back to empty object if there's an error
+    allBadges.value = {}
+  }
+}
 
 const fetchLeaderboard = async () => {
   try {
@@ -29,11 +53,29 @@ const fetchLeaderboard = async () => {
     const usersSnapshot = await getDocs(usersQuery)
     
     // Map data and add rank
-    users.value = usersSnapshot.docs.map((doc, index) => ({
-      id: doc.id,
-      rank: index + 1,
-      ...doc.data(),
-    }))
+    users.value = usersSnapshot.docs.map((doc, index) => {
+      const userData = doc.data()
+      
+      // Map badge IDs to full badge objects if they exist
+      let mappedBadges = []
+      
+      if (userData.badges && Array.isArray(userData.badges)) {
+        mappedBadges = userData.badges.map(badgeId => {
+          // Handle both string IDs and existing badge objects
+          if (typeof badgeId === 'string') {
+            return allBadges.value[badgeId] || badgeId
+          }
+          return badgeId
+        })
+      }
+      
+      return {
+        id: doc.id,
+        rank: index + 1,
+        ...userData,
+        badges: mappedBadges
+      }
+    })
   } catch (err) {
     console.error('Error fetching leaderboard:', err)
     error.value = 'Failed to load leaderboard data'
@@ -178,13 +220,19 @@ const mockUsers = [
                     :key="index"
                     class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
                     :class="{
-                      'bg-primary/20 text-primary': badge.includes('html'),
-                      'bg-secondary/20 text-secondary': badge.includes('css'),
-                      'bg-accent/20 text-accent': badge.includes('js')
+                      'bg-primary/20 text-primary': typeof badge === 'string' ? badge.includes('html') : badge.category === 'HTML',
+                      'bg-secondary/20 text-secondary': typeof badge === 'string' ? badge.includes('css') : badge.category === 'CSS',
+                      'bg-accent/20 text-accent': typeof badge === 'string' ? badge.includes('js') : badge.category === 'JavaScript'
                     }"
-                    :title="badge"
+                    :title="typeof badge === 'string' ? badge : badge.name"
                   >
-                    {{ badge.includes('html') ? 'H' : badge.includes('css') ? 'C' : 'J' }}
+                    <!-- Support both string badges and badge objects -->
+                    <template v-if="typeof badge === 'string'">
+                      {{ badge.includes('html') ? 'H' : badge.includes('css') ? 'C' : 'J' }}
+                    </template>
+                    <template v-else>
+                      {{ badge.icon || (badge.category === 'HTML' ? 'H' : badge.category === 'CSS' ? 'C' : 'J') }}
+                    </template>
                   </div>
                 </div>
               </td>

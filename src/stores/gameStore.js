@@ -187,13 +187,13 @@ export const useGameStore = defineStore('game', () => {
             if (levelNum === 7) badgesToCheck.push('css-selector')
             if (levelNum === 8) badgesToCheck.push('css-layouter')
             if (levelNum === 9) badgesToCheck.push('css-animator')
-            if (levelNum === 10) badgesToCheck.push('css-master')
+            if (levelNum === 10) badgesToCheck.push('css-flexer')
           } else { // JavaScript Levels (11-15)
-            if (levelNum === 11) badgesToCheck.push('js-starter')
+            if (levelNum === 11) badgesToCheck.push('js-rookie')
             if (levelNum === 12) badgesToCheck.push('js-logician')
-            if (levelNum === 13) badgesToCheck.push('js-manipulator')
-            if (levelNum === 14) badgesToCheck.push('js-event-handler')
-            if (levelNum === 15) badgesToCheck.push('js-master')
+            if (levelNum === 13) badgesToCheck.push('js-engineer')
+            if (levelNum === 14) badgesToCheck.push('js-collector')
+            if (levelNum === 15) badgesToCheck.push('js-manipulator')
           }
           
           // Award badges not yet earned
@@ -289,11 +289,12 @@ export const useGameStore = defineStore('game', () => {
       'css-selector': 'Element Selector',
       'css-layouter': 'Layout Designer',
       'css-animator': 'Animation Creator',
-      'css-master': 'CSS Master',
-      'js-starter': 'JavaScript Starter',
-      'js-logician': 'Logic Master',
+      'css-flexer': 'Flexbox Master',
+      'js-rookie': 'JavaScript Rookie',
+      'js-logician': 'Code Logician',
+      'js-engineer': 'Function Engineer',
+      'js-collector': 'Data Collector',
       'js-manipulator': 'DOM Manipulator',
-      'js-event-handler': 'Event Handler',
       'js-master': 'JavaScript Master',
       'web-developer': 'Web Developer'
     }
