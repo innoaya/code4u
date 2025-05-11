@@ -88,8 +88,8 @@ Code4U/
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/edugame.git
-   cd edugame
+   git clone git@github.com:innoaya/code4u.git
+   cd code4u
    ```
 
 2. Install dependencies
