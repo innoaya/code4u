@@ -15,7 +15,10 @@ export const useGameStore = defineStore('game', () => {
   })
   const isLoading = ref(false)
   const error = ref(null)
-  
+
+  // Badge cache to avoid repeated Firestore queries
+  const badgeCache = ref({})  // Store badge data fetched from Firestore
+
   // Game state
   const gameStarted = ref(false)
   const gameCompleted = ref(false)
@@ -26,7 +29,7 @@ export const useGameStore = defineStore('game', () => {
   // Computed
   const isLoggedIn = computed(() => !!auth.currentUser)
   const currentUser = computed(() => auth.currentUser)
-  
+
   // Actions
   async function fetchUserProgress() {
     if (!auth.currentUser) return
@@ -34,7 +37,7 @@ export const useGameStore = defineStore('game', () => {
     try {
       isLoading.value = true
       error.value = null
-      
+
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
       if (userDoc.exists()) {
         userProgress.value = {
@@ -56,22 +59,22 @@ export const useGameStore = defineStore('game', () => {
     try {
       isLoading.value = true
       error.value = null
-      
+
       // Get level from Firestore
       const levelDoc = await getDoc(doc(db, 'levels', levelId))
-      
+
       if (levelDoc.exists()) {
         const levelData = levelDoc.data()
         console.log('Loaded level from Firestore:', levelData)
-        
+
         // Ensure learning objectives array exists and is not empty
         if (!levelData.learningObjectives || levelData.learningObjectives.length === 0) {
           console.warn('Learning objectives missing in Firestore data, adding default ones')
           levelData.learningObjectives = getMockLearningObjectives(levelData.number || 1)
         }
-        
+
         console.log('Learning objectives after check:', levelData.learningObjectives)
-        
+
         currentLevel.value = {
           id: levelDoc.id,
           ...levelData
@@ -83,7 +86,7 @@ export const useGameStore = defineStore('game', () => {
         currentLevel.value = getMockLevel(levelNum)
         console.log('Using mock level data:', currentLevel.value)
       }
-      
+
       // Reset game state
       gameStarted.value = false
       gameCompleted.value = false
@@ -107,36 +110,36 @@ export const useGameStore = defineStore('game', () => {
 
   async function completeLevel(levelId) {
     gameCompleted.value = true
-    
+
     if (!auth.currentUser) return
-    
+
     try {
       // Extract level number from levelId (e.g., 'level-1' => 1)
       const completedLevelNum = parseInt(levelId.split('-')[1], 10) || 0
-      
+
       // Get current user data to determine the correct next level
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
       const userData = userDoc.exists() ? userDoc.data() : { level: 1 }
-      
+
       // Determine the new level - should be the next sequential level
       // Only update level if the completed level is the current level
       // This prevents skipping levels if a user completes them out of order
-      const newLevel = (completedLevelNum === userData.level) ? 
-                      completedLevelNum + 1 : 
+      const newLevel = (completedLevelNum === userData.level) ?
+                      completedLevelNum + 1 :
                       Math.max(userData.level, completedLevelNum)
-      
+
       // Update user progress in Firestore
       await updateDoc(doc(db, 'users', auth.currentUser.uid), {
         completedLevels: arrayUnion(levelId),
         points: increment(currentLevel.value?.pointsToEarn || 100),
         level: newLevel
       })
-      
+
       // Update local state
       userProgress.value.completedLevels.push(levelId)
       userProgress.value.points += (currentLevel.value?.pointsToEarn || 100)
       userProgress.value.level = newLevel
-      
+
       // Record this activity
       await recordUserActivity('level_completed', {
         levelId,
@@ -145,17 +148,17 @@ export const useGameStore = defineStore('game', () => {
         category: currentLevel.value?.category,
         pointsEarned: currentLevel.value?.pointsToEarn || 100
       })
-      
+
       // Check if we should prompt for feedback after this level completion
       const feedbackStore = useFeedbackStore()
       if (currentLevel.value) {
         feedbackStore.showFeedbackFor(
-          levelId, 
-          currentLevel.value.number, 
+          levelId,
+          currentLevel.value.number,
           currentLevel.value.category
         )
       }
-      
+
       // Check for badges
       await checkForBadges()
     } catch (err) {
@@ -165,17 +168,17 @@ export const useGameStore = defineStore('game', () => {
 
   async function checkForBadges() {
     if (!auth.currentUser) return
-    
+
     try {
       // Check for individual level badges
       for (let levelNum = 1; levelNum <= 15; levelNum++) {
         const levelId = `level-${levelNum}`
-        
+
         // Check if level is completed
         if (userProgress.value.completedLevels.includes(levelId)) {
           // Determine which badges to check based on level number
           let badgesToCheck = []
-          
+
           if (levelNum <= 5) { // HTML Levels (1-5)
             if (levelNum === 1) badgesToCheck.push('html-apprentice')
             if (levelNum === 2) badgesToCheck.push('html-formatter')
@@ -195,7 +198,7 @@ export const useGameStore = defineStore('game', () => {
             if (levelNum === 14) badgesToCheck.push('js-collector')
             if (levelNum === 15) badgesToCheck.push('js-manipulator')
           }
-          
+
           // Award badges not yet earned
           for (const badgeId of badgesToCheck) {
             if (!userProgress.value.badges.includes(badgeId)) {
@@ -203,9 +206,9 @@ export const useGameStore = defineStore('game', () => {
                 badges: arrayUnion(badgeId)
               })
               userProgress.value.badges.push(badgeId)
-              
+
               // Record badge earned activity with correct name
-              const badgeName = getBadgeName(badgeId)
+              const badgeName = await getBadgeName(badgeId)
               await recordUserActivity('badge_earned', {
                 badgeId,
                 badgeName
@@ -214,12 +217,12 @@ export const useGameStore = defineStore('game', () => {
           }
         }
       }
-      
+
       // Check for category mastery badges
       const completedLevelNumbers = userProgress.value.completedLevels.map(
         id => parseInt(id.split('-')[1], 10)
       )
-      
+
       // HTML Master badge - all HTML levels complete
       const htmlComplete = [1, 2, 3, 4, 5].every(num => completedLevelNumbers.includes(num))
       if (htmlComplete && !userProgress.value.badges.includes('html-master')) {
@@ -232,7 +235,7 @@ export const useGameStore = defineStore('game', () => {
           badgeName: 'HTML Master'
         })
       }
-      
+
       // CSS Master badge - all CSS levels complete
       const cssComplete = [6, 7, 8, 9, 10].every(num => completedLevelNumbers.includes(num))
       if (cssComplete && !userProgress.value.badges.includes('css-master')) {
@@ -245,7 +248,7 @@ export const useGameStore = defineStore('game', () => {
           badgeName: 'CSS Master'
         })
       }
-      
+
       // JavaScript Master badge - all JS levels complete
       const jsComplete = [11, 12, 13, 14, 15].every(num => completedLevelNumbers.includes(num))
       if (jsComplete && !userProgress.value.badges.includes('js-master')) {
@@ -258,7 +261,7 @@ export const useGameStore = defineStore('game', () => {
           badgeName: 'JavaScript Master'
         })
       }
-      
+
       // Web Developer badge - all levels complete
       const allComplete = completedLevelNumbers.length >= 15
       if (allComplete && !userProgress.value.badges.includes('web-developer')) {
@@ -275,39 +278,43 @@ export const useGameStore = defineStore('game', () => {
       console.error('Error checking/awarding badges:', err)
     }
   }
-  
-  // Helper function to get badge name from ID
-  function getBadgeName(badgeId) {
-    const badgeNames = {
-      'html-apprentice': 'HTML Apprentice',
-      'html-formatter': 'Text Wizard',
-      'html-navigator': 'Web Navigator',
-      'html-illustrator': 'Web Illustrator',
-      'html-organizer': 'Data Organizer',
-      'html-master': 'HTML Master',
-      'css-stylist': 'CSS Stylist',
-      'css-selector': 'Element Selector',
-      'css-layouter': 'Layout Designer',
-      'css-animator': 'Animation Creator',
-      'css-flexer': 'Flexbox Master',
-      'js-rookie': 'JavaScript Rookie',
-      'js-logician': 'Code Logician',
-      'js-engineer': 'Function Engineer',
-      'js-collector': 'Data Collector',
-      'js-manipulator': 'DOM Manipulator',
-      'js-master': 'JavaScript Master',
-      'web-developer': 'Web Developer'
+
+  // Helper function to get badge name from ID - uses Firestore data with caching
+  async function getBadgeName(badgeId) {
+    // If badge is in cache, return name
+    if (badgeCache.value[badgeId]) {
+      return badgeCache.value[badgeId].name;
     }
-    
-    return badgeNames[badgeId] || 'Unknown Badge'
+
+    try {
+      // Try to fetch badge from Firestore
+      const badgeDoc = await getDoc(doc(db, 'badges', badgeId));
+
+      if (badgeDoc.exists()) {
+        // Add badge to cache
+        badgeCache.value[badgeId] = badgeDoc.data();
+        return badgeDoc.data().name;
+      }
+
+      // Fallback to formatted badge ID if not found
+      const formattedName = badgeId
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+
+      return formattedName;
+    } catch (error) {
+      console.error('Error fetching badge data:', error);
+      // Fallback with formatted badge ID
+      return badgeId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
   }
 
   function runCode(code) {
     if (!currentLevel.value || !currentLevel.value.tasks) return false
-    
+
     const task = currentLevel.value.tasks[currentTask.value]
     userCode.value = code
-    
+
     // Simple code checking logic - in a real app this would be more sophisticated
     if (code.includes(task.solution)) {
       codeOutput.value = task.expectedOutput
@@ -347,19 +354,19 @@ export const useGameStore = defineStore('game', () => {
       ],
       prerequisites: [],
       references: [
-        { 
-          title: `MDN Web Docs: ${getLevelCategory(levelNum)}`, 
-          url: `https://developer.mozilla.org/en-US/docs/Web/${getLevelCategory(levelNum)}` 
+        {
+          title: `MDN Web Docs: ${getLevelCategory(levelNum)}`,
+          url: `https://developer.mozilla.org/en-US/docs/Web/${getLevelCategory(levelNum)}`
         }
       ],
       tasks: getMockTasks(levelNum)
     }
   }
-  
+
   // Generate appropriate learning objectives based on level
   function getMockLearningObjectives(levelNum) {
     const category = getLevelCategory(levelNum)
-    
+
     if (category === 'HTML') {
       return [
         `Understand what HTML is and why it's important`,
@@ -421,7 +428,7 @@ export const useGameStore = defineStore('game', () => {
 
   function getMockTasks(levelNum) {
     const category = getLevelCategory(levelNum)
-    
+
     if (category === 'HTML') {
       return [
         {
@@ -522,12 +529,12 @@ export const useGameStore = defineStore('game', () => {
       console.log('No auth user found, cannot record activity');
       return;
     }
-    
+
     try {
       // Get current user data to include display name
       const currentUser = auth.currentUser;
       const userDisplayName = currentUser.displayName || 'Anonymous User';
-      
+
       console.log('Adding to Firestore:', activityType, 'for user', currentUser.uid);
       const docRef = await addDoc(collection(db, 'user_activities'), {
         userId: currentUser.uid,
@@ -544,7 +551,7 @@ export const useGameStore = defineStore('game', () => {
       console.error('Error recording user activity:', err);
     }
   }
-  
+
   // Function to fetch user activities
   async function fetchUserActivities(resultLimit = 5) {
     console.log('Fetching user activities with limit:', resultLimit);
@@ -552,10 +559,10 @@ export const useGameStore = defineStore('game', () => {
       console.log('No authenticated user, returning empty array');
       return [];
     }
-    
+
     try {
       console.log('Current user UID:', auth.currentUser.uid);
-      
+
       // Check specific document for debugging
       if (auth.currentUser.email === 'demo@codequest.edu') {
         console.log('Checking specific document for demo@codequest.edu');
@@ -571,7 +578,7 @@ export const useGameStore = defineStore('game', () => {
           console.error('Error fetching specific document:', err);
         }
       }
-      
+
       // General query for all user activities
       const q = query(
         collection(db, 'user_activities'),
@@ -579,24 +586,24 @@ export const useGameStore = defineStore('game', () => {
         orderBy('timestamp', 'desc'),
         limit(resultLimit)
       );
-      
+
       console.log('Executing Firestore query...');
       const snapshot = await getDocs(q);
       console.log(`Found ${snapshot.docs.length} activities`);
-      
+
       // Debugging query results
       snapshot.docs.forEach((doc, index) => {
         console.log(`Document ${index}:`, doc.id);
         console.log(`Data:`, doc.data());
       });
-      
+
       // Process each document
       const activities = snapshot.docs.map(doc => {
         const data = doc.data();
         const timestamp = data.timestamp;
-        
+
         let formattedDate = null;
-        
+
         // Handle different timestamp formats
         if (timestamp && typeof timestamp.toDate === 'function') {
           // Firestore Timestamp object
@@ -611,7 +618,7 @@ export const useGameStore = defineStore('game', () => {
           // No timestamp, use current time
           formattedDate = new Date();
         }
-        
+
         return {
           id: doc.id,
           ...data,
@@ -619,7 +626,7 @@ export const useGameStore = defineStore('game', () => {
           rawTimestamp: timestamp // Keep the original for debugging
         };
       });
-      
+
       console.log('Processed activities:', activities);
       return activities;
     } catch (err) {
@@ -627,7 +634,7 @@ export const useGameStore = defineStore('game', () => {
       return []
     }
   }
-  
+
   // Calculate progress by category
   function calculateCategoryProgress() {
     const totalLevels = {
@@ -635,17 +642,17 @@ export const useGameStore = defineStore('game', () => {
       'CSS': 5,   // Levels 6-10
       'JavaScript': 5 // Levels 11-15
     }
-    
+
     // Count completed levels by category
     const completedCount = {
       'HTML': 0,
       'CSS': 0,
       'JavaScript': 0
     }
-    
+
     userProgress.value.completedLevels.forEach(levelId => {
       const levelNum = parseInt(levelId.split('-')[1], 10)
-      
+
       if (levelNum <= 5) {
         completedCount['HTML']++
       } else if (levelNum <= 10) {
@@ -654,7 +661,7 @@ export const useGameStore = defineStore('game', () => {
         completedCount['JavaScript']++
       }
     })
-    
+
     // Calculate percentages
     return {
       HTML: Math.min(100, Math.round((completedCount['HTML'] / totalLevels['HTML']) * 100)),
@@ -674,11 +681,11 @@ export const useGameStore = defineStore('game', () => {
     currentTask,
     userCode,
     codeOutput,
-    
+
     // Computed
     isLoggedIn,
     currentUser,
-    
+
     // Actions
     fetchUserProgress,
     loadLevel,
@@ -686,7 +693,7 @@ export const useGameStore = defineStore('game', () => {
     completeLevel,
     runCode,
     nextTask,
-    
+
     // Progress tracking
     recordUserActivity,
     fetchUserActivities,
