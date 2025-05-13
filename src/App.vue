@@ -1,18 +1,42 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { onMounted, ref } from 'vue'
-import { auth } from './firebase'
+import { onMounted, ref, computed } from 'vue'
+import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import FloatingFeedbackButton from './components/FloatingFeedbackButton.vue'
 import AutoFeedbackPrompt from './components/AutoFeedbackPrompt.vue'
 
 const user = ref(null)
+const userRole = ref(null)
 const isLoading = ref(true)
 const isMenuOpen = ref(false)
 
+// Computed property to check if user is admin
+const isAdmin = computed(() => userRole.value === 'admin')
+
+async function fetchUserRole(userId) {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId))
+    if (userDoc.exists()) {
+      userRole.value = userDoc.data().role || null
+    }
+  } catch (error) {
+    console.error('Error fetching user role:', error)
+  }
+}
+
 onMounted(() => {
-  onAuthStateChanged(auth, (currentUser) => {
+  onAuthStateChanged(auth, async (currentUser) => {
     user.value = currentUser
+    
+    if (currentUser) {
+      // Fetch user role from Firestore
+      await fetchUserRole(currentUser.uid)
+    } else {
+      userRole.value = null
+    }
+    
     isLoading.value = false
   })
 })
@@ -60,6 +84,38 @@ function closeMenu() {
           <RouterLink v-if="user" @click="closeMenu" to="/profile" class="text-text-primary hover:text-primary transition-colors duration-200">
             Profile
           </RouterLink>
+          <!-- Admin Dropdown Menu for Desktop -->
+          <div v-if="isAdmin" class="relative group">
+            <button class="text-text-primary hover:text-primary transition-colors duration-200 flex items-center space-x-1 focus:outline-none">
+              <span>Admin</span>
+              <span class="ml-1 px-1.5 text-xs bg-primary text-white rounded">New</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-50 transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 origin-top-left">
+              <!-- Feedback Management -->
+              <RouterLink @click="closeMenu" to="/admin/feedback" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                  </svg>
+                  <span>Feedback Management</span>
+                </div>
+              </RouterLink>
+              
+              <!-- Placeholder for User Management (future feature) -->
+              <div class="block px-4 py-2 text-sm text-gray-400 cursor-not-allowed">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  <span>User Management</span>
+                  <span class="ml-2 px-1.5 text-xs bg-gray-200 text-gray-600 rounded">Coming soon</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Mobile Menu Button - visible only on mobile -->
@@ -146,6 +202,39 @@ function closeMenu() {
           >
             Profile
           </RouterLink>
+          <!-- Admin Section (Mobile) -->
+          <div v-if="isAdmin" class="px-3 py-2">
+            <div class="flex items-center text-base font-medium text-gray-600 mb-1">
+              <span>Admin</span>
+              <span class="ml-1 px-1.5 text-xs bg-primary text-white rounded">New</span>
+            </div>
+            <!-- Admin submenu items -->
+            <div class="ml-3 border-l-2 border-gray-200 pl-3 space-y-1">
+              <!-- Feedback Management -->
+              <RouterLink
+                @click="closeMenu"
+                to="/admin/feedback"
+                class="block py-2 text-base font-medium text-text-primary hover:text-primary"
+              >
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                  </svg>
+                  <span>Feedback Management</span>
+                </div>
+              </RouterLink>
+              <!-- User Management (coming soon) -->
+              <div class="block py-2 text-base font-medium text-gray-400 cursor-not-allowed">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  <span>User Management</span>
+                  <span class="ml-2 text-xs bg-gray-200 text-gray-600 rounded px-1">Soon</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

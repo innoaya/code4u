@@ -9,6 +9,13 @@ service cloud.firestore {
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
+    
+    // New helper function to check if user is an admin
+    function isAdmin() {
+      return isSignedIn() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
 
     // User profiles - public read access for leaderboard functionality
     match /users/{userId} {
@@ -17,48 +24,73 @@ service cloud.firestore {
       
       // But only allow users to create/update their own data
       allow create: if isSignedIn() && request.auth.uid == userId;
-      allow update: if isSignedIn() && request.auth.uid == userId && 
+      allow update: if isSignedIn() && (
+                      // Normal users can only update specific fields
+                      (request.auth.uid == userId && 
                       request.resource.data.diff(resource.data).affectedKeys()
-                      .hasOnly(['displayName', 'photoURL', 'level', 'points', 'badges', 'completedLevels', 'lastLogin', 'isFirstLogin']);
+                      .hasOnly(['displayName', 'photoURL', 'level', 'points', 'badges', 'completedLevels', 'lastLogin', 'isFirstLogin'])) ||
+                      // Admins can update any user
+                      isAdmin()
+                    );
       allow delete: if false;
     }
 
     // Level data - all authenticated users can read, only admins can modify
     match /levels/{levelId} {
       allow read: if isSignedIn();
-      allow write: if false; // Restrict level creation/modification to admin tools or server
+      allow write: if isAdmin(); // Allow admins to modify levels
     }
 
     // User activities - public read access for activity feed, restricted write
     match /user_activities/{activityId} {
       allow read: if true; // Public read access for activity feed
       allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if false;
+      allow update, delete: if isAdmin(); // Allow admins to update or delete activities
     }
 
     // Badges - read-only for all authenticated users
     match /badges/{badgeId} {
       allow read: if isSignedIn();
-      allow write: if false;
+      allow write: if isAdmin(); // Allow admins to manage badges
     }
 
     // Leaderboard data - public read access
     match /leaderboard/{entryId} {
       allow read: if true; // Allow everyone to read leaderboard data
-      allow write: if false; // Should be updated by server functions
+      allow write: if isAdmin(); // Allow admins to update leaderboard
     }
 
-    // Feedback collection - allow users to submit and read their own feedback
+    // Feedback collection - allow users to submit and read their own feedback, admins can read all
     match /feedback/{feedbackId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
+      allow read: if isSignedIn() && (
+                    resource.data.userId == request.auth.uid || // User can read their own feedback
+                    isAdmin() // Admins can read all feedback
+                  );
       allow create: if true; // Allow both signed-in and anonymous feedback
-      allow update, delete: if false; // No updating or deleting feedback once submitted
+      allow update: if isAdmin(); // Admins can update feedback status
+      allow delete: if isAdmin(); // Admins can delete feedback if needed
+    }
+    
+    // Feedback comments - allow admins to manage, users to read their own
+    match /feedback_comments/{commentId} {
+      allow read: if isSignedIn() && (
+                    exists(/databases/$(database)/documents/feedback/$(resource.data.feedbackId)) &&
+                    (
+                      get(/databases/$(database)/documents/feedback/$(resource.data.feedbackId)).data.userId == request.auth.uid || // User can read comments on their feedback
+                      isAdmin() // Admins can read all comments
+                    )
+                  );
+      allow create: if isSignedIn() && (
+                      request.resource.data.authorId == request.auth.uid || // User creating comment with their ID
+                      isAdmin() // Admins can create comments
+                    );
+      allow update, delete: if isAdmin(); // Only admins can update or delete comments
     }
 
     // Legal content - public read access, admin-only write access
     match /legal_content/{documentId} {
       allow read: if true; // Allow everyone to read legal documents
-      allow write: if false; // Restrict writing to admin tools or server
+      allow write: if isAdmin(); // Allow admins to update legal content
     }
   }
 }
