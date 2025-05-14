@@ -3,31 +3,31 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../firebase'
 import ActivityFeed from '../components/ActivityFeed.vue'
-import { useLearningPathStore } from '../stores/learningPathStore'
+import { useJourneyStore } from '../stores/journeyStore'
 
 const router = useRouter()
-const learningPathStore = useLearningPathStore()
+const journeyStore = useJourneyStore()
 const isLoggedIn = ref(!!auth.currentUser)
-const featuredPaths = ref([])
+const featuredJourneys = ref([])
 const isLoading = ref(true)
 
 onMounted(async () => {
-  // Fetch featured learning paths
+  // Fetch featured journeys
   isLoading.value = true
   try {
-    await learningPathStore.fetchAllPaths()
-    // Make sure learningPaths exists before filtering
-    if (learningPathStore.learningPaths) {
-      featuredPaths.value = learningPathStore.learningPaths
-        .filter(path => path.featured)
-        .slice(0, 3) // Show only the top 3 featured paths
+    await journeyStore.fetchAllJourneys()
+    // Make sure journeys exists before filtering
+    if (journeyStore.journeys) {
+      featuredJourneys.value = journeyStore.journeys
+        .filter(journey => journey.featured)
+        .slice(0, 3) // Show only the top 3 featured journeys
     } else {
-      console.warn('Learning paths not available yet')
-      featuredPaths.value = []
+      console.warn('Journeys not available yet')
+      featuredJourneys.value = []
     }
   } catch (error) {
-    console.error('Error fetching learning paths:', error)
-    featuredPaths.value = []
+    console.error('Error fetching journeys:', error)
+    featuredJourneys.value = []
   } finally {
     isLoading.value = false
   }
@@ -35,14 +35,14 @@ onMounted(async () => {
 
 const startLearning = () => {
   if (isLoggedIn.value) {
-    router.push('/learning-paths')
+    router.push('/journeys')
   } else {
-    router.push('/login?redirect=/learning-paths')
+    router.push('/login?redirect=/journeys')
   }
 }
 
-const viewPath = (pathId) => {
-  router.push(`/learning-path/${pathId}`)
+const viewJourney = (journeyId) => {
+  router.push(`/journey/${journeyId}`)
 }
 </script>
 
@@ -71,32 +71,32 @@ const viewPath = (pathId) => {
     </div>
     
     <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-      <!-- Featured Learning Paths -->
-      <div v-for="path in featuredPaths" :key="path.id" 
+      <!-- Featured Journeys -->
+      <div v-for="journey in featuredJourneys" :key="journey.id" 
            class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between">
         <div>
-          <div class="text-4xl mb-4">{{ path.icon }}</div>
-          <h3 class="text-xl font-semibold mb-2">{{ path.title }}</h3>
+          <div class="text-4xl mb-4">{{ journey.icon }}</div>
+          <h3 class="text-xl font-semibold mb-2">{{ journey.title }}</h3>
           <p class="text-text-secondary mb-4">
-            {{ path.description }}
+            {{ journey.description }}
           </p>
           <div class="flex flex-wrap gap-2 mb-4">
-            <span v-for="category in path.categories" :key="category"
+            <span v-for="category in journey.categories" :key="category"
                   class="text-xs px-2 py-1 bg-gray-100 rounded-full">
               {{ category }}
             </span>
           </div>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-sm text-gray-500">{{ path.estimatedHours }} hours</span>
-          <button @click="viewPath(path.id)" class="btn btn-primary">
-            View Path
+          <span class="text-sm text-gray-500">{{ journey.estimatedHours }} hours</span>
+          <button @click="viewJourney(journey.id)" class="btn btn-primary">
+            View Journey
           </button>
         </div>
       </div>
       
-      <!-- View All Paths Card -->
-      <div v-if="featuredPaths.length < 3" 
+      <!-- View All Journeys Card -->
+      <div v-if="featuredJourneys.length < 3" 
            class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between bg-gray-50 border-dashed border-2 border-gray-200">
         <div class="flex flex-col items-center justify-center h-full">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,8 +106,8 @@ const viewPath = (pathId) => {
           <p class="text-text-secondary mb-6 text-center">
             Explore all our journeys and find the perfect fit for your coding adventure
           </p>
-          <button @click="router.push('/learning-paths')" class="btn btn-secondary">
-            View All Paths
+          <button @click="router.push('/journeys')" class="btn btn-secondary">
+            View All Journeys
           </button>
         </div>
       </div>

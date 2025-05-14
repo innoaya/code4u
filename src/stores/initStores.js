@@ -1,20 +1,20 @@
 // Store initialization helper
-import { useLearningPathStore } from './learningPathStore';
+import { useJourneyStore } from './journeyStore';
 
 /**
  * Pre-load critical data for the application
  * This should be called early in the app lifecycle
  */
 export async function initializeStores() {
-  // Initialize the learning path store data
-  const learningPathStore = useLearningPathStore();
+  // Initialize the journey store data
+  const journeyStore = useJourneyStore();
   
   try {
-    // Pre-fetch learning paths
-    await learningPathStore.fetchAllPaths();
-    console.log('Learning paths pre-loaded successfully');
+    // Pre-fetch journeys
+    await journeyStore.fetchAllJourneys();
+    console.log('Journeys pre-loaded successfully');
   } catch (error) {
-    console.error('Error pre-loading learning paths:', error);
+    console.error('Error pre-loading journeys:', error);
   }
   
   // Add other store initializations here as needed

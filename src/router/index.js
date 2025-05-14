@@ -55,7 +55,7 @@ const router = createRouter({
     {
       path: '/journeys',
       name: 'journeys',
-      component: () => import('../views/LearningPathsView.vue'),
+      component: () => import('../views/JourneysView.vue'),
       meta: {
         title: 'Journeys - Code4U'
       }
@@ -66,9 +66,12 @@ const router = createRouter({
     },
     {
       path: '/journey/:id',
-      redirect: to => {
-        // Redirect old path format to new format
-        return { path: `/journey/${to.params.id}/levels` }
+      name: 'journey-detail',
+      component: () => import('../views/JourneyDetailView.vue'),
+      props: true,
+      beforeEnter: requireAuth,
+      meta: {
+        title: 'Journey Details - Code4U'
       }
     },
     {

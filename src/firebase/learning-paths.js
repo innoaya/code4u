@@ -1,17 +1,17 @@
 /**
- * Learning Paths Configuration for Code4U
+ * Journeys Configuration for Code4U
  *
- * This file defines the available learning paths for the Code4U platform.
- * Each path has its own set of levels, prerequisites, and metadata.
+ * This file defines the available journeys for the Code4U platform.
+ * Each journey has its own set of levels, prerequisites, and metadata.
  */
 
 import { db } from './index.js'
 import { collection, doc, getDocs, writeBatch, getDoc } from 'firebase/firestore'
 
 /**
- * Learning path definitions
+ * Journey definitions
  */
-export const learningPaths = [
+export const journeys = [
   {
     id: 'web-fundamentals',
     title: 'Web Development Fundamentals',
@@ -175,15 +175,16 @@ export const domManipulationLevels = [
 ];
 
 /**
- * Initialize learning paths in Firestore
+ * Initialize development journeys in Firestore
+ * @returns {boolean} Success status
  */
-export const initLearningPaths = async () => {
+export const initializeJourneys = async () => {
   try {
     console.log('Initializing learning paths...');
     const batch = writeBatch(db);
 
     // Add learning paths
-    for (const path of learningPaths) {
+    for (const path of journeys) {
       const pathRef = doc(db, 'learning_paths', path.id);
       batch.set(pathRef, path);
       console.log(`Added learning path: ${path.title}`);
@@ -332,62 +333,68 @@ const initLearningPathBadges = async () => {
 };
 
 /**
- * Fetch available learning paths
- * @returns {Array} Array of learning path objects
+ * Fetch available learning journeys
+ * @returns {Array} Array of learning journey objects
  */
-export const fetchLearningPaths = async () => {
+export async function fetchJourneys() {
   try {
-    const pathsSnapshot = await getDocs(collection(db, 'learning_paths'));
-    return pathsSnapshot.docs.map(doc => ({
+    const journeysSnapshot = await getDocs(collection(db, 'journeys'));
+    return journeysSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })).sort((a, b) => a.order - b.order);
   } catch (error) {
-    console.error('Error fetching learning paths:', error);
+    console.error('Error fetching journeys:', error);
     return [];
   }
 };
 
 /**
- * Fetch levels for a specific learning path
- * @param {string} pathId - ID of the learning path
+ * Fetch levels for a specific learning journey
+ * @param {string} journeyId - ID of the learning journey
  * @returns {Array} Array of level objects sorted by number
  */
-export const fetchPathLevels = async (pathId) => {
+export async function fetchJourneyLevels(journeyId) {
   try {
-    const path = await getDoc(doc(db, 'learning_paths', pathId));
+    const journey = await getDoc(doc(db, 'journeys', journeyId));
 
-    if (!path.exists()) {
-      throw new Error(`Learning path with ID ${pathId} not found`);
+    if (!journey.exists()) {
+      throw new Error(`Journey with ID ${journeyId} not found`);
     }
 
-    const pathData = path.data();
-    const levelIds = pathData.levelIds || [];
-
-    // Get all level documents for this path
-    const levels = [];
-
-    for (const levelId of levelIds) {
-      const levelDoc = await getDoc(doc(db, 'levels', levelId));
-      if (levelDoc.exists()) {
-        levels.push({
-          id: levelDoc.id,
-          ...levelDoc.data()
-        });
-      }
+    const journeyData = journey.data();
+    
+    // If no levels in the journey, return empty array
+    if (!journeyData.levelIds || !Array.isArray(journeyData.levelIds) || journeyData.levelIds.length === 0) {
+      return [];
     }
 
-    // Sort by number property
+    // Get all levels for this journey
+    const levelsPromises = journeyData.levelIds.map(levelId => 
+      getDoc(doc(db, 'levels', levelId))
+    );
+    
+    const levelDocs = await Promise.all(levelsPromises);
+    
+    // Map to array of level objects
+    const levels = levelDocs
+      .filter(doc => doc.exists())
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+    // Sort levels by their number property
     return levels.sort((a, b) => a.number - b.number);
   } catch (error) {
-    console.error(`Error fetching levels for path ${pathId}:`, error);
+    console.error(`Error fetching levels for journey ${journeyId}:`, error);
     return [];
   }
 };
 
 export default {
-  learningPaths,
-  initLearningPaths,
-  fetchLearningPaths,
-  fetchPathLevels
+  journeys,
+  initializeJourneys,
+  fetchJourneys,
+  fetchJourneyLevels
 };

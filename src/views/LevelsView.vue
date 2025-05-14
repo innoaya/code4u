@@ -4,37 +4,37 @@ import { useRouter, useRoute } from 'vue-router'
 import { auth, db } from '../firebase'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 import { trackPathSelected, trackLevelStarted } from '../firebase/analytics-utils'
-import { useLearningPathStore } from '../stores/learningPathStore'
+import { useJourneyStore } from '../stores/journeyStore'
 
 const router = useRouter()
 const route = useRoute()
-const learningPathStore = useLearningPathStore()
+const journeyStore = useJourneyStore()
 const levels = ref([])
 const userProgress = ref({
   currentLevel: 1,
   completedLevels: []
 })
 const isLoading = ref(true)
-const currentPath = ref(null)
+const currentJourney = ref(null)
 
 // Fetch levels and user progress
 onMounted(async () => {
   try {
     isLoading.value = true
 
-    // Get path ID from route
-    const pathId = route.params.pathId
+    // Get journey ID from route
+    const journeyId = route.params.pathId
 
-    // If a path ID was provided, fetch that specific path
-    if (pathId) {
-      await learningPathStore.fetchAllPaths()
-      currentPath.value = learningPathStore.learningPaths.find(p => p.id === pathId)
+    // If a journey ID was provided, fetch that specific journey
+    if (journeyId) {
+      await journeyStore.fetchAllJourneys()
+      currentJourney.value = journeyStore.journeys.find(j => j.id === journeyId)
 
-      if (currentPath.value) {
-        // Get levels for this path
-        const pathLevels = await learningPathStore.fetchPathLevels(pathId)
-        levels.value = pathLevels
-        trackPathSelected(pathId)
+      if (currentJourney.value) {
+        // Get levels for this journey
+        const journeyLevels = await journeyStore.fetchJourneyLevelsById(journeyId)
+        levels.value = journeyLevels
+        trackPathSelected(journeyId)
       }
     } else {
       // No path ID, get all levels
@@ -72,13 +72,12 @@ const goToLevel = (level) => {
     return
   }
 
-  // If we're in a learning path, store the path ID for back navigation
-  const pathId = route.params.pathId
-  if (pathId) {
-    localStorage.setItem('lastLearningPathId', pathId)
+  // If we're in a journey, store the journey ID for back navigation
+  const journeyId = route.params.pathId
+  if (journeyId) {
+    localStorage.setItem('lastJourneyId', journeyId)
   } else {
-    // Clear any previously stored path ID if we're in the general levels view
-    localStorage.removeItem('lastLearningPathId')
+    localStorage.removeItem('lastJourneyId')
   }
 
   // Track level start in analytics
@@ -98,8 +97,8 @@ const getLevelStatus = (level) => {
     return 'completed'
   }
 
-  // For learning path levels, check if previous levels are completed
-  if (currentPath.value) {
+  // For journey levels, check if previous levels are completed
+  if (currentJourney.value) {
     // Sort levels by number to ensure proper order
     const sortedLevels = [...levels.value].sort((a, b) => a.number - b.number)
 
@@ -132,30 +131,30 @@ const getLevelStatus = (level) => {
 
 <template>
   <div>
-    <!-- Show learning path context if available -->
-    <div v-if="currentPath" class="mb-8">
+    <!-- Show journey context if available -->
+    <div v-if="currentJourney" class="mb-8">
       <div class="flex items-center mb-4">
-        <button @click="router.push('/learning-paths')" class="mr-3 text-gray-500 hover:text-primary">
+        <button @click="router.push('/journeys')" class="mr-3 text-gray-500 hover:text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
         </button>
-        <h1 class="text-3xl font-bold">{{ currentPath.title }}</h1>
-        <div class="ml-3 text-2xl">{{ currentPath.icon }}</div>
+        <h1 class="text-3xl font-bold">{{ currentJourney.title }}</h1>
+        <div class="ml-3 text-2xl">{{ currentJourney.icon }}</div>
       </div>
-      <p class="text-gray-600 mb-4">{{ currentPath.description }}</p>
+      <p class="text-gray-600 mb-4">{{ currentJourney.description }}</p>
       <div class="flex items-center text-sm text-gray-500 mb-6">
-        <span>{{ currentPath.estimatedHours }} hours</span>
+        <span>{{ currentJourney.estimatedHours }} hours</span>
         <span class="mx-2">•</span>
         <span>{{ levels.length }} levels</span>
         <span class="mx-2">•</span>
         <span class="px-2 py-1 rounded-full"
               :class="{
-                'bg-green-100 text-green-800': currentPath.difficulty === 'Beginner',
-                'bg-blue-100 text-blue-800': currentPath.difficulty === 'Intermediate',
-                'bg-purple-100 text-purple-800': currentPath.difficulty === 'Advanced'
+                'bg-green-100 text-green-800': currentJourney.difficulty === 'Beginner',
+                'bg-blue-100 text-blue-800': currentJourney.difficulty === 'Intermediate',
+                'bg-purple-100 text-purple-800': currentJourney.difficulty === 'Advanced'
               }">
-          {{ currentPath.difficulty }}
+          {{ currentJourney.difficulty }}
         </span>
       </div>
     </div>
@@ -167,15 +166,15 @@ const getLevelStatus = (level) => {
     </div>
 
     <div v-else>
-      <!-- If we have a current path, show its levels -->
-      <div v-if="currentPath" class="mb-10">
+      <!-- If we have a current journey, show its levels -->
+      <div v-if="currentJourney" class="mb-10">
         <div class="flex items-center mb-6">
           <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mr-4 text-primary">
-            <span class="text-2xl">{{ currentPath.icon }}</span>
+            <span class="text-2xl">{{ currentJourney.icon }}</span>
           </div>
           <div>
             <h2 class="text-2xl font-bold">Your Journey</h2>
-            <p class="text-gray-600">{{ levels.length }} levels • {{ currentPath.estimatedHours }} hours journey</p>
+            <p class="text-gray-600">{{ levels.length }} levels • {{ currentJourney.estimatedHours }} hours journey</p>
           </div>
         </div>
 

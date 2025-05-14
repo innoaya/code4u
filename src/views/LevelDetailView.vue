@@ -46,12 +46,12 @@ const startLevel = () => {
 
 // Handle back navigation intelligently
 const goBack = () => {
-  // Check if the user came from a learning path levels view
-  const pathId = localStorage.getItem('lastLearningPathId')
+  // Check if the user came from a journey levels view
+  const journeyId = localStorage.getItem('lastJourneyId')
   
-  if (pathId) {
-    // Go back to the specific learning path levels
-    router.push(`/learning-path/${pathId}/levels`)
+  if (journeyId) {
+    // Go back to the specific journey levels
+    router.push(`/journey/${journeyId}/levels`)
   } else {
     // Go back to the general levels view
     router.push('/levels')
