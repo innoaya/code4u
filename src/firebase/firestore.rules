@@ -50,8 +50,14 @@ service cloud.firestore {
 
     // Badges - read-only for all authenticated users
     match /badges/{badgeId} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow write: if isAdmin(); // Allow admins to manage badges
+    }
+    
+    // Learning paths - read-only for all users, admin-only write access
+    match /learning_paths/{pathId} {
+      allow read: if true;
+      allow write: if isAdmin(); // Allow admins to manage learning paths
     }
 
     // Leaderboard data - public read access

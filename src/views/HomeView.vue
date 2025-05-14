@@ -1,18 +1,48 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../firebase'
 import ActivityFeed from '../components/ActivityFeed.vue'
+import { useLearningPathStore } from '../stores/learningPathStore'
 
 const router = useRouter()
+const learningPathStore = useLearningPathStore()
 const isLoggedIn = ref(!!auth.currentUser)
+const featuredPaths = ref([])
+const isLoading = ref(true)
+
+onMounted(async () => {
+  // Fetch featured learning paths
+  isLoading.value = true
+  try {
+    await learningPathStore.fetchAllPaths()
+    // Make sure learningPaths exists before filtering
+    if (learningPathStore.learningPaths) {
+      featuredPaths.value = learningPathStore.learningPaths
+        .filter(path => path.featured)
+        .slice(0, 3) // Show only the top 3 featured paths
+    } else {
+      console.warn('Learning paths not available yet')
+      featuredPaths.value = []
+    }
+  } catch (error) {
+    console.error('Error fetching learning paths:', error)
+    featuredPaths.value = []
+  } finally {
+    isLoading.value = false
+  }
+})
 
 const startLearning = () => {
   if (isLoggedIn.value) {
-    router.push('/levels')
+    router.push('/learning-paths')
   } else {
-    router.push('/login')
+    router.push('/login?redirect=/learning-paths')
   }
+}
+
+const viewPath = (pathId) => {
+  router.push(`/learning-path/${pathId}`)
 }
 </script>
 
@@ -25,50 +55,61 @@ const startLearning = () => {
       </div>
       <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">Welcome to Code4U</h1>
       <p class="text-xl text-text-secondary max-w-2xl mx-auto mb-8">
-        Embark on an exciting journey to master HTML, CSS, and JavaScript through interactive
-        challenges and fun coding games!
+        Embark on an exciting adventure through multiple coding journeys! Master web development
+        fundamentals, responsive design, and much more through interactive challenges.
       </p>
       <button @click="startLearning" class="btn btn-primary text-lg px-8 py-3">
-        Start Your Coding Adventure
+        Explore Journeys
       </button>
     </div>
 
-    <!-- Features Section -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-      <div class="card text-center hover:shadow-lg transition-shadow duration-300">
-        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+    <!-- Journeys Section -->
+    <h2 class="text-2xl font-bold mb-6 text-center">Featured Journeys</h2>
+    
+    <div v-if="isLoading" class="flex justify-center items-center h-64">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+    
+    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <!-- Featured Learning Paths -->
+      <div v-for="path in featuredPaths" :key="path.id" 
+           class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between">
+        <div>
+          <div class="text-4xl mb-4">{{ path.icon }}</div>
+          <h3 class="text-xl font-semibold mb-2">{{ path.title }}</h3>
+          <p class="text-text-secondary mb-4">
+            {{ path.description }}
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span v-for="category in path.categories" :key="category"
+                  class="text-xs px-2 py-1 bg-gray-100 rounded-full">
+              {{ category }}
+            </span>
+          </div>
         </div>
-        <h3 class="text-xl font-semibold mb-2">Learn HTML</h3>
-        <p class="text-text-secondary">
-          Master the building blocks of web pages with interactive HTML lessons and challenges.
-        </p>
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500">{{ path.estimatedHours }} hours</span>
+          <button @click="viewPath(path.id)" class="btn btn-primary">
+            View Path
+          </button>
+        </div>
       </div>
-
-      <div class="card text-center hover:shadow-lg transition-shadow duration-300">
-        <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+      
+      <!-- View All Paths Card -->
+      <div v-if="featuredPaths.length < 3" 
+           class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between bg-gray-50 border-dashed border-2 border-gray-200">
+        <div class="flex flex-col items-center justify-center h-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
+          <h3 class="text-xl font-semibold mb-2 text-center">Discover More</h3>
+          <p class="text-text-secondary mb-6 text-center">
+            Explore all our journeys and find the perfect fit for your coding adventure
+          </p>
+          <button @click="router.push('/learning-paths')" class="btn btn-secondary">
+            View All Paths
+          </button>
         </div>
-        <h3 class="text-xl font-semibold mb-2">Style with CSS</h3>
-        <p class="text-text-secondary">
-          Transform bland web pages into beautiful designs with CSS styling games and puzzles.
-        </p>
-      </div>
-
-      <div class="card text-center hover:shadow-lg transition-shadow duration-300">
-        <div class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold mb-2">JavaScript Magic</h3>
-        <p class="text-text-secondary">
-          Bring your websites to life with JavaScript, creating interactive elements and games.
-        </p>
       </div>
     </div>
 
@@ -79,7 +120,7 @@ const startLearning = () => {
         <div class="text-center">
           <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
           <h3 class="text-lg font-semibold mb-2">Choose a Path</h3>
-          <p class="text-text-secondary">Select your learning path: HTML, CSS, or JavaScript</p>
+          <p class="text-text-secondary">Select your journey: HTML, CSS, or JavaScript</p>
         </div>
         <div class="text-center">
           <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>

@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import FloatingFeedbackButton from './components/FloatingFeedbackButton.vue'
 import AutoFeedbackPrompt from './components/AutoFeedbackPrompt.vue'
+import { initializeStores } from './stores/initStores'
 
 const user = ref(null)
 const userRole = ref(null)
@@ -26,17 +27,20 @@ async function fetchUserRole(userId) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // Pre-load critical store data at application startup
+  await initializeStores()
+
   onAuthStateChanged(auth, async (currentUser) => {
     user.value = currentUser
-    
+
     if (currentUser) {
       // Fetch user role from Firestore
       await fetchUserRole(currentUser.uid)
     } else {
       userRole.value = null
     }
-    
+
     isLoading.value = false
   })
 })
@@ -69,8 +73,8 @@ function closeMenu() {
           <RouterLink @click="closeMenu" to="/" class="text-text-primary hover:text-primary transition-colors duration-200">
             Home
           </RouterLink>
-          <RouterLink @click="closeMenu" to="/levels" class="text-text-primary hover:text-primary transition-colors duration-200">
-            Levels
+          <RouterLink @click="closeMenu" to="/learning-paths" class="text-text-primary hover:text-primary transition-colors duration-200">
+            Journeys
           </RouterLink>
           <RouterLink @click="closeMenu" to="/leaderboard" class="text-text-primary hover:text-primary transition-colors duration-200">
             Leaderboard
@@ -93,7 +97,7 @@ function closeMenu() {
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </button>
-            <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-50 transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 origin-top-left">
+            <div class="absolute right-0 mt-6 w-64 bg-white shadow-lg rounded-md py-1 z-50 transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 origin-top-right admin-dropdown">
               <!-- Feedback Management -->
               <RouterLink @click="closeMenu" to="/admin/feedback" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <div class="flex items-center">
@@ -103,7 +107,7 @@ function closeMenu() {
                   <span>Feedback Management</span>
                 </div>
               </RouterLink>
-              
+
               <!-- Placeholder for User Management (future feature) -->
               <div class="block px-4 py-2 text-sm text-gray-400 cursor-not-allowed">
                 <div class="flex items-center">
@@ -111,7 +115,6 @@ function closeMenu() {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                   <span>User Management</span>
-                  <span class="ml-2 px-1.5 text-xs bg-gray-200 text-gray-600 rounded">Coming soon</span>
                 </div>
               </div>
             </div>
@@ -158,19 +161,11 @@ function closeMenu() {
         class="md:hidden absolute w-full bg-white shadow-md border-t border-gray-100 z-20"
       >
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <RouterLink
-            @click="closeMenu"
-            to="/"
-            class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:text-primary hover:bg-gray-50"
-          >
+          <RouterLink @click="closeMenu" to="/" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-50 hover:text-primary">
             Home
           </RouterLink>
-          <RouterLink
-            @click="closeMenu"
-            to="/levels"
-            class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:text-primary hover:bg-gray-50"
-          >
-            Levels
+          <RouterLink @click="closeMenu" to="/learning-paths" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-50 hover:text-primary">
+            Journeys
           </RouterLink>
           <RouterLink
             @click="closeMenu"
@@ -230,7 +225,6 @@ function closeMenu() {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                   <span>User Management</span>
-                  <span class="ml-2 text-xs bg-gray-200 text-gray-600 rounded px-1">Soon</span>
                 </div>
               </div>
             </div>

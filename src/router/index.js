@@ -53,10 +53,52 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/journeys',
+      name: 'journeys',
+      component: () => import('../views/LearningPathsView.vue'),
+      meta: {
+        title: 'Journeys - Code4U'
+      }
+    },
+    {
+      path: '/learning-paths',
+      redirect: '/journeys'
+    },
+    {
+      path: '/journey/:id',
+      redirect: to => {
+        // Redirect old path format to new format
+        return { path: `/journey/${to.params.id}/levels` }
+      }
+    },
+    {
+      path: '/learning-path/:id',
+      redirect: to => {
+        // Redirect old path format to new format
+        return { path: `/journey/${to.params.id}/levels` }
+      }
+    },
+    {
       path: '/levels',
       name: 'levels',
       component: () => import('../views/LevelsView.vue'),
       beforeEnter: requireAuth
+    },
+    {
+      path: '/journey/:pathId/levels',
+      name: 'journey-levels',
+      component: () => import('../views/LevelsView.vue'),
+      props: true,
+      beforeEnter: requireAuth,
+      meta: {
+        title: 'Journey Levels - Code4U'
+      }
+    },
+    {
+      path: '/learning-path/:pathId/levels',
+      redirect: to => {
+        return { path: `/journey/${to.params.pathId}/levels` }
+      }
     },
     {
       path: '/level/:id',

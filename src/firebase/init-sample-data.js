@@ -7,6 +7,7 @@
 import { auth, db } from './firebase-node.js'
 import { collection, doc, setDoc, writeBatch, getDoc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { initLearningPaths } from './learning-paths.js'
 
 // Sample HTML levels
 const htmlLevels = [
@@ -1063,7 +1064,10 @@ export async function initializeFirestore() {
       const badgeRef = doc(collection(db, 'badges'), badge.id);
       batch.set(badgeRef, badge);
     }
-    
+
+    // Initialize learning paths
+    await initLearningPaths();
+
     // Add legal documents
     // Terms of Service
     const termsRef = doc(collection(db, LEGAL_COLLECTION), 'terms_of_service');
@@ -1072,6 +1076,7 @@ export async function initializeFirestore() {
       batch.set(termsRef, DEFAULT_TERMS);
       console.log('Added default Terms of Service');
     }
+
     
     // Privacy Policy
     const privacyRef = doc(collection(db, LEGAL_COLLECTION), 'privacy_policy');

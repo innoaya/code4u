@@ -23,7 +23,7 @@ Code4U is an interactive educational web application designed to teach middle an
 - **Styling**: Tailwind CSS for responsive design with Roboto Mono as primary font
 - **Backend/Database**: Firebase suite of services:
   - **Authentication**: Email/password and Google SSO login
-  - **Firestore**: NoSQL database for user data, levels, activities, and feedback
+  - **Firestore**: NoSQL database for user data, levels, activities, badges, and feedback
   - **Storage**: Cloud storage for profile pictures, issue screenshots, and assets
   - **Rules**: Custom security rules for data protection and file uploads
 - **State Management**: Pinia for global state management
@@ -136,6 +136,13 @@ Code4U/
    
    The project contains security rules for:
    - `firestore.rules`: Database access controls
+     - **Important**: Make sure to allow public read access to the badges collection:
+     ```
+     match /badges/{badgeId} {
+       allow read: if true;
+       allow write: if false;
+     }
+     ```
    - `storage.rules`: File upload permissions and validations
 
 6. Initialize the database (optional for development)
@@ -176,6 +183,9 @@ Code4U/
 
 ### Gamification & Motivation
 - Achievement badges for completing modules and special challenges
+  - Centralized badge definitions in Firestore `/badges` collection
+  - Automatic badge awarding based on level completion
+  - Category-based badges (HTML, CSS, JavaScript, Achievement)
 - Points system for tracking progress
 - Community leaderboard to promote healthy competition
 - Activity feed showing community achievements
@@ -233,6 +243,7 @@ Code4U/
   lastLogin: timestamp
   isFirstLogin: boolean
   settings: object (user preferences)
+  role: string
 
 /levels/{levelId}/
   title: string

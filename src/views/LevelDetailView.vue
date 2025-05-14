@@ -44,6 +44,20 @@ const startLevel = () => {
   })
 }
 
+// Handle back navigation intelligently
+const goBack = () => {
+  // Check if the user came from a learning path levels view
+  const pathId = localStorage.getItem('lastLearningPathId')
+  
+  if (pathId) {
+    // Go back to the specific learning path levels
+    router.push(`/learning-path/${pathId}/levels`)
+  } else {
+    // Go back to the general levels view
+    router.push('/levels')
+  }
+}
+
 // Mock data for development until Firestore is set up
 const mockLevel = {
   id: levelId,
@@ -87,7 +101,7 @@ if (!level.value && !isLoading.value) {
       <!-- Level Info -->
       <div class="md:col-span-2">
         <div class="flex items-center mb-6">
-          <button @click="router.push('/levels')" class="btn bg-white border border-gray-300 mr-4">
+          <button @click="goBack()" class="btn bg-white border border-gray-300 mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
