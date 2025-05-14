@@ -54,10 +54,10 @@ service cloud.firestore {
       allow write: if isAdmin(); // Allow admins to manage badges
     }
     
-    // Learning paths - read-only for all users, admin-only write access
-    match /learning_paths/{pathId} {
+    // Journeys - read-only for all users, admin-only write access
+    match /journeys/{journeyId} {
       allow read: if true;
-      allow write: if isAdmin(); // Allow admins to manage learning paths
+      allow write: if isAdmin(); // Allow admins to manage journeys
     }
 
     // Leaderboard data - public read access

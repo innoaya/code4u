@@ -7,7 +7,7 @@
 import { auth, db } from './firebase-node.js'
 import { collection, doc, setDoc, writeBatch, getDoc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { initLearningPaths } from './learning-paths.js'
+import { initializeJourneys } from './journeys.js'
 
 // Sample HTML levels
 const htmlLevels = [
@@ -1065,8 +1065,8 @@ export async function initializeFirestore() {
       batch.set(badgeRef, badge);
     }
 
-    // Initialize learning paths
-    await initLearningPaths();
+    // Initialize journeys
+    await initializeJourneys();
 
     // Add legal documents
     // Terms of Service
