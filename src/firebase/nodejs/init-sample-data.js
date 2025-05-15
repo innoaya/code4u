@@ -4,10 +4,8 @@
  * Run this file once to set up your initial data structure
  */
 
-import { auth, db } from './firebase-node.js'
-import { collection, doc, setDoc, writeBatch, getDoc } from 'firebase/firestore'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { initializeJourneys } from './journeys.js'
+import { db } from './firebase-node.js'
+import { collection, doc, writeBatch, getDoc } from 'firebase/firestore'
 
 // Sample HTML levels
 const htmlLevels = [
@@ -1065,8 +1063,29 @@ export async function initializeFirestore() {
       batch.set(badgeRef, badge);
     }
 
-    // Initialize journeys
-    await initializeJourneys();
+    // Define the web fundamentals journey
+    const webFundamentalsJourney = {
+      id: 'web-fundamentals',
+      title: 'Web Development Fundamentals',
+      description: 'Learn the basics of HTML, CSS, and JavaScript to build simple websites',
+      icon: '🌐',
+      difficulty: 'Beginner',
+      estimatedHours: 15,
+      levelIds: ['level-1', 'level-2', 'level-3', 'level-4', 'level-5',
+                 'level-6', 'level-7', 'level-8', 'level-9', 'level-10',
+                 'level-11', 'level-12', 'level-13', 'level-14', 'level-15'],
+      prerequisites: [],
+      badgeId: 'web-developer',
+      categories: ['HTML', 'CSS', 'JavaScript'],
+      tags: ['beginner', 'fundamentals', 'web'],
+      featured: true,
+      order: 1
+    };
+
+    // Add journey to Firestore
+    const journeyRef = doc(collection(db, 'journeys'), webFundamentalsJourney.id);
+    batch.set(journeyRef, webFundamentalsJourney);
+    console.log(`Added journey: ${webFundamentalsJourney.title}`);
 
     // Add legal documents
     // Terms of Service
@@ -1077,7 +1096,7 @@ export async function initializeFirestore() {
       console.log('Added default Terms of Service');
     }
 
-    
+
     // Privacy Policy
     const privacyRef = doc(collection(db, LEGAL_COLLECTION), 'privacy_policy');
     const privacyDoc = await getDoc(privacyRef);
@@ -1097,53 +1116,7 @@ export async function initializeFirestore() {
   }
 }
 
-// Demo user for testing
-export async function createDemoUser() {
-  try {
-    const email = 'demo@codequest.edu';
-    const password = 'demo123';
-
-    // First, create the authentication user
-    let userCredential;
-    try {
-      // Try to create the user
-      userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('Demo authentication user created successfully!');
-    } catch (authError) {
-      if (authError.code === 'auth/email-already-in-use') {
-        // User already exists, just sign in to get the user credentials
-        console.log('Demo user already exists, signing in instead...');
-        userCredential = await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        // Other auth error
-        throw authError;
-      }
-    }
-
-    // Get the user UID from the authentication
-    const uid = userCredential.user.uid;
-
-    // Then create/update the user document in Firestore
-    const userRef = doc(collection(db, 'users'), uid);
-    await setDoc(userRef, {
-      displayName: 'Demo User',
-      email: email,
-      createdAt: new Date(),
-      level: 3,
-      points: 250,
-      completedLevels: ['level-1', 'level-2'],
-      badges: ['html-basics'],
-      lastActive: new Date()
-    });
-
-    console.log('Demo user data created successfully in Firestore!');
-    console.log('Demo Login Credentials:', { email, password });
-    return true;
-  } catch (error) {
-    console.error('Error creating demo user:', error);
-    return false;
-  }
-}
+// NOTE: Demo user functionality has been removed as the application uses Google SSO login only
 
 // Uncomment to run the initialization when this file is executed directly
-initializeFirestore().then(() => createDemoUser());
+initializeFirestore();

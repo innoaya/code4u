@@ -22,7 +22,7 @@ Code4U is an interactive educational web application designed to teach middle an
 - **Frontend**: Vue.js 3 with Composition API
 - **Styling**: Tailwind CSS for responsive design with Roboto Mono as primary font
 - **Backend/Database**: Firebase suite of services:
-  - **Authentication**: Email/password and Google SSO login
+  - **Authentication**: Google SSO login
   - **Firestore**: NoSQL database for user data, levels, activities, badges, and feedback
   - **Storage**: Cloud storage for profile pictures, issue screenshots, and assets
   - **Rules**: Custom security rules for data protection and file uploads
@@ -45,12 +45,14 @@ Code4U/
 │   │   └── ...
 │   ├── firebase/           # Firebase configuration and utilities
 │   │   ├── index.js             # Firebase browser initialization
-│   │   ├── firebase-node.js     # Firebase Node.js initialization
 │   │   ├── analytics-utils.js   # Analytics tracking utilities
 │   │   ├── firestore.rules      # Firestore security rules
-│   │   ├── init-sample-data.js  # Sample data initialization script
+│   │   ├── journeys.js          # Client-side journey functions
 │   │   ├── legal-utils.js       # Legal document utilities
-│   │   └── storage-utils.js     # Firebase Storage utilities
+│   │   ├── storage-utils.js     # Firebase Storage utilities
+│   │   └── nodejs/              # Node.js specific scripts
+│   │       ├── firebase-node.js     # Firebase Node.js initialization
+│   │       └── init-sample-data.js  # Sample data initialization script
 │   ├── router/             # Vue Router configuration
 │   ├── stores/             # Pinia store modules
 │   │   ├── gameStore.js    # Game state and progress management
@@ -146,10 +148,9 @@ Code4U/
    - `storage.rules`: File upload permissions and validations
 
 6. Initialize the database (optional for development)
-   - Uncomment the initialization code in `src/firebase/init-sample-data.js`
    - Run the initialization script:
    ```bash
-   node src/firebase/init-sample-data.js
+   node src/firebase/nodejs/init-sample-data.js
    ```
 
 7. Start the development server
@@ -162,8 +163,8 @@ Code4U/
 ## Features & Components
 
 ### Authentication & User Management
-- User registration and login powered by Firebase Authentication
-- Google SSO integration for quick onboarding
+- User authentication powered by Firebase Authentication
+- Google SSO integration for login and registration
 - Custom profile management with display name editing
 - Profile picture upload and management with Firebase Storage
 - First-time user onboarding flow
