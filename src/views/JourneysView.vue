@@ -19,11 +19,25 @@ const availableJourneys = computed(() => {
     return []; // Return empty array if no journeys are loaded yet
   }
 
-  // Always return all journeys
-  return journeyStore.journeys;
+  // Get the journeys that are not in progress or completed
+  if (isLoggedIn.value) {
+    // Get the IDs of in-progress and completed journeys
+    const inProgressIds = inProgressJourneys.value.map(journey => journey.id);
+    const completedIds = completedJourneys.value.map(journey => journey.id);
+    const excludedIds = [...inProgressIds, ...completedIds];
+
+    // Filter out in-progress and completed journeys
+    return journeyStore.journeys.filter(journey =>
+      !excludedIds.includes(journey.id)
+    );
+  } else {
+    // If not logged in, show all journeys
+    return journeyStore.journeys;
+  }
 })
-const inProgressJourneys = computed(() => journeyStore.inProgressJourneys)
 const completedJourneys = computed(() => journeyStore.completedJourneys)
+const inProgressJourneys = computed(() => journeyStore.inProgressJourneys)
+
 const isLoggedIn = computed(() => !!auth.currentUser)
 
 // Load all journeys and user progress
@@ -31,12 +45,14 @@ onMounted(async () => {
   isLoading.value = true
 
   try {
-    // Fetch all journeys
-    await journeyStore.fetchAllJourneys()
-
-    // If user is logged in, fetch their progress
+    // If user is logged in, use the refreshJourneyProgress function to get fresh data
     if (isLoggedIn.value) {
-      await journeyStore.fetchUserJourneyProgress()
+      console.log('Refreshing journey progress data...')
+      // This will fetch all journeys and the latest user progress in one call
+      await journeyStore.refreshJourneyProgress()
+    } else {
+      // If not logged in, just fetch the journeys
+      await journeyStore.fetchAllJourneys()
     }
   } catch (error) {
     console.error('Error loading journeys:', error)
@@ -93,22 +109,6 @@ const getPrerequisiteNames = (journey) => {
   })
 }
 
-// Calculate completion percentage for a journey
-const calculateCompletionPercentage = (journey) => {
-  // If progress information exists in the journey object, use it
-  if (journey.progress && typeof journey.progress.completionPercentage === 'number') {
-    return journey.progress.completionPercentage
-  }
-
-  // Otherwise, calculate it manually
-  const userProgress = journeyStore.userJourneyProgress?.[journey.id]
-  if (!userProgress) return 0
-
-  const totalLevels = journey.levelIds?.length || 0
-  const completedLevels = userProgress.completedLevels?.length || 0
-
-  return totalLevels > 0 ? Math.round((completedLevels / totalLevels) * 100) : 0
-}
 </script>
 
 <template>
@@ -122,8 +122,6 @@ const calculateCompletionPercentage = (journey) => {
     <div v-else>
       <!-- User's Journeys (In-Progress & Completed) -->
       <div v-if="isLoggedIn && (inProgressJourneys.length > 0 || completedJourneys.length > 0)" class="mb-12">
-        <h2 class="text-2xl font-semibold mb-6">Your Learning Journeys</h2>
-
         <!-- In Progress Journeys -->
         <div v-if="inProgressJourneys.length > 0" class="mb-8">
           <h3 class="text-xl font-medium mb-4">In Progress</h3>
@@ -142,9 +140,9 @@ const calculateCompletionPercentage = (journey) => {
                 <!-- Progress bar -->
                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                   <div class="bg-primary h-2.5 rounded-full"
-                      :style="`width: ${calculateCompletionPercentage(journey)}%`"></div>
+                      :style="`width: ${journey.progress.completionPercentage}%`"></div>
                 </div>
-                <p class="text-sm text-right mt-1">{{ calculateCompletionPercentage(journey) }}% complete</p>
+                <p class="text-sm text-right mt-1">{{ journey.progress.completionPercentage }}% complete</p>
               </div>
 
               <button @click="viewJourney(journey)" class="btn btn-primary w-full">

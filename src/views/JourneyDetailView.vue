@@ -27,22 +27,22 @@ const isJourneyCompleted = computed(() => !!journeyProgress.value?.completed)
 // Fetch journey details on mount
 onMounted(async () => {
   isLoading.value = true
-  
+
   try {
     // If user is logged in, fetch their progress first
     if (isLoggedIn.value) {
       await journeyStore.fetchUserJourneyProgress()
     }
-    
+
     // Fetch journey details (includes the journey and its levels)
     const { journey, levels: journeyLevels } = await journeyStore.fetchJourneyDetails(journeyId.value)
-    
+
     if (!journey) {
       // Journey not found, redirect to main journeys page
       router.push('/journeys')
       return
     }
-    
+
     levels.value = journeyLevels
   } catch (error) {
     console.error('Error loading journey details:', error)
@@ -57,7 +57,7 @@ const startJourney = async () => {
     router.push(`/login?redirect=/journey/${journeyId.value}`)
     return
   }
-  
+
   try {
     isLoading.value = true
     await journeyStore.startJourney(journeyId.value)
@@ -81,7 +81,7 @@ const continueJourney = () => {
     <div v-if="isLoading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
     </div>
-    
+
     <div v-else-if="currentJourney">
       <!-- Journey Header -->
       <div class="mb-8">
@@ -94,9 +94,9 @@ const continueJourney = () => {
           <h1 class="text-3xl font-bold">{{ currentJourney.title }}</h1>
           <div class="ml-3 text-2xl">{{ currentJourney.icon }}</div>
         </div>
-        
+
         <p class="text-gray-600 mb-4">{{ currentJourney.description }}</p>
-        
+
         <div class="flex items-center text-sm text-gray-500 mb-6">
           <span>{{ currentJourney.estimatedHours }} hours</span>
           <span class="mx-2">•</span>
@@ -111,7 +111,7 @@ const continueJourney = () => {
             {{ currentJourney.difficulty }}
           </span>
         </div>
-        
+
         <!-- Categories & Tags -->
         <div class="mb-6">
           <div class="flex flex-wrap gap-2">
@@ -125,21 +125,21 @@ const continueJourney = () => {
             </span>
           </div>
         </div>
-        
+
         <!-- Action Buttons -->
         <div class="mb-8">
-          <button v-if="!isJourneyStarted" 
-                  @click="startJourney" 
+          <button v-if="!isJourneyStarted"
+                  @click="startJourney"
                   class="btn btn-primary mr-4">
             Start Journey
           </button>
-          
+
           <button v-else-if="isJourneyCompleted"
                   @click="continueJourney"
                   class="btn btn-secondary mr-4">
             Review Journey
           </button>
-          
+
           <button v-else
                   @click="continueJourney"
                   class="btn btn-primary mr-4">
@@ -147,37 +147,37 @@ const continueJourney = () => {
           </button>
         </div>
       </div>
-      
+
       <!-- Journey Levels -->
       <h2 class="text-2xl font-bold mb-6">Journey Levels</h2>
-      
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="level in levels" :key="level.id" 
+        <div v-for="level in levels" :key="level.id"
             class="card p-6 hover:shadow-lg transition-all">
           <div class="flex justify-between items-start mb-4">
             <h3 class="text-xl font-semibold">{{ level.title }}</h3>
             <span class="text-2xl">{{ level.number }}</span>
           </div>
-          
+
           <p class="text-gray-600 mb-4">{{ level.description }}</p>
-          
+
           <div class="flex justify-between items-center text-sm text-gray-500 mb-6">
             <span>{{ level.estimatedTime }}</span>
             <span>{{ level.pointsToEarn }} points</span>
           </div>
-          
+<!--
           <button :disabled="!isJourneyStarted"
                   @click="router.push(`/level/${level.id}`)"
                   :class="[
-                    'w-full', 
+                    'w-full',
                     isJourneyStarted ? 'btn btn-primary' : 'btn btn-disabled'
                   ]">
             {{ isJourneyStarted ? 'Start Level' : 'Start Journey First' }}
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
-    
+
     <div v-else class="text-center py-16">
       <h2 class="text-2xl font-bold mb-4">Journey Not Found</h2>
       <p class="text-gray-600 mb-6">The journey you're looking for doesn't exist or has been removed.</p>

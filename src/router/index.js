@@ -69,7 +69,7 @@ const router = createRouter({
       name: 'journey-detail',
       component: () => import('../views/JourneyDetailView.vue'),
       props: true,
-      beforeEnter: requireAuth,
+      //beforeEnter: requireAuth,
       meta: {
         title: 'Journey Details - Code4U'
       }
