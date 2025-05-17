@@ -1,14 +1,15 @@
-# Code4U - Interactive Web Development Learning Platform
+# Code4U - Interactive Programming Learning Platform
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-green.svg)](https://github.com/innoaya/code4u)
 
-Code4U is an interactive educational web application designed to teach middle and high school students the fundamentals of web development through gamified learning experiences. Students can learn HTML, CSS, and JavaScript through interactive challenges and progress tracking.
+Code4U is an interactive educational web application designed to teach middle and high school students programming fundamentals through gamified learning experiences. Students can learn various programming languages including HTML, CSS, JavaScript, Python, Java, C#, PHP and more through customizable journeys, interactive challenges, and comprehensive progress tracking.
 
 ## Features
 
 - **Interactive Learning**: Hands-on coding challenges with real-time feedback
 - **Gamified Experience**: Progress tracking, badges, and a leaderboard to motivate students
-- **Multi-level Curriculum**: Structured learning path from HTML basics to advanced JavaScript
+- **Multi-language Support**: Create custom journeys for any programming language or technology
+- **Flexible Curriculum**: Structured learning paths from basics to advanced concepts across various languages
 - **User Authentication**: Secure login and registration system using Firebase with Google SSO
 - **Profile Management**: Customizable user profiles with display names and profile pictures
 - **Responsive Design**: Works on desktops, tablets, and mobile devices
@@ -23,7 +24,7 @@ Code4U is an interactive educational web application designed to teach middle an
 - **Styling**: Tailwind CSS for responsive design with Roboto Mono as primary font
 - **Backend/Database**: Firebase suite of services:
   - **Authentication**: Google SSO login
-  - **Firestore**: NoSQL database for user data, levels, activities, badges, and feedback
+  - **Firestore**: NoSQL database for user data, journeys, levels, activities, badges, and feedback
   - **Storage**: Cloud storage for profile pictures, issue screenshots, and assets
   - **Rules**: Custom security rules for data protection and file uploads
 - **State Management**: Pinia for global state management

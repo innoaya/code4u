@@ -97,12 +97,13 @@ export const useJourneyStore = defineStore('journey', () => {
   })
 
   // Actions
-  async function fetchAllJourneys() {
+  async function fetchAllJourneys(includeUnpublished = false) {
     try {
       isLoading.value = true;
       error.value = null;
 
-      const paths = await fetchJourneys();
+      // Pass the includeUnpublished parameter - admin views will set this to true
+      const paths = await fetchJourneys(includeUnpublished);
       journeys.value = paths;
 
       return paths;
@@ -256,10 +257,25 @@ export const useJourneyStore = defineStore('journey', () => {
     try {
       // Only proceed if user is logged in
       if (!auth.currentUser) return false;
+      
+      // Check user role to determine if we should include unpublished journeys
+      let userRole = null;
+      let includeUnpublished = false;
+      
+      try {
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (userDoc.exists()) {
+          userRole = userDoc.data().role || 'user';
+          // Admin and creators can see unpublished journeys
+          includeUnpublished = (userRole === 'admin' || userRole === 'creator');
+        }
+      } catch (e) {
+        console.error('Error checking user role:', e);
+      }
 
       // First get fresh journey data if needed
       if (journeys.value.length === 0) {
-        await fetchAllJourneys();
+        await fetchAllJourneys(includeUnpublished);
       }
 
       // Then get fresh user data
@@ -298,9 +314,24 @@ export const useJourneyStore = defineStore('journey', () => {
     if (!auth.currentUser) return false;
 
     try {
+      // Check user role to determine if we should include unpublished journeys
+      let userRole = null;
+      let includeUnpublished = false;
+      
+      try {
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (userDoc.exists()) {
+          userRole = userDoc.data().role || 'user';
+          // Admin and creators can see unpublished journeys
+          includeUnpublished = (userRole === 'admin' || userRole === 'creator');
+        }
+      } catch (e) {
+        console.error('Error checking user role:', e);
+      }
+      
       // Ensure we have journeys loaded
       if (journeys.value.length === 0) {
-        await fetchAllJourneys();
+        await fetchAllJourneys(includeUnpublished);
       }
 
       if (journeys.value.length === 0) {

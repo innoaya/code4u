@@ -1,5 +1,6 @@
 // Store initialization helper
 import { useJourneyStore } from './journeyStore';
+import { useUserStore } from './userStore';
 
 /**
  * Pre-load critical data for the application
@@ -8,6 +9,9 @@ import { useJourneyStore } from './journeyStore';
 export async function initializeStores() {
   // Initialize the journey store data
   const journeyStore = useJourneyStore();
+  
+  // Initialize the user store - initialization happens in the store itself
+  useUserStore();
   
   try {
     // Pre-fetch journeys

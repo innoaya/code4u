@@ -1,5 +1,11 @@
 <template>
   <div class="admin-level-form">
+    <!-- Breadcrumb Navigation -->
+    <AdminBreadcrumbs 
+      :itemId="levelId" 
+      :itemTitle="isEditing ? level.title || 'Edit Level' : 'New Level'" 
+    />
+    
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">{{ isEditing ? 'Edit' : 'Create' }} Level</h1>
       <router-link to="/admin/levels" class="text-blue-600 hover:underline">
@@ -11,7 +17,7 @@
       <form @submit.prevent="saveLevel">
         <div class="p-6 border-b border-gray-200">
           <h2 class="text-lg font-medium mb-4">Level Information</h2>
-          
+
           <!-- Basic Information -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <!-- ID -->
@@ -24,7 +30,7 @@
                   id="level-id"
                   v-model="level.id"
                   :disabled="isEditing"
-                  class="flex-1 focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm border-gray-300"
+                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm"
                   :class="{ 'bg-gray-100': isEditing }"
                   placeholder="level-1"
                 />
@@ -42,7 +48,7 @@
                   id="level-number"
                   v-model="level.number"
                   min="1"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
                   placeholder="1"
                 />
               </div>
@@ -77,7 +83,7 @@
                   name="level-title"
                   id="level-title"
                   v-model="level.title"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
                   placeholder="HTML Fundamentals: Your First Web Page"
                 />
               </div>
@@ -92,7 +98,7 @@
                   id="level-description"
                   v-model="level.description"
                   rows="3"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
                   placeholder="Learn the basic building blocks of every website..."
                 ></textarea>
               </div>
@@ -127,12 +133,12 @@
                   v-model="level.pointsToEarn"
                   min="50"
                   step="50"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   placeholder="100"
                 />
               </div>
             </div>
-            
+
             <!-- Estimated Time -->
             <div>
               <label for="level-time" class="block text-sm font-medium text-gray-700">Estimated Time</label>
@@ -142,7 +148,7 @@
                   name="level-time"
                   id="level-time"
                   v-model="level.estimatedTime"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   placeholder="30 minutes"
                 />
               </div>
@@ -163,13 +169,39 @@
               </select>
               <p class="mt-1 text-sm text-gray-500">Hold ctrl/cmd to select multiple</p>
             </div>
+
+            <!-- Published Toggle -->
+            <div class="col-span-1 md:col-span-2 bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
+              <label for="level-published" class="block text-sm font-medium text-gray-700 mb-2">Publishing Status</label>
+              <div class="flex items-center space-x-2">
+                <div class="relative inline-block h-6 w-11">
+                  <input
+                    type="checkbox"
+                    id="level-published"
+                    v-model="level.isPublished"
+                    class="appearance-none h-6 w-11 rounded-full cursor-pointer bg-gray-300 checked:bg-green-500 transition-colors duration-200 ease-in-out focus:outline-none focus:ring focus:ring-offset-2 focus:ring-green-300"
+                  />
+                  <span
+                    class="pointer-events-none absolute left-0 top-0 h-6 w-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out"
+                    :class="{ 'translate-x-5': level.isPublished }"
+                  ></span>
+                </div>
+                <span class="text-sm text-gray-500">{{ level.isPublished ? 'This level is published and visible to users' : 'This level is unpublished and only visible to admins and creators' }}</span>
+              </div>
+              <p class="text-sm text-gray-500 mt-3">
+                <span class="font-medium">Note for creators:</span> Instead of deleting content, you can toggle this switch to unpublish levels temporarily. This keeps your content in the system while making it invisible to regular users.
+              </p>
+              <p class="text-sm text-blue-600 mt-1">
+                Only administrators can permanently delete content. If you need to remove something permanently, please contact an admin.
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Learning Objectives and Applications -->
         <div class="p-6 border-b border-gray-200">
           <h2 class="text-lg font-medium mb-4">Learning Content</h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <!-- Learning Objectives -->
             <div>
@@ -179,20 +211,20 @@
                   <input
                     type="text"
                     v-model="level.learningObjectives[index]"
-                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="Understand what HTML is and why it's important"
                   />
-                  <button 
-                    type="button" 
-                    @click="removeObjective(index)" 
+                  <button
+                    type="button"
+                    @click="removeObjective(index)"
                     class="ml-2 text-red-600"
                   >
                     ×
                   </button>
                 </div>
-                <button 
-                  type="button" 
-                  @click="addObjective" 
+                <button
+                  type="button"
+                  @click="addObjective"
                   class="mt-2 text-sm text-blue-600 hover:text-blue-800"
                 >
                   + Add Learning Objective
@@ -208,20 +240,20 @@
                   <input
                     type="text"
                     v-model="level.realWorldApplications[index]"
-                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="Creating your own personal web page"
                   />
-                  <button 
-                    type="button" 
-                    @click="removeApplication(index)" 
+                  <button
+                    type="button"
+                    @click="removeApplication(index)"
                     class="ml-2 text-red-600"
                   >
                     ×
                   </button>
                 </div>
-                <button 
-                  type="button" 
-                  @click="addApplication" 
+                <button
+                  type="button"
+                  @click="addApplication"
                   class="mt-2 text-sm text-blue-600 hover:text-blue-800"
                 >
                   + Add Real World Application
@@ -238,26 +270,26 @@
                 <input
                   type="text"
                   v-model="level.references[index].title"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-1/3 sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-1/3 sm:text-sm border-gray-300 rounded-md"
                   placeholder="MDN Web Docs: HTML Basics"
                 />
                 <input
                   type="url"
                   v-model="level.references[index].url"
-                  class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-2/3 sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-2/3 sm:text-sm border-gray-300 rounded-md"
                   placeholder="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics"
                 />
-                <button 
-                  type="button" 
-                  @click="removeReference(index)" 
+                <button
+                  type="button"
+                  @click="removeReference(index)"
                   class="sm:ml-2 text-red-600"
                 >
                   ×
                 </button>
               </div>
-              <button 
-                type="button" 
-                @click="addReference" 
+              <button
+                type="button"
+                @click="addReference"
                 class="mt-2 text-sm text-blue-600 hover:text-blue-800"
               >
                 + Add Reference
@@ -274,7 +306,7 @@
                 name="level-tags"
                 id="level-tags"
                 v-model="tagsInput"
-                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
                 placeholder="HTML, Web Basics, Document Structure"
               />
             </div>
@@ -427,7 +459,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { db } from '@/firebase';
+import { auth, db } from '@/firebase';
+import AdminBreadcrumbs from '@/components/AdminBreadcrumbs.vue';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 
 const route = useRoute();
@@ -450,7 +483,10 @@ const level = ref({
   realWorldApplications: [''],
   references: [{ title: '', url: '' }],
   tags: [],
-  tasks: []
+  tasks: [],
+  createdBy: '',
+  createdAt: new Date(),
+  isPublished: true // Default to published for new levels
 });
 
 const tagsInput = ref('');
@@ -476,21 +512,21 @@ onMounted(async () => {
       title: doc.data().title,
       ...doc.data()
     }));
-    
+
     // If editing, load the level
     if (isEditing.value && levelId.value) {
       const levelDoc = await getDoc(doc(db, 'levels', levelId.value));
-      
+
       if (levelDoc.exists()) {
         const levelData = levelDoc.data();
         level.value = { ...levelData, id: levelDoc.id };
-        
+
         // Initialize arrays if they don't exist
         if (!level.value.learningObjectives) level.value.learningObjectives = [''];
         if (!level.value.realWorldApplications) level.value.realWorldApplications = [''];
         if (!level.value.references) level.value.references = [{ title: '', url: '' }];
         if (!level.value.tasks) level.value.tasks = [];
-        
+
         // Set tags input from array
         if (levelData.tags && Array.isArray(levelData.tags)) {
           tagsInput.value = levelData.tags.join(', ');
@@ -579,18 +615,18 @@ async function saveLevel() {
     alert('Level title and ID are required');
     return;
   }
-  
+
   try {
     isSaving.value = true;
-    
+
     // Ensure level.id is properly formatted
     level.value.id = level.value.id.trim().toLowerCase().replace(/\s+/g, '-');
-    
+
     // Filter out empty strings from arrays
     level.value.learningObjectives = level.value.learningObjectives.filter(obj => obj.trim());
     level.value.realWorldApplications = level.value.realWorldApplications.filter(app => app.trim());
     level.value.references = level.value.references.filter(ref => ref.title.trim() || ref.url.trim());
-    
+
     // Process tags from the input field
     if (tagsInput.value) {
       level.value.tags = tagsInput.value
@@ -598,16 +634,22 @@ async function saveLevel() {
         .map(tag => tag.trim())
         .filter(tag => tag);
     }
-    
+
     // Check if tasks have required fields
     level.value.tasks.forEach((task, index) => {
       if (!task.id) task.id = `task${index + 1}`;
       if (!task.title) task.title = `Task ${index + 1}`;
     });
-    
+
+    // Set creator information if creating new level
+    if (!isEditing.value) {
+      level.value.createdBy = auth.currentUser?.uid || '';
+      level.value.createdAt = new Date();
+    }
+
     // Save to Firestore
     await setDoc(doc(db, 'levels', level.value.id), level.value);
-    
+
     // Navigate back to level list
     router.push('/admin/levels');
   } catch (err) {

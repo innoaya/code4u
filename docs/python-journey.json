@@ -1,0 +1,971 @@
+[
+  {
+    "id": "python-level-1",
+    "number": 1,
+    "title": "Python Basics — Start Coding with Python!",
+    "description": "Begin your Python programming journey! Learn core concepts such as variables, data types, and basic operations to write simple yet powerful scripts.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 300,
+    "estimatedTime": "45 minutes",
+    "prerequisites": [],
+    "learningObjectives": [
+      "Understand Python and why it’s widely used",
+      "Learn Python’s fundamental data types and variables",
+      "Perform basic arithmetic operations"
+    ],
+    "realWorldApplications": [
+      "Automate simple daily tasks",
+      "Write scripts to process data",
+      "Build foundation for web and data applications"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial",
+        "url": "https://docs.python.org/3/tutorial/index.html"
+      },
+      {
+        "title": "W3Schools Python Tutorial",
+        "url": "https://www.w3schools.com/python/python_intro.asp"
+      },
+      { "title": "Real Python: Python Basics", "url": "https://realpython.com/python-basics/" }
+    ],
+    "tags": ["Python", "Programming", "Variables", "Data Types"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Declare Python Variables",
+        "description": "Create variables named name, age, and is_student with appropriate data types (string, integer, boolean).",
+        "initialCode": "# Your code here:\n",
+        "solution": "name =",
+        "expectedOutput": "Variables created successfully!",
+        "errorHint": "Declare variables like: name = \"Alex\", age = 20, is_student = True."
+      },
+      {
+        "id": "task2",
+        "title": "Perform Arithmetic Operations",
+        "description": "Create two number variables and perform addition, subtraction, multiplication, and division. Store results in variables.",
+        "initialCode": "num1 = 15\nnum2 = 3\n\n# Your code here:\n",
+        "solution": "add =",
+        "expectedOutput": "Calculations performed successfully!",
+        "errorHint": "Use operators +, -, *, / and assign results like: add = num1 + num2"
+      },
+      {
+        "id": "task3",
+        "title": "Use Input and Output",
+        "description": "Write a program that asks for user's name and age, then prints a greeting message including both.",
+        "initialCode": "# Your code here:\n",
+        "solution": "input(",
+        "expectedOutput": "Greeting displayed successfully!",
+        "errorHint": "Use input() to get user input and print() to display the greeting."
+      }
+    ]
+  },
+  {
+    "id": "python-level-2",
+    "number": 2,
+    "title": "Python Conditionals — Make Decisions in Your Code",
+    "description": "Learn to use conditional statements to create programs that can make decisions and take different actions based on user input or data conditions.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 350,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Basics — Start Coding with Python!"],
+    "learningObjectives": [
+      "Understand if, elif, and else statements",
+      "Use comparison and logical operators",
+      "Implement decision-making logic"
+    ],
+    "realWorldApplications": [
+      "Validate user input in forms",
+      "Build simple text-based games",
+      "Filter data based on conditions"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: if Statements",
+        "url": "https://docs.python.org/3/tutorial/controlflow.html#if-statements"
+      },
+      {
+        "title": "W3Schools Python Conditions",
+        "url": "https://www.w3schools.com/python/python_conditions.asp"
+      },
+      {
+        "title": "Real Python: Python Conditional Statements",
+        "url": "https://realpython.com/python-conditional-statements/"
+      }
+    ],
+    "tags": ["Python", "Conditionals", "Logic", "Decision Making"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Check Voting Eligibility",
+        "description": "Write a program to check if a person is eligible to vote (18 or older). Print appropriate message.",
+        "initialCode": "age = 17\n\n# Your code here:\n",
+        "solution": "if age",
+        "expectedOutput": "Conditional check successful!",
+        "errorHint": "Use an if-else statement to check if age is at least 18."
+      },
+      {
+        "id": "task2",
+        "title": "Grade Calculator",
+        "description": "Convert a numeric score (0–100) into a letter grade using if, elif, else statements.",
+        "initialCode": "score = 75\n\n# Your code here:\n",
+        "solution": "elif score",
+        "expectedOutput": "Grade calculated successfully!",
+        "errorHint": "Use if, elif, else to check score ranges and assign grades."
+      },
+      {
+        "id": "task3",
+        "title": "Check Even or Odd",
+        "description": "Ask user to input a number and print whether it is even or odd.",
+        "initialCode": "# Your code here:\n",
+        "solution": "% 2",
+        "expectedOutput": "Even/Odd check successful!",
+        "errorHint": "Use the modulus operator % to check divisibility by 2."
+      }
+    ]
+  },
+  {
+    "id": "python-level-3",
+    "number": 3,
+    "title": "Python Functions — Write Reusable Code",
+    "description": "Discover how to create functions to write reusable, modular, and organized Python code that improves readability and maintenance.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Conditionals — Make Decisions in Your Code"],
+    "learningObjectives": [
+      "Define and call functions",
+      "Pass parameters to functions",
+      "Return values from functions"
+    ],
+    "realWorldApplications": [
+      "Automate repeated tasks",
+      "Create modular scripts and tools",
+      "Build larger applications with cleaner code"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Functions",
+        "url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions"
+      },
+      {
+        "title": "W3Schools Python Functions",
+        "url": "https://www.w3schools.com/python/python_functions.asp"
+      },
+      {
+        "title": "Real Python: Defining Your Own Python Function",
+        "url": "https://realpython.com/defining-your-own-python-function/"
+      }
+    ],
+    "tags": ["Python", "Functions", "Modularity", "Parameters"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Define a Greeting Function",
+        "description": "Create a function greet that accepts a name and returns \"Hello, [name]!\".",
+        "initialCode": "# Your code here:\n\n# Test your function\nprint(greet(\"Alex\"))\n",
+        "solution": "def greet",
+        "expectedOutput": "Function created successfully!",
+        "errorHint": "Define the function using def and ensure it returns the greeting string."
+      },
+      {
+        "id": "task2",
+        "title": "Calculator Function",
+        "description": "Write a function calculate that takes num1, num2, and operation (add, subtract, multiply, divide) and returns the result.",
+        "initialCode": "# Your code here:\n\n# Test your function\nprint(calculate(10, 5, \"add\"))\n",
+        "solution": "def calculate",
+        "expectedOutput": "Calculator function created successfully!",
+        "errorHint": "Use def and conditionals to perform the specified operation."
+      },
+      {
+        "id": "task3",
+        "title": "Check Palindrome Function",
+        "description": "Create a function is_palindrome that returns True if a string is palindrome, else False.",
+        "initialCode": "# Your code here:\n\n# Test your function\nprint(is_palindrome(\"racecar\"))\n",
+        "solution": "def is_palindrome",
+        "expectedOutput": "Palindrome check successful!",
+        "errorHint": "Define the function and compare the string to its reverse."
+      }
+    ]
+  },
+  {
+    "id": "python-level-4",
+    "number": 4,
+    "title": "Python Lists — Manage Collections of Data",
+    "description": "Learn how to create, access, and modify lists, one of Python's most versatile data structures.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Functions — Write Reusable Code"],
+    "learningObjectives": [
+      "Create and access list elements",
+      "Modify lists by adding/removing items",
+      "Loop through lists"
+    ],
+    "realWorldApplications": [
+      "Manage to-do lists",
+      "Store user input data",
+      "Process data collections"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Data Structures",
+        "url": "https://docs.python.org/3/tutorial/datastructures.html#more-on-lists"
+      },
+      {
+        "title": "W3Schools Python Lists",
+        "url": "https://www.w3schools.com/python/python_lists.asp"
+      },
+      {
+        "title": "Real Python: Python Lists and List Manipulation",
+        "url": "https://realpython.com/python-lists-tuples/"
+      }
+    ],
+    "tags": ["Python", "Lists", "Data Structures", "Loops"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create and Modify a List",
+        "description": "Create a list of fruits, add and remove items, and print the final list.",
+        "initialCode": "# Your code here:\n",
+        "solution": "fruits =",
+        "expectedOutput": "List modified successfully!",
+        "errorHint": "Use list syntax like fruits = ['apple', 'banana'] and methods like append() and pop()."
+      },
+      {
+        "id": "task2",
+        "title": "Loop Through a List",
+        "description": "Write a loop to print each item in a list of student names.",
+        "initialCode": "students = ['Emma', 'Liam', 'Olivia']\n\n# Your code here:\n",
+        "solution": "for student in",
+        "expectedOutput": "List loop successful!",
+        "errorHint": "Use a for loop like: for student in students:"
+      },
+      {
+        "id": "task3",
+        "title": "Find Item in List",
+        "description": "Create a function to check if a name exists in a list of students.",
+        "initialCode": "# Your code here:\n\n# Test your function\nprint(find_student('Liam', students))\n",
+        "solution": "def find_student",
+        "expectedOutput": "Search function created successfully!",
+        "errorHint": "Define a function and use 'in' operator to check membership."
+      }
+    ]
+  },
+  {
+    "id": "python-level-5",
+    "number": 5,
+    "title": "Python Dictionaries — Store Data with Keys",
+    "description": "Learn to use dictionaries for storing data in key-value pairs, ideal for structured information.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 450,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Lists — Manage Collections of Data"],
+    "learningObjectives": [
+      "Create and access dictionary elements",
+      "Modify dictionary entries",
+      "Use dictionaries for real-world data"
+    ],
+    "realWorldApplications": [
+      "Store user profiles",
+      "Map keys to values efficiently",
+      "Work with JSON-like data"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Dictionaries",
+        "url": "https://docs.python.org/3/tutorial/datastructures.html#dictionaries"
+      },
+      {
+        "title": "W3Schools Python Dictionaries",
+        "url": "https://www.w3schools.com/python/python_dictionaries.asp"
+      },
+      {
+        "title": "Real Python: Dictionaries in Python",
+        "url": "https://realpython.com/python-dicts/"
+      }
+    ],
+    "tags": ["Python", "Dictionaries", "Data Structures", "Key-Value"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create and Access a Dictionary",
+        "description": "Create a dictionary for a person's info (name, age, city) and print the age.",
+        "initialCode": "# Your code here:\n",
+        "solution": "person =",
+        "expectedOutput": "Dictionary accessed successfully!",
+        "errorHint": "Use dictionary syntax like person = {'name': 'Alex', 'age': 30} and access by person['age']."
+      },
+      {
+        "id": "task2",
+        "title": "Modify Dictionary Entries",
+        "description": "Add a new key-value pair 'is_student': True to the dictionary and print it.",
+        "initialCode": "person = {'name': 'Alex', 'age': 30}\n\n# Your code here:\n",
+        "solution": "person['is_student']",
+        "expectedOutput": "Dictionary modified successfully!",
+        "errorHint": "Add entries like: person['is_student'] = True."
+      },
+      {
+        "id": "task3",
+        "title": "Loop Through Dictionary",
+        "description": "Loop through the dictionary and print all keys and values.",
+        "initialCode": "person = {'name': 'Alex', 'age': 30, 'is_student': True}\n\n# Your code here:\n",
+        "solution": "for key, value in",
+        "expectedOutput": "Dictionary loop successful!",
+        "errorHint": "Use a for loop: for key, value in person.items():"
+      }
+    ]
+  },
+  {
+    "id": "python-level-6",
+    "number": 6,
+    "title": "Python Loops — Automate Repetitive Tasks",
+    "description": "Master for and while loops to automate repetitive tasks and iterate over data structures.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Dictionaries — Store Data with Keys"],
+    "learningObjectives": [
+      "Understand for and while loops",
+      "Loop through lists and dictionaries",
+      "Use loops with conditional statements"
+    ],
+    "realWorldApplications": [
+      "Process multiple data entries",
+      "Automate batch operations",
+      "Create iterative game mechanics"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Loops",
+        "url": "https://docs.python.org/3/tutorial/controlflow.html#for-statements"
+      },
+      {
+        "title": "W3Schools Python For Loops",
+        "url": "https://www.w3schools.com/python/python_for_loops.asp"
+      },
+      {
+        "title": "Real Python: Python While Loops",
+        "url": "https://realpython.com/python-while-loop/"
+      }
+    ],
+    "tags": ["Python", "Loops", "Automation", "Control Flow"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Loop Through a List",
+        "description": "Use a for loop to print all items in a list of colors.",
+        "initialCode": "colors = ['red', 'green', 'blue']\n\n# Your code here:\n",
+        "solution": "for color in",
+        "expectedOutput": "Loop executed successfully!",
+        "errorHint": "Use a for loop like: for color in colors:"
+      },
+      {
+        "id": "task2",
+        "title": "Sum Numbers Using a Loop",
+        "description": "Use a while loop to sum numbers from 1 to 10 and print the result.",
+        "initialCode": "# Your code here:\n",
+        "solution": "while",
+        "expectedOutput": "Sum calculated successfully!",
+        "errorHint": "Use a while loop with a counter variable to accumulate the sum."
+      },
+      {
+        "id": "task3",
+        "title": "Loop with Conditionals",
+        "description": "Print only the even numbers from a list using a loop and if statement.",
+        "initialCode": "numbers = [1,2,3,4,5,6]\n\n# Your code here:\n",
+        "solution": "if num % 2",
+        "expectedOutput": "Filtered numbers printed successfully!",
+        "errorHint": "Inside the loop, use an if statement to check if the number is even."
+      }
+    ]
+  },
+  {
+    "id": "python-level-7",
+    "number": 7,
+    "title": "Python Strings — Work with Text Data",
+    "description": "Learn how to manipulate strings for text processing, formatting, and analysis.",
+    "category": "Python",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["Python Loops — Automate Repetitive Tasks"],
+    "learningObjectives": [
+      "Manipulate strings and use built-in string methods",
+      "Format strings with f-strings and format()",
+      "Analyze string content"
+    ],
+    "realWorldApplications": [
+      "Process user input and display messages",
+      "Format reports and logs",
+      "Parse and clean data"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Strings",
+        "url": "https://docs.python.org/3/tutorial/introduction.html#strings"
+      },
+      {
+        "title": "W3Schools Python Strings",
+        "url": "https://www.w3schools.com/python/python_strings.asp"
+      },
+      {
+        "title": "Real Python: Working with Strings",
+        "url": "https://realpython.com/python-strings/"
+      }
+    ],
+    "tags": ["Python", "Strings", "Text Processing", "Formatting"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "String Concatenation",
+        "description": "Combine first and last names into a full name string and print it.",
+        "initialCode": "first_name = \"John\"\nlast_name = \"Doe\"\n\n# Your code here:\n",
+        "solution": "+",
+        "expectedOutput": "Concatenated string printed!",
+        "errorHint": "Use the + operator to concatenate strings."
+      },
+      {
+        "id": "task2",
+        "title": "String Formatting",
+        "description": "Use f-strings to create a formatted greeting message.",
+        "initialCode": "name = \"Alice\"\nage = 30\n\n# Your code here:\n",
+        "solution": "f\"",
+        "expectedOutput": "Formatted message displayed!",
+        "errorHint": "Use an f-string like: f\"Hello, {name}! You are {age}.\""
+      },
+      {
+        "id": "task3",
+        "title": "Count Characters",
+        "description": "Count and print the number of times a specific character appears in a string.",
+        "initialCode": "text = \"hello world\"\nchar = \"l\"\n\n# Your code here:\n",
+        "solution": "count(",
+        "expectedOutput": "Character count printed!",
+        "errorHint": "Use the count() method of string objects."
+      }
+    ]
+  },
+  {
+    "id": "python-level-8",
+    "number": 8,
+    "title": "Python File Handling — Read and Write Files",
+    "description": "Learn to read from and write to files, enabling your programs to work with persistent data.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 450,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["Python Strings — Work with Text Data"],
+    "learningObjectives": [
+      "Open, read, and write text files",
+      "Work with file contexts using with statements",
+      "Handle file exceptions"
+    ],
+    "realWorldApplications": [
+      "Store program data persistently",
+      "Read configuration and log files",
+      "Process large datasets"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: File I/O",
+        "url": "https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files"
+      },
+      {
+        "title": "W3Schools Python File Handling",
+        "url": "https://www.w3schools.com/python/python_file_handling.asp"
+      },
+      {
+        "title": "Real Python: Reading and Writing Files",
+        "url": "https://realpython.com/read-write-files-python/"
+      }
+    ],
+    "tags": ["Python", "File Handling", "Input/Output", "Persistence"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Write to a File",
+        "description": "Write a list of names to a text file named 'names.txt'.",
+        "initialCode": "# Your code here:\n",
+        "solution": "open('names.txt'",
+        "expectedOutput": "File written successfully!",
+        "errorHint": "Use open() with mode 'w' and write() or writelines()."
+      },
+      {
+        "id": "task2",
+        "title": "Read from a File",
+        "description": "Read the contents of 'names.txt' and print each line.",
+        "initialCode": "# Your code here:\n",
+        "solution": "open('names.txt'",
+        "expectedOutput": "File read successfully!",
+        "errorHint": "Use open() with mode 'r' and readlines() or iterate over the file object."
+      },
+      {
+        "id": "task3",
+        "title": "File Context Manager",
+        "description": "Use a with statement to safely read 'names.txt' and print the lines.",
+        "initialCode": "# Your code here:\n",
+        "solution": "with open(",
+        "expectedOutput": "File read with context manager successfully!",
+        "errorHint": "Use with open(filename) as f: to handle files."
+      }
+    ]
+  },
+  {
+    "id": "python-level-9",
+    "number": 9,
+    "title": "Python Modules and Packages — Organize Your Code",
+    "description": "Learn to organize your code into modules and packages for better structure and reusability.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 450,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["Python File Handling — Read and Write Files"],
+    "learningObjectives": [
+      "Import and use Python standard modules",
+      "Create your own modules",
+      "Understand package structure"
+    ],
+    "realWorldApplications": [
+      "Reuse code across projects",
+      "Leverage third-party libraries",
+      "Maintain large codebases"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Modules",
+        "url": "https://docs.python.org/3/tutorial/modules.html"
+      },
+      {
+        "title": "W3Schools Python Modules",
+        "url": "https://www.w3schools.com/python/python_modules.asp"
+      },
+      {
+        "title": "Real Python: Python Modules and Packages",
+        "url": "https://realpython.com/python-modules-packages/"
+      }
+    ],
+    "tags": ["Python", "Modules", "Packages", "Code Organization"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Import a Standard Module",
+        "description": "Import the math module and print the value of pi.",
+        "initialCode": "# Your code here:\n",
+        "solution": "import math",
+        "expectedOutput": "Module imported and used successfully!",
+        "errorHint": "Use import math and access math.pi."
+      },
+      {
+        "id": "task2",
+        "title": "Create and Import a Module",
+        "description": "Create a module with a function that returns a greeting. Import and use it in another script.",
+        "initialCode": "# Your code here:\n",
+        "solution": "def greet",
+        "expectedOutput": "Custom module function executed!",
+        "errorHint": "Define the function in a .py file and import it properly."
+      },
+      {
+        "id": "task3",
+        "title": "Use Package Structure",
+        "description": "Explain how to structure a package with __init__.py and multiple modules.",
+        "initialCode": "# Your explanation here:\n",
+        "solution": "__init__.py",
+        "expectedOutput": "Package structure explained successfully!",
+        "errorHint": "Remember __init__.py initializes the package."
+      }
+    ]
+  },
+  {
+    "id": "python-level-10",
+    "number": 10,
+    "title": "Python Exceptions — Handle Errors Gracefully",
+    "description": "Learn to anticipate and handle runtime errors using try, except, else, and finally blocks.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 450,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["Python Modules and Packages — Organize Your Code"],
+    "learningObjectives": [
+      "Understand exception handling concepts",
+      "Use try, except, else, finally blocks",
+      "Raise custom exceptions"
+    ],
+    "realWorldApplications": [
+      "Build robust programs",
+      "Handle user input errors",
+      "Manage file and network errors"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Errors and Exceptions",
+        "url": "https://docs.python.org/3/tutorial/errors.html"
+      },
+      {
+        "title": "W3Schools Python Try Except",
+        "url": "https://www.w3schools.com/python/python_try_except.asp"
+      },
+      {
+        "title": "Real Python: Python Exceptions",
+        "url": "https://realpython.com/python-exceptions/"
+      }
+    ],
+    "tags": ["Python", "Exceptions", "Error Handling", "Robust Code"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Basic Try Except",
+        "description": "Write code that attempts to convert user input to int and handles ValueError.",
+        "initialCode": "# Your code here:\n",
+        "solution": "try:",
+        "expectedOutput": "Exception handled successfully!",
+        "errorHint": "Use try-except blocks to catch exceptions."
+      },
+      {
+        "id": "task2",
+        "title": "Use Else and Finally",
+        "description": "Add else and finally blocks to a try-except structure to demonstrate flow.",
+        "initialCode": "# Your code here:\n",
+        "solution": "else:",
+        "expectedOutput": "Else and finally blocks executed!",
+        "errorHint": "Use else for code that runs if no exception, finally for cleanup."
+      },
+      {
+        "id": "task3",
+        "title": "Raise Custom Exception",
+        "description": "Create and raise a custom exception when input is invalid.",
+        "initialCode": "# Your code here:\n",
+        "solution": "raise ValueError",
+        "expectedOutput": "Custom exception raised successfully!",
+        "errorHint": "Use raise to throw exceptions with a message."
+      }
+    ]
+  },
+  {
+    "id": "python-level-11",
+    "number": 11,
+    "title": "Python List Comprehensions — Write Cleaner Loops",
+    "description": "Learn to create concise and readable list comprehensions to replace traditional loops.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["Python Loops — Automate Repetitive Tasks"],
+    "learningObjectives": [
+      "Understand list comprehensions syntax",
+      "Create lists using comprehensions with conditions",
+      "Improve code readability and efficiency"
+    ],
+    "realWorldApplications": [
+      "Transform and filter data efficiently",
+      "Generate lists dynamically",
+      "Simplify data processing code"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: List Comprehensions",
+        "url": "https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions"
+      },
+      {
+        "title": "W3Schools Python List Comprehensions",
+        "url": "https://www.w3schools.com/python/python_lists_comprehension.asp"
+      },
+      {
+        "title": "Real Python: List Comprehensions",
+        "url": "https://realpython.com/list-comprehensions-python/"
+      }
+    ],
+    "tags": ["Python", "List Comprehensions", "Loops", "Data Processing"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Basic List Comprehension",
+        "description": "Use list comprehension to create a list of squares from 1 to 10.",
+        "initialCode": "# Your code here:\n",
+        "solution": "[x**2 for x in",
+        "expectedOutput": "List comprehension created successfully!",
+        "errorHint": "Use syntax: [expression for item in iterable]"
+      },
+      {
+        "id": "task2",
+        "title": "List Comprehension with Condition",
+        "description": "Create a list of even numbers between 1 and 20 using list comprehension with an if condition.",
+        "initialCode": "# Your code here:\n",
+        "solution": "[x for x in",
+        "expectedOutput": "Filtered list created successfully!",
+        "errorHint": "Add if condition: [x for x in range(...) if x % 2 == 0]"
+      },
+      {
+        "id": "task3",
+        "title": "Nested List Comprehension",
+        "description": "Create a list of tuples (x, y) for x in 1-3 and y in 1-3 using nested list comprehension.",
+        "initialCode": "# Your code here:\n",
+        "solution": "[(x, y) for x in",
+        "expectedOutput": "Nested list comprehension successful!",
+        "errorHint": "Use syntax: [(x, y) for x in ... for y in ...]"
+      }
+    ]
+  },
+  {
+    "id": "python-level-12",
+    "number": 12,
+    "title": "Python Classes and Objects — Introduction to OOP",
+    "description": "Explore object-oriented programming by defining classes, creating objects, and understanding attributes and methods.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["Python Functions — Write Reusable Code"],
+    "learningObjectives": [
+      "Define classes and create objects",
+      "Use instance variables and methods",
+      "Understand the basics of OOP"
+    ],
+    "realWorldApplications": [
+      "Model real-world entities",
+      "Structure larger programs",
+      "Use OOP libraries and frameworks"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Classes",
+        "url": "https://docs.python.org/3/tutorial/classes.html"
+      },
+      {
+        "title": "W3Schools Python Classes",
+        "url": "https://www.w3schools.com/python/python_classes.asp"
+      },
+      {
+        "title": "Real Python: Object-Oriented Programming",
+        "url": "https://realpython.com/python3-object-oriented-programming/"
+      }
+    ],
+    "tags": ["Python", "OOP", "Classes", "Objects"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Define a Simple Class",
+        "description": "Define a class Person with attributes name and age, and create an object.",
+        "initialCode": "# Your code here:\n",
+        "solution": "class Person",
+        "expectedOutput": "Class and object created successfully!",
+        "errorHint": "Use class keyword and define __init__ method."
+      },
+      {
+        "id": "task2",
+        "title": "Add a Method",
+        "description": "Add a greet method to the Person class that returns a greeting message.",
+        "initialCode": "# Your code here:\n",
+        "solution": "def greet",
+        "expectedOutput": "Method added successfully!",
+        "errorHint": "Define a method inside the class with self parameter."
+      },
+      {
+        "id": "task3",
+        "title": "Create Multiple Objects",
+        "description": "Create multiple Person objects with different attributes and print their greetings.",
+        "initialCode": "# Your code here:\n",
+        "solution": "Person(",
+        "expectedOutput": "Multiple objects created successfully!",
+        "errorHint": "Create objects by calling the class with parameters."
+      }
+    ]
+  },
+  {
+    "id": "python-level-13",
+    "number": 13,
+    "title": "Python Inheritance — Extend Classes",
+    "description": "Understand how to extend existing classes using inheritance to create specialized child classes.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["Python Classes and Objects — Introduction to OOP"],
+    "learningObjectives": [
+      "Use inheritance to extend classes",
+      "Override methods in child classes",
+      "Use super() to access parent methods"
+    ],
+    "realWorldApplications": [
+      "Create reusable and extendable code",
+      "Implement polymorphism",
+      "Build complex systems with class hierarchies"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: Inheritance",
+        "url": "https://docs.python.org/3/tutorial/classes.html#inheritance"
+      },
+      {
+        "title": "W3Schools Python Inheritance",
+        "url": "https://www.w3schools.com/python/python_inheritance.asp"
+      },
+      {
+        "title": "Real Python: Inheritance and Subclasses",
+        "url": "https://realpython.com/inheritance-composition-python/"
+      }
+    ],
+    "tags": ["Python", "Inheritance", "OOP", "Classes"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create Parent and Child Class",
+        "description": "Create a Vehicle class and extend it with a Car child class.",
+        "initialCode": "# Your code here:\n",
+        "solution": "class Vehicle",
+        "expectedOutput": "Parent and child class created!",
+        "errorHint": "Define a parent class and extend it with child class syntax."
+      },
+      {
+        "id": "task2",
+        "title": "Override a Method",
+        "description": "Override a method in the Car class to change behavior.",
+        "initialCode": "# Your code here:\n",
+        "solution": "def method_name",
+        "expectedOutput": "Method overridden successfully!",
+        "errorHint": "Define a method with the same name in child class."
+      },
+      {
+        "id": "task3",
+        "title": "Use super()",
+        "description": "Use super() to call the parent class method from child class.",
+        "initialCode": "# Your code here:\n",
+        "solution": "super()",
+        "expectedOutput": "Parent method called via super()!",
+        "errorHint": "Call super().method_name() inside the child method."
+      }
+    ]
+  },
+  {
+    "id": "python-level-14",
+    "number": 14,
+    "title": "Python File and Directory Management",
+    "description": "Learn to manipulate files and directories using os and shutil modules.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["Python File Handling — Read and Write Files"],
+    "learningObjectives": [
+      "Use os module to navigate and manage directories",
+      "Copy, move, and delete files with shutil",
+      "Handle file paths"
+    ],
+    "realWorldApplications": [
+      "Automate file system tasks",
+      "Organize project files",
+      "Manage backups"
+    ],
+    "references": [
+      {
+        "title": "Official Python Tutorial: File and Directory Access",
+        "url": "https://docs.python.org/3/library/os.html"
+      },
+      {
+        "title": "W3Schools Python OS Module",
+        "url": "https://www.w3schools.com/python/python_os.asp"
+      },
+      {
+        "title": "Real Python: Working with Files in Python",
+        "url": "https://realpython.com/working-with-files-in-python/"
+      }
+    ],
+    "tags": ["Python", "File Management", "OS", "Shutil"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "List Directory Contents",
+        "description": "Use os.listdir() to list all files and folders in current directory.",
+        "initialCode": "# Your code here:\n",
+        "solution": "os.listdir",
+        "expectedOutput": "Directory contents listed!",
+        "errorHint": "Import os and use os.listdir() with the correct path."
+      },
+      {
+        "id": "task2",
+        "title": "Create and Remove Directory",
+        "description": "Create a new directory and then remove it.",
+        "initialCode": "# Your code here:\n",
+        "solution": "os.mkdir",
+        "expectedOutput": "Directory created and removed!",
+        "errorHint": "Use os.mkdir() and os.rmdir() for directory management."
+      },
+      {
+        "id": "task3",
+        "title": "Copy a File",
+        "description": "Copy a file from one location to another using shutil.",
+        "initialCode": "# Your code here:\n",
+        "solution": "shutil.copy",
+        "expectedOutput": "File copied successfully!",
+        "errorHint": "Import shutil and use shutil.copy(src, dst)."
+      }
+    ]
+  },
+  {
+    "id": "python-level-15",
+    "number": 15,
+    "title": "Python Working with APIs — Fetch and Process Data",
+    "description": "Learn to interact with web APIs using requests library to fetch and process JSON data.",
+    "category": "Python",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 600,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["Python Modules and Packages — Organize Your Code"],
+    "learningObjectives": [
+      "Use requests library to send HTTP requests",
+      "Parse JSON data returned from APIs",
+      "Handle errors in API requests"
+    ],
+    "realWorldApplications": [
+      "Fetch data from web services",
+      "Build dynamic applications",
+      "Integrate third-party APIs"
+    ],
+    "references": [
+      { "title": "Requests: HTTP for Humans", "url": "https://requests.readthedocs.io/en/latest/" },
+      {
+        "title": "Real Python: Using APIs in Python",
+        "url": "https://realpython.com/api-integration-in-python/"
+      },
+      {
+        "title": "W3Schools Python JSON",
+        "url": "https://www.w3schools.com/python/python_json.asp"
+      }
+    ],
+    "tags": ["Python", "APIs", "Requests", "JSON"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Send a GET Request",
+        "description": "Use requests to send a GET request to 'https://api.github.com' and print the status code.",
+        "initialCode": "# Your code here:\n",
+        "solution": "requests.get",
+        "expectedOutput": "Request sent successfully!",
+        "errorHint": "Import requests and use requests.get(url)."
+      },
+      {
+        "id": "task2",
+        "title": "Parse JSON Response",
+        "description": "Parse JSON data from the API response and print a specific field.",
+        "initialCode": "# Your code here:\n",
+        "solution": "response.json()",
+        "expectedOutput": "JSON parsed successfully!",
+        "errorHint": "Use response.json() to parse JSON data."
+      },
+      {
+        "id": "task3",
+        "title": "Handle API Errors",
+        "description": "Add error handling for HTTP errors when making API requests.",
+        "initialCode": "# Your code here:\n",
+        "solution": "try:",
+        "expectedOutput": "Error handling implemented!",
+        "errorHint": "Use try-except and response.raise_for_status() for error checking."
+      }
+    ]
+  }
+]

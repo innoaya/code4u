@@ -1,0 +1,49 @@
+/* Admin Form Styles - Consistent form elements */
+
+.admin-form-control {
+  @apply py-2 px-3 border border-gray-300 shadow-sm focus:ring-2 focus:ring-offset-0 block w-full sm:text-sm rounded-md;
+}
+
+.admin-form-control:focus {
+  @apply outline-none border-blue-400;
+}
+
+.admin-form-group {
+  @apply mb-4;
+}
+
+.admin-form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.admin-form-input-wrapper {
+  @apply mt-1 relative rounded-md shadow-sm;
+}
+
+.admin-form-help {
+  @apply mt-1 text-sm text-gray-500;
+}
+
+/* Input type specific styles */
+.admin-form-control[type="text"],
+.admin-form-control[type="number"],
+.admin-form-control[type="email"] {
+  @apply focus:ring-blue-500 focus:border-blue-500;
+}
+
+textarea.admin-form-control {
+  @apply focus:ring-blue-500 focus:border-blue-500;
+}
+
+select.admin-form-control {
+  @apply focus:ring-blue-500 focus:border-blue-500 bg-white pr-10;
+}
+
+/* Form layout adjustments */
+.admin-grid-form {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4;
+}
+
+.admin-grid-form-full {
+  @apply col-span-1 md:col-span-2;
+}

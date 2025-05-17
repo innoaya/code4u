@@ -5,7 +5,7 @@
  */
 
 import { db } from './firebase-node.js'
-import { collection, doc, writeBatch, getDoc } from 'firebase/firestore'
+import { collection, doc, writeBatch, getDoc, setDoc } from 'firebase/firestore'
 
 // Sample HTML levels
 const htmlLevels = [
@@ -1037,28 +1037,53 @@ export async function initializeFirestore() {
   try {
     console.log('Initializing Firestore with sample data...');
 
+    // Create admin user for sample data ownership
+    await createAdminUser();
+
+    // Default admin ID for sample data
+    const ADMIN_USER_ID = 'TghQPJnSUZPHjZU2qAdObEV6uOY2';
+    const currentTimestamp = new Date();
+
     const batch = writeBatch(db);
 
     // Add HTML levels
     for (const level of htmlLevels) {
+      // Add creator fields
+      level.createdBy = ADMIN_USER_ID;
+      level.createdAt = currentTimestamp;
+
       const levelRef = doc(collection(db, 'levels'), level.id);
       batch.set(levelRef, level);
     }
 
     // Add CSS levels
     for (const level of cssLevels) {
+      // Add creator fields
+      level.createdBy = ADMIN_USER_ID;
+      level.createdAt = currentTimestamp;
+      level.isPublished = true; // Default all sample levels to published
+
       const levelRef = doc(collection(db, 'levels'), level.id);
       batch.set(levelRef, level);
     }
 
     // Add JavaScript levels
     for (const level of jsLevels) {
+      // Add creator fields
+      level.createdBy = ADMIN_USER_ID;
+      level.createdAt = currentTimestamp;
+      level.isPublished = true; // Default all sample levels to published
+
       const levelRef = doc(collection(db, 'levels'), level.id);
       batch.set(levelRef, level);
     }
 
     // Add badges
     for (const badge of badges) {
+      // Add creator fields
+      badge.createdBy = ADMIN_USER_ID;
+      badge.createdAt = currentTimestamp;
+
       const badgeRef = doc(collection(db, 'badges'), badge.id);
       batch.set(badgeRef, badge);
     }
@@ -1079,7 +1104,10 @@ export async function initializeFirestore() {
       categories: ['HTML', 'CSS', 'JavaScript'],
       tags: ['beginner', 'fundamentals', 'web'],
       featured: true,
-      order: 1
+      isPublished: true,
+      order: 1,
+      createdBy: ADMIN_USER_ID,
+      createdAt: currentTimestamp
     };
 
     // Add journey to Firestore
@@ -1116,7 +1144,28 @@ export async function initializeFirestore() {
   }
 }
 
+// Create an admin user for Firestore rule validation
+async function createAdminUser() {
+  try {
+    const adminUserRef = doc(db, 'users', 'admin123');
+    const adminDoc = await getDoc(adminUserRef);
+
+    if (!adminDoc.exists()) {
+      await setDoc(adminUserRef, {
+        uid: 'admin123',
+        displayName: 'Admin User',
+        email: 'admin@code4u.com',
+        role: 'admin',
+        createdAt: new Date()
+      });
+      console.log('Created admin user for sample data ownership');
+    }
+  } catch (error) {
+    console.error('Error creating admin user:', error);
+  }
+}
+
 // NOTE: Demo user functionality has been removed as the application uses Google SSO login only
 
-// Uncomment to run the initialization when this file is executed directly
+// Run the initialization when this file is executed directly
 initializeFirestore();

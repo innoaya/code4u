@@ -1,7 +1,7 @@
 <template>
   <div class="admin-dashboard">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ isAdmin ? 'Admin' : 'Creator' }} Dashboard</h1>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Journey Management Card -->
@@ -163,9 +163,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { ref, computed, onMounted } from 'vue';
+import { db, auth } from '@/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+const currentUser = ref(auth.currentUser);
+const userRole = computed(() => userStore.userRole);
+const isAdmin = computed(() => userRole.value === 'admin');
+const isCreator = computed(() => userRole.value === 'creator');
 
 const journeyCount = ref(0);
 const levelCount = ref(0);
@@ -175,20 +182,44 @@ const isLoading = ref(true);
 
 onMounted(async () => {
   try {
-    // Get journey count
-    const journeysSnapshot = await getDocs(collection(db, 'journeys'));
-    journeyCount.value = journeysSnapshot.size;
-    
-    // Get level count
-    const levelsSnapshot = await getDocs(collection(db, 'levels'));
-    levelCount.value = levelsSnapshot.size;
-    
-    // Get badge count
-    const badgesSnapshot = await getDocs(collection(db, 'badges'));
-    badgeCount.value = badgesSnapshot.size;
+    // Get journey count based on role
+    if (isAdmin.value) {
+      const journeysSnapshot = await getDocs(collection(db, 'journeys'));
+      journeyCount.value = journeysSnapshot.size;
+      
+      // Get level count
+      const levelsSnapshot = await getDocs(collection(db, 'levels'));
+      levelCount.value = levelsSnapshot.size;
+      
+      // Get badge count
+      const badgesSnapshot = await getDocs(collection(db, 'badges'));
+      badgeCount.value = badgesSnapshot.size;
+    } else {
+      // For creators, only show their created content
+      const journeysQuery = query(collection(db, 'journeys'), where('createdBy', '==', currentUser.value.uid));
+      const journeysSnapshot = await getDocs(journeysQuery);
+      journeyCount.value = journeysSnapshot.size;
+      
+      // Get level count for creator
+      const levelsQuery = query(collection(db, 'levels'), where('createdBy', '==', currentUser.value.uid));
+      const levelsSnapshot = await getDocs(levelsQuery);
+      levelCount.value = levelsSnapshot.size;
+      
+      // Get badge count for creator
+      const badgesQuery = query(collection(db, 'badges'), where('createdBy', '==', currentUser.value.uid));
+      const badgesSnapshot = await getDocs(badgesQuery);
+      badgeCount.value = badgesSnapshot.size;
+    }
 
-    // Simulate recent activity (in a production app, you would fetch real admin activity logs)
-    recentActivity.value = [
+    // Customize recent activity based on user role
+    recentActivity.value = isCreator.value ? [
+      {
+        type: 'journey',
+        description: 'Created new journey:',
+        itemName: 'Getting started with your role',
+        date: 'Now'
+      }
+    ] : [
       {
         type: 'journey',
         description: 'Created new journey:',

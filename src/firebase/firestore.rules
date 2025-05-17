@@ -10,11 +10,28 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
     
-    // New helper function to check if user is an admin
+    // Helper function to check if user is an admin
     function isAdmin() {
       return isSignedIn() && 
         exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Helper function to check if user is a creator
+    function isCreator() {
+      return isSignedIn() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'creator';
+    }
+    
+    // Helper function to check if user is an admin or creator
+    function isAdminOrCreator() {
+      return isAdmin() || isCreator();
+    }
+    
+    // Helper function to check if user is the creator of a document
+    function isDocumentCreator(docData) {
+      return isSignedIn() && docData.createdBy == request.auth.uid;
     }
 
     // User profiles - public read access for leaderboard functionality
@@ -35,10 +52,18 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Level data - all authenticated users can read, only admins can modify
+    // Level data - filtered by isPublished for regular users, admins and creators can modify, only admins can delete
     match /levels/{levelId} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin(); // Allow admins to modify levels
+      allow read: if 
+        // Regular users can only see published levels
+        (resource.data.isPublished == true) || 
+        // Admins can see all levels
+        isAdmin() ||
+        // Creators can see their own levels regardless of publish status
+        (isCreator() && resource.data.createdBy == request.auth.uid);
+      allow create: if isAdminOrCreator(); // Admins and creators can create levels
+      allow update: if isAdmin() || (isCreator() && resource.data.createdBy == request.auth.uid); // Admins can edit any level, creators can only edit their own
+      allow delete: if isAdmin(); // Only admins can delete levels
     }
 
     // User activities - public read access for activity feed, restricted write
@@ -51,13 +76,23 @@ service cloud.firestore {
     // Badges - read-only for all authenticated users
     match /badges/{badgeId} {
       allow read: if true;
-      allow write: if isAdmin(); // Allow admins to manage badges
+      allow create: if isAdminOrCreator(); // Admins and creators can create badges
+      allow update: if isAdmin() || (isCreator() && resource.data.createdBy == request.auth.uid); // Admins can edit any badge, creators can only edit their own
+      allow delete: if isAdmin(); // Only admins can delete badges
     }
     
-    // Journeys - read-only for all users, admin-only write access
+    // Journeys - read filtered by isPublished, admins and creators can write, only admins can delete
     match /journeys/{journeyId} {
-      allow read: if true;
-      allow write: if isAdmin(); // Allow admins to manage journeys
+      allow read: if 
+        // Regular users can only see published journeys
+        (resource.data.isPublished == true) || 
+        // Admins can see all journeys
+        isAdmin() ||
+        // Creators can see their own journeys regardless of publish status
+        (isCreator() && resource.data.createdBy == request.auth.uid);
+      allow create: if isAdminOrCreator(); // Admins and creators can create journeys
+      allow update: if isAdmin() || (isCreator() && resource.data.createdBy == request.auth.uid); // Admins can edit any journey, creators can only edit their own
+      allow delete: if isAdmin(); // Only admins can delete journeys
     }
 
     // Leaderboard data - public read access

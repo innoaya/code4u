@@ -1,5 +1,11 @@
 <template>
   <div class="admin-badge-form">
+    <!-- Breadcrumb Navigation -->
+    <AdminBreadcrumbs 
+      :itemId="badgeId" 
+      :itemTitle="isEditing ? badge.name || 'Edit Badge' : 'New Badge'" 
+    />
+    
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">{{ isEditing ? 'Edit' : 'Create' }} Badge</h1>
       <router-link to="/admin/badges" class="text-purple-600 hover:underline">
@@ -22,7 +28,7 @@
                   id="badge-id"
                   v-model="badge.id"
                   :disabled="isEditing"
-                  class="flex-1 focus:ring-purple-500 focus:border-purple-500 block w-full min-w-0 rounded-md sm:text-sm border-gray-300"
+                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-purple-500 focus:border-purple-500 block w-full min-w-0 rounded-md sm:text-sm"
                   :class="{ 'bg-gray-100': isEditing }"
                   placeholder="html-apprentice"
                 />
@@ -39,7 +45,7 @@
                   name="badge-name"
                   id="badge-name"
                   v-model="badge.name"
-                  class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm rounded-md"
                   placeholder="HTML Apprentice"
                 />
               </div>
@@ -54,7 +60,7 @@
                   id="badge-description"
                   v-model="badge.description"
                   rows="3"
-                  class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm rounded-md"
                   placeholder="Completed your first HTML page"
                 ></textarea>
               </div>
@@ -72,7 +78,7 @@
                   id="badge-icon"
                   v-model="badge.icon"
                   maxlength="2"
-                  class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm rounded-md"
                   placeholder="📄"
                 />
               </div>
@@ -233,8 +239,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { db } from '@/firebase';
+import { auth, db } from '@/firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import AdminBreadcrumbs from '@/components/AdminBreadcrumbs.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -248,7 +255,9 @@ const badge = ref({
   description: '',
   icon: '🏆',
   category: 'HTML',
-  requirements: []
+  requirements: [],
+  createdBy: '',
+  createdAt: new Date()
 });
 
 const allLevels = ref([]);
@@ -372,6 +381,12 @@ async function saveBadge() {
     
     // Ensure badge ID is properly formatted
     badge.value.id = badge.value.id.trim().toLowerCase().replace(/\s+/g, '-');
+    
+    // Set creator information if creating new badge
+    if (!isEditing.value) {
+      badge.value.createdBy = auth.currentUser?.uid || '';
+      badge.value.createdAt = new Date();
+    }
     
     // Save to Firestore
     await setDoc(doc(db, 'badges', badge.value.id), badge.value);
