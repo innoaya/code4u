@@ -162,6 +162,99 @@ const router = createRouter({
     },
     // Admin routes
     {
+      path: '/admin',
+      name: 'admin-dashboard',
+      component: () => import('../views/admin/AdminDashboard.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Admin Dashboard - Code4U'
+      }
+    },
+    {
+      path: '/admin/journeys',
+      name: 'admin-journey-list',
+      component: () => import('../views/admin/journeys/JourneyList.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Journey Management - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/badges',
+      name: 'admin-badge-list',
+      component: () => import('../views/admin/badges/BadgeList.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Badge Management - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/badges/new',
+      name: 'admin-create-badge',
+      component: () => import('../views/admin/badges/BadgeForm.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Create Badge - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/badges/:id/edit',
+      name: 'admin-edit-badge',
+      component: () => import('../views/admin/badges/BadgeForm.vue'),
+      props: true,
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Edit Badge - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/journeys/new',
+      name: 'admin-journey-create',
+      component: () => import('../views/admin/journeys/JourneyForm.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Create Journey - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/journeys/:id/edit',
+      name: 'admin-journey-edit',
+      component: () => import('../views/admin/journeys/JourneyForm.vue'),
+      props: true,
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Edit Journey - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/levels',
+      name: 'admin-level-list',
+      component: () => import('../views/admin/journeys/LevelList.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Level Management - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/levels/new',
+      name: 'admin-level-create',
+      component: () => import('../views/admin/journeys/LevelForm.vue'),
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Create Level - Code4U Admin'
+      }
+    },
+    {
+      path: '/admin/levels/:id/edit',
+      name: 'admin-level-edit',
+      component: () => import('../views/admin/journeys/LevelForm.vue'),
+      props: true,
+      beforeEnter: requireAdmin,
+      meta: {
+        title: 'Edit Level - Code4U Admin'
+      }
+    },
+    {
       path: '/admin/feedback',
       name: 'admin-feedback-list',
       component: () => import('../views/admin/FeedbackListView.vue'),
