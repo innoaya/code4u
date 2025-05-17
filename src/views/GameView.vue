@@ -162,11 +162,20 @@ onUnmounted(() => {
         Congratulations! You've completed Level {{ gameStore.currentLevel?.number || '1' }}.
       </p>
 
-      <div class="bg-gray-50 p-6 rounded-lg mb-8">
+      <!-- Show different message based on if this is a retry or first completion -->
+      <div v-if="!gameStore.isLevelRetry" class="bg-gray-50 p-6 rounded-lg mb-8">
         <div class="text-3xl font-bold text-primary mb-2">
           +{{ gameStore.currentLevel?.pointsToEarn || 100 }} points
         </div>
         <p class="text-text-secondary">added to your score</p>
+      </div>
+      
+      <!-- For retry completions -->
+      <div v-else class="bg-gray-50 p-6 rounded-lg mb-8">
+        <div class="text-2xl font-medium text-gray-600 mb-2">
+          Great practice!
+        </div>
+        <p class="text-text-secondary">You've already earned points for this level</p>
       </div>
 
       <div class="flex flex-col md:flex-row gap-4 justify-center">

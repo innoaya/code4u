@@ -25,6 +25,7 @@ export const useGameStore = defineStore('game', () => {
   const currentTask = ref(0)
   const userCode = ref('')
   const codeOutput = ref('')
+  const isLevelRetry = ref(false)
 
   // Computed
   const isLoggedIn = computed(() => !!auth.currentUser)
@@ -119,8 +120,14 @@ export const useGameStore = defineStore('game', () => {
 
       // Get current user data to determine the correct next level
       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid))
-      const userData = userDoc.exists() ? userDoc.data() : { level: 1 }
-
+      const userData = userDoc.exists() ? userDoc.data() : { level: 1, completedLevels: [] }
+      
+      // Check if user has already completed this level
+      const alreadyCompleted = userData.completedLevels && userData.completedLevels.includes(levelId)
+      
+      // Set the retry flag for the UI to use
+      isLevelRetry.value = alreadyCompleted
+      
       // Determine the new level - should be the next sequential level
       // Only update level if the completed level is the current level
       // This prevents skipping levels if a user completes them out of order
@@ -128,25 +135,40 @@ export const useGameStore = defineStore('game', () => {
                       completedLevelNum + 1 :
                       Math.max(userData.level, completedLevelNum)
 
-      // Update user progress in Firestore
-      await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      // Prepare update object
+      const updateObject = {
         completedLevels: arrayUnion(levelId),
-        points: increment(currentLevel.value?.pointsToEarn || 100),
         level: newLevel
-      })
+      }
+      
+      // Only award points if this is the first time completing the level
+      const pointsToAward = currentLevel.value?.pointsToEarn || 100
+      if (!alreadyCompleted) {
+        updateObject.points = increment(pointsToAward)
+      }
+
+      // Update user progress in Firestore
+      await updateDoc(doc(db, 'users', auth.currentUser.uid), updateObject)
 
       // Update local state
-      userProgress.value.completedLevels.push(levelId)
-      userProgress.value.points += (currentLevel.value?.pointsToEarn || 100)
+      if (!userProgress.value.completedLevels.includes(levelId)) {
+        userProgress.value.completedLevels.push(levelId)
+      }
+      
+      // Only update points if this is the first time completing the level
+      if (!alreadyCompleted) {
+        userProgress.value.points += pointsToAward
+      }
       userProgress.value.level = newLevel
 
-      // Record this activity
+      // Record this activity with different message based on if it's a retry
       await recordUserActivity('level_completed', {
         levelId,
         levelNumber: currentLevel.value?.number,
         levelTitle: currentLevel.value?.title,
         category: currentLevel.value?.category,
-        pointsEarned: currentLevel.value?.pointsToEarn || 100
+        pointsEarned: alreadyCompleted ? 0 : pointsToAward,
+        isRetry: alreadyCompleted
       })
 
       // Check if we should prompt for feedback after this level completion
@@ -681,6 +703,7 @@ export const useGameStore = defineStore('game', () => {
     currentTask,
     userCode,
     codeOutput,
+    isLevelRetry,
 
     // Computed
     isLoggedIn,
