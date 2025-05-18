@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import HtmlLearnView from '../views/learn/HtmlLearnView.vue'
+import CssLearnView from '../views/learn/CssLearnView.vue'
+import JavaScriptLearnView from '../views/learn/JavaScriptLearnView.vue'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { requireAdmin, requireCreatorOrAdmin } from './adminGuard'
@@ -143,7 +146,32 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue'),
+      component: () => import('../views/AboutView.vue')
+    },
+    // Learning routes
+    {
+      path: '/learn/html',
+      name: 'learn-html',
+      component: HtmlLearnView,
+      meta: {
+        title: 'Learn HTML - Code4U'
+      }
+    },
+    {
+      path: '/learn/css',
+      name: 'learn-css',
+      component: CssLearnView,
+      meta: {
+        title: 'Learn CSS - Code4U'
+      }
+    },
+    {
+      path: '/learn/javascript',
+      name: 'learn-javascript',
+      component: JavaScriptLearnView,
+      meta: {
+        title: 'Learn JavaScript - Code4U'
+      }
     },
     {
       path: '/terms',

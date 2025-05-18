@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML သင်ကြားရေး</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #a5b4fc;
+            --accent: #fbbf24;
+            --light: #f5f3ff;
+            --dark: #1e1b4b;
+        }
+        body {
+            font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        .page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);
+        }
+        h1, h2, h3 {
+            color: var(--primary);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 3px dashed var(--secondary);
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        .character {
+            width: 120px;
+            float: right;
+            margin-left: 20px;
+        }
+        .example {
+            background-color: #eef2ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin-bottom: 20px;
+        }
+        .try-it {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 10px 5px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .try-it:hover {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .preview-box {
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+        }
+        .tag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tag-card {
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .tag-name {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        .code-container {
+            position: relative;
+        }
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            font-family: monospace;
+            padding: 15px;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            background: #f5f5f5;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .run-button {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .fun-fact {
+            background: #fff9db;
+            border-left: 4px solid var(--accent);
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .challenge {
+            background: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Welcome -->
+    <div class="page" id="page1">
+        <img src="../logo.svg" alt="Robot Helper" class="character">
+        <h1><span class="emoji">👋</span> လွယ်ကူလေ့လာ HTML သင်ခန်းစာ!</h1>
+        <p>မင်္ဂလာပါ! ကျွန်တော့်နာမည်က Code4U ပါ။ HTML ကို အတူတူ သင်ယူကြမယ်!</p>
+        <p>HTML ဆိုတာ website တွေ တည်ဆောက်ဖို့ LEGO အတုံးလေးတွေနဲ့ တူတူပါပဲ!</p>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> ပထမဆုံး website က ၁၉၉၁ ခုနှစ်မှာ စတင်ခဲ့ပြီး World Wide Web အကြောင်းကိုပဲ ရှင်းပြထားတာပါ!</p>
+        </div>
+        
+        <h2>HTML ဆိုတာဘာလဲ?</h2>
+        <p>HTML ဆိုတာ <strong>HyperText Markup Language</strong> ဖြစ်ပါတယ်။ website တိုင်းရဲ့ အခြေခံအဆောက်အဦပါ!</p>
+        <p>HTML မှာ <span style="color: var(--primary); font-weight: bold;">tags</span> တွေကို သုံးပြီး webpage အစိတ်အပိုင်းတွေ ဖန်တီးကြတယ်။</p>
+        
+        <div class="example">
+            <h3>ဥပမာ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code1">&lt;p&gt;ဒါက စာပိုဒ်တစ်ခုပါ!&lt;/p&gt;</textarea>
+                <button class="run-button" onclick="runCode(1)">Run</button>
+            </div>
+            <div class="preview-box" id="preview1"></div>
+        </div>
+        
+        <div class="try-it" onclick="showPage(2)">စသင်ကြရအောင်! <span class="emoji">🚀</span></div>
+    </div>
+
+    <!-- Page 2: Basic Structure -->
+    <div class="page hidden" id="page2">
+        <h1><span class="emoji">🏗️</span> HTML Page အခြေခံဖွဲ့စည်းပုံ</h1>
+        <p>HTML document တိုင်းမှာ ဒီအစိတ်အပိုင်းတွေ ပါဝင်ပါတယ်:</p>
+        
+        <div class="example">
+            <h3>HTML အခြေခံဖွဲ့စည်းပုံ</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code2" rows="12">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;ကျွန်တော့်စာမျက်နှာ&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;မင်္ဂလာပါ!&lt;/h1&gt;
+    &lt;p&gt;HTML ကို သင်ယူနေပါတယ်!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+                <button class="run-button" onclick="runCode(2)">Run</button>
+            </div>
+            <div class="preview-box" id="preview2"></div>
+        </div>
+        
+        <h2>Tags အချို့ကို မိတ်ဆက်ခြင်း:</h2>
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;!DOCTYPE html&gt;</div>
+                <p>ဒါက HTML5 ဖြစ်ကြောင်း ပြောတာပါ</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;html&gt;</div>
+                <p>အရာအားလုံးရဲ့ အခြေခံအိုးပါ</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;head&gt;</div>
+                <p>မြင်ရတဲ့အချက်အလက် (title လိုမျိုး)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;body&gt;</div>
+                <p>မြင်ရတဲ့အကြောင်းအရာတွေ ထည့်ရာနေရာ</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;title&gt;</div>
+                <p>Browser tab မှာ ပြမယ့်ခေါင်းစဉ်</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;meta&gt;</div>
+                <p>စာမျက်နှာအကြောင်း အချက်အလက်</p>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ ပထမဆုံး စိန်ခေါ်မှု!</h3>
+            <p>ဒီလိုစာမျက်နှာလေး တည်ဆောက်ကြည့်ပါ:</p>
+            <ol>
+                <li>ခေါင်းစဉ်တစ်ခု ("ကျွန်တော့်အိမ်မွေးတိရစ္ဆာန်")</li>
+                <li>သင့်အိမ်မွေးတိရစ္ဆာန်အကြောင်း စာပိုဒ်တိုလေး</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(1)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(3)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 3: Text Tags -->
+    <div class="page hidden" id="page3">
+        <h1><span class="emoji">✏️</span> စာသား Tags - စာလုံးတွေကို အပျော်လုပ်ကြမယ်!</h1>
+        
+        <div class="example">
+            <h3>HTML မှာ ဒါတွေကို စမ်းကြည့်ပါ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code3">&lt;h1&gt;အကြီးဆုံးခေါင်းစဉ်&lt;/h1&gt;
+&lt;h2&gt;အလတ်စားခေါင်းစဉ်&lt;/h2&gt;
+&lt;p&gt;သာမန်စာပိုဒ်။&lt;/p&gt;
+&lt;strong&gt;အထူစာလုံး&lt;/strong&gt; သို့မဟုတ် &lt;b&gt;အထူ&lt;/b&gt;
+&lt;em&gt;စာလုံးစောင်း&lt;/em&gt; သို့မဟုတ် &lt;i&gt;စာလုံးစောင်း&lt;/i&gt;
+H&lt;sub&gt;2&lt;/sub&gt;O (အောက်ခြေစာလုံး)
+x&lt;sup&gt;2&lt;/sup&gt; (အပေါ်ခြေစာလုံး)
+&lt;mark style="background-color: yellow;"&gt;မှတ်သားစရာ!&lt;/mark&gt;</textarea>
+                <button class="run-button" onclick="runCode(3)">Run</button>
+            </div>
+            <div class="preview-box" id="preview3"></div>
+        </div>
+        
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;h1&gt; မှ &lt;h6&gt;</div>
+                <p>ခေါင်းစဉ်များ (h1 အကြီးဆုံး၊ h6 အသေးဆုံး)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;p&gt;</div>
+                <p>စာပိုဒ်</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;br&gt;</div>
+                <p>စာကြောင်းခွဲ (အလိုအလျောက်ပိတ်)</p>
+                <div class="tag-example">&lt;p&gt;စာကြောင်း 1&lt;br&gt;စာကြောင်း 2&lt;/p&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;hr&gt;</div>
+                <p>အလျားလိုက်မျဉ်း (အလိုအလျောက်ပိတ်)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;pre&gt;</div>
+                <p>ကြိုတင်ဖော်မတ်ထားသော စာသား (နေရာလွတ်များကို ထိန်းသိမ်း)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;blockquote&gt;</div>
+                <p>အတုအယောင် ကိုးကားချက်</p>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ စာသား Tag စိန်ခေါ်မှု!</h3>
+            <p>HTML tags တွေသုံးပြီး ဒီစာကြောင်းကို ရေးပါ:</p>
+            <div style="background:#eef2ff;padding:15px;border-radius:5px;">
+                <p><strong>အရေးကြီးပါတယ်:</strong> ရေသည် H<sub>2</sub>O ဖြစ်ပါတယ်။ အလင်းအလျင်သည် 3x10<sup>8</sup> m/s ဖြစ်ပါတယ်! <mark style="background:yellow;">မှတ်ထားပါ!</mark></p>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(2)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(4)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 4: Links & Images -->
+    <div class="page hidden" id="page4">
+        <h1><span class="emoji">🔗</span> လင့်ခ်နှင့် ဓာတ်ပုံများ</h1>
+        <p>စာမျက်နှာတွေကို ချိတ်ဆက်ပြီး ဓာတ်ပုံတွေ ထည့်ကြမယ်!</p>
+        
+        <div class="example">
+            <h3>လင့်ခ် ဥပမာများ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code4">&lt;!-- အခြေခံလင့်ခ် --&gt;
+&lt;a href="https://www.google.com"&gt;Google ကိုဝင်ကြည့်ပါ&lt;/a&gt;
+
+&lt;!-- အသစ်တပ်ဗ်မှာ ဖွင့်မယ့်လင့်ခ် --&gt;
+&lt;a href="https://www.google.com" target="_blank"&gt;Google (အသစ်တပ်ဗ်)&lt;/a&gt;
+
+&lt;!-- အီးမေးလ်လင့်ခ် --&gt;
+&lt;a href="mailto:hello@example.com"&gt;ကျွန်တော်တို့ကိုအီးမေးလ်ပို့ပါ&lt;/a&gt;
+
+&lt;!-- ဓာတ်ပုံဥပမာများ --&gt;
+&lt;img src="robot.png" alt="ပျော်ရွှင်နေသော စက်ရုပ်"&gt;
+&lt;img src="robot.png" alt="ပျော်ရွှင်နေသော စက်ရုပ်" width="200"&gt;</textarea>
+                <button class="run-button" onclick="runCode(4)">Run</button>
+            </div>
+            <div class="preview-box" id="preview4"></div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> Web ပေါ်မှာ ပထမဆုံးတင်ခဲ့တဲ့ ဓာတ်ပုံက ၁၉၉၂ ခုနှစ်က "Les Horribles Cernettes" ဆိုတဲ့ ဟာသအဖွဲ့ရဲ့ ဓာတ်ပုံဖြစ်ပါတယ်!</p>
+        </div>
+        
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;a&gt;</div>
+                <p>ချိတ်ဆက်မှုများ ဖန်တီးရန်</p>
+                <p>Attributes: <code>href</code>, <code>target</code></p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;img&gt;</div>
+                <p>ဓာတ်ပုံ (အလိုအလျောက်ပိတ်)</p>
+                <p>Attributes: <code>src</code>, <code>alt</code>, <code>width</code>, <code>height</code></p>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ လင့်ခ်စိန်ခေါ်မှု!</h3>
+            <p>ဒီလိုစာမျက်နှာလေး တည်ဆောက်ပါ:</p>
+            <ol>
+                <li>ခေါင်းစဉ် "ကျွန်တော်ကြိုက်နှစ်သက်သော website များ"</li>
+                <li>သင့်အကြိုက်ဆုံး site ၃ခုကို လင့်ခ်ချိတ်ပါ (အသစ်တပ်ဗ်မှာ ဖွင့်ပါ)</li>
+                <li>အဲဒီ site တစ်ခုကို ချိတ်ထားသော ဓာတ်ပုံတစ်ပုံ</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(3)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(5)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 5: Lists -->
+    <div class="page hidden" id="page5">
+        <h1><span class="emoji">📋</span> စာရင်းများ အစီအစဉ်</h1>
+        <p>HTML မှာ စာရင်း ၃မျိုး ဖန်တီးနိုင်ပါတယ်:</p>
+        
+        <div class="example">
+            <h3>အမှတ်စဉ်မပါသော စာရင်း (အမှတ်အသားများ)</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code5">&lt;ul&gt;
+  &lt;li&gt;ပန်းသီး&lt;/li&gt;
+  &lt;li&gt;ငှက်ပျော&lt;/li&gt;
+  &lt;li&gt;လိမ္မော်သီး&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- အမှတ်စဉ်ပါသော စာရင်း --&gt;
+&lt;ol&gt;
+  &lt;li&gt;ပထမအဆင့်&lt;/li&gt;
+  &lt;li&gt;ဒုတိယအဆင့်&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- အဓိပ္ပာယ်ဖွင့်ဆိုချက် စာရင်း --&gt;
+&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;Website အခြေခံဖွဲ့စည်းပုံ&lt;/dd&gt;
+&lt;/dl&gt;</textarea>
+                <button class="run-button" onclick="runCode(5)">Run</button>
+            </div>
+            <div class="preview-box" id="preview5"></div>
+        </div>
+        
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;ul&gt;</div>
+                <p>အမှတ်စဉ်မပါသော စာရင်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;ol&gt;</div>
+                <p>အမှတ်စဉ်ပါသော စာရင်း</p>
+                <p>Attributes: <code>type</code>, <code>start</code></p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;li&gt;</div>
+                <p>စာရင်းအချက် (ul/ol အတွက်)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;dl&gt;</div>
+                <p>အဓိပ္ပာယ်ဖွင့်ဆိုချက် စာရင်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;dt&gt;</div>
+                <p>အဓိပ္ပာယ်ဖွင့်ဆိုချက် စာလုံး</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;dd&gt;</div>
+                <p>အဓိပ္ပာယ်ဖွင့်ဆိုချက်</p>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ စာရင်းစိန်ခေါ်မှု!</h3>
+            <p>သင့်အကြိုက်ဆုံးအရာတွေရဲ့ စာရင်းကို ဖန်တီးပါ:</p>
+            <ol>
+                <li>အစားအစာများ
+                    <ul>
+                        <li>ပီဇာ</li>
+                        <li>ရေခဲမုန့်</li>
+                    </ul>
+                </li>
+                <li>ဂိမ်းများ</li>
+                <li>တိရစ္ဆာန်များ</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(4)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(6)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 6: Tables -->
+    <div class="page hidden" id="page6">
+        <h1><span class="emoji">📊</span> ဇယားများ</h1>
+        <p>အချက်အလက်တွေကို အတန်းနဲ့ ကော်လံအလိုက် စီစဉ်ကြမယ်:</p>
+        
+        <div class="example">
+            <div class="code-container">
+                <textarea class="code-editor" id="code6">&lt;table border="1"&gt;
+  &lt;caption&gt;တိရစ္ဆာန်များနှင့် အသံများ&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;တိရစ္ဆာန်&lt;/th&gt;
+      &lt;th&gt;အသံ&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ကြောင်&lt;/td&gt;
+      &lt;td&gt;မည်း&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ခွေး&lt;/td&gt;
+      &lt;td&gt;ဝါး&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;စုစုပေါင်း: ၂ကောင်&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</textarea>
+                <button class="run-button" onclick="runCode(6)">Run</button>
+            </div>
+            <div class="preview-box" id="preview6"></div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> HTML ဇယားတွေကို အချက်အလက်တွေအတွက် ဒီဇိုင်းဆွဲထားပေမယ့် အစောပိုင်း web တွေမှာ CSS မပြည့်စုံသေးတဲ့အခါ ဇယားတွေနဲ့ page layout တွေ တည်ဆောက်ကြပါတယ်!</p>
+        </div>
+        
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;table&gt;</div>
+                <p>ဇယားကွက်</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;caption&gt;</div>
+                <p>ဇယားခေါင်းစဉ်</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;thead&gt;</div>
+                <p>ဇယားခေါင်းပိုင်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;tbody&gt;</div>
+                <p>ဇယားကိုယ်ပိုင်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;tfoot&gt;</div>
+                <p>ဇယားအောက်ပိုင်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;tr&gt;</div>
+                <p>ဇယားအတန်း</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;th&gt;</div>
+                <p>ဇယားခေါင်းစီးဆဲလ်</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;td&gt;</div>
+                <p>ဇယားဒေတာဆဲလ်</p>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ ဇယားစိန်ခေါ်မှု!</h3>
+            <p>သင့်အတန်းချိန်ဇယားကို ဖန်တီးပါ:</p>
+            <ol>
+                <li>နေ့၊ အချိန်၊ ဘာသာရပ် အတွက် ကော်လံများ</li>
+                <li>ဒေတာအတန်း အနည်းဆုံး ၃ခု</li>
+                <li>ခေါင်းစဉ် "ကျွန်တော့်အတန်းချိန်ဇယား"</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(5)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(7)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 7: Forms -->
+    <div class="page hidden" id="page7">
+        <h1><span class="emoji">📝</span> ဖောင်များ</h1>
+        <p>အသုံးပြုသူတွေအတွက် အချက်အလက်ထည့်သွင်းနိုင်သော အစိတ်အပိုင်းများ:</p>
+        
+        <div class="example">
+            <h3>ပြည့်စုံသော ဖောင်ဥပမာ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code7">&lt;form&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;အသုံးပြုသူအချက်အလက်&lt;/legend&gt;
+    
+    &lt;label for="name"&gt;နာမည်:&lt;/label&gt;
+    &lt;input type="text" id="name" name="name" required&gt;
+    
+    &lt;label for="email"&gt;အီးမေးလ်:&lt;/label&gt;
+    &lt;input type="email" id="email" name="email" required&gt;
+    
+    &lt;label for="pw"&gt;စကားဝှက်:&lt;/label&gt;
+    &lt;input type="password" id="pw" name="password" minlength="8"&gt;
+  &lt;/fieldset&gt;
+  
+  &lt;fieldset&gt;
+    &lt;legend&gt;ဦးစားပေးမှုများ&lt;/legend&gt;
+    
+    &lt;label&gt;အသက်:
+      &lt;input type="number" name="age" min="5" max="120"&gt;
+    &lt;/label&gt;
+    
+    &lt;label&gt;အကြိုက်ဆုံးအရောင်:
+      &lt;input type="color" name="favcolor"&gt;
+    &lt;/label&gt;
+    
+    &lt;label&gt;မွေးနေ့:
+      &lt;input type="date" name="bday"&gt;
+    &lt;/label&gt;
+  &lt;/fieldset&gt;
+  
+  &lt;button type="submit"&gt;တင်ပြမည်&lt;/button&gt;
+  &lt;button type="reset"&gt;ပြန်စမည်&lt;/button&gt;
+&lt;/form&gt;</textarea>
+                <button class="run-button" onclick="runCode(7)">Run</button>
+            </div>
+            <div class="preview-box" id="preview7"></div>
+        </div>
+        
+        <h2>Input အမျိုးအစားများ:</h2>
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">စာသား Inputs</div>
+                <div class="tag-example">&lt;input type="text"&gt;</div>
+                <div class="tag-example">&lt;input type="password"&gt;</div>
+                <div class="tag-example">&lt;input type="email"&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">နံပါတ် Inputs</div>
+                <div class="tag-example">&lt;input type="number"&gt;</div>
+                <div class="tag-example">&lt;input type="range"&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">ရက်စွဲ/အချိန်</div>
+                <div class="tag-example">&lt;input type="date"&gt;</div>
+                <div class="tag-example">&lt;input type="time"&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">ရွေးချယ်မှုများ</div>
+                <div class="tag-example">&lt;input type="checkbox"&gt;</div>
+                <div class="tag-example">&lt;input type="radio"&gt;</div>
+                <div class="tag-example">&lt;select&gt; with &lt;option&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">အထူး</div>
+                <div class="tag-example">&lt;input type="color"&gt;</div>
+                <div class="tag-example">&lt;input type="file"&gt;</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">ခလုတ်များ</div>
+                <div class="tag-example">&lt;input type="submit"&gt;</div>
+                <div class="tag-example">&lt;input type="reset"&gt;</div>
+                <div class="tag-example">&lt;button&gt;နှိပ်ပါ&lt;/button&gt;</div>
+            </div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> ပထမဆုံး web ဖောင်ကို ၁၉၉၃ ခုနှစ်မှာ ဖန်တီးခဲ့ပြီး Mosaic web browser အကြောင်း အကြံပြုချက်တွေ တင်သွင်းဖို့အတွက် ဖြစ်ပါတယ်!</p>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ ဖောင်စိန်ခေါ်မှု!</h3>
+            <p>စစ်တမ်းကောက်ယူဖို့ ဖောင်တစ်ခု ဖန်တီးပါ:</p>
+            <ol>
+                <li>နာမည်နဲ့ အီးမေးလ်အတွက် စာသားအကွက်များ</li>
+                <li>အကြိုက်ဆုံးအရောင်အတွက် dropdown</li>
+                <li>ဝါသနာများအတွက် checkbox များ</li>
+                <li>တင်ရန် ခလုတ်</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(6)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(8)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 8: Semantic HTML -->
+    <div class="page hidden" id="page8">
+        <h1><span class="emoji">🏛️</span> Semantic HTML</h1>
+        <p>Browser နဲ့ screen reader တွေအတွက် ၎င်းတို့၏ရည်ရွယ်ချက်ကို ဖော်ပြတဲ့ modern tags တွေ:</p>
+        
+        <div class="example">
+            <h3>Semantic Layout ဥပမာ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code8">&lt;header&gt;
+  &lt;h1&gt;Website ခေါင်းစဉ်&lt;/h1&gt;
+  &lt;nav&gt;
+    &lt;a href="/"&gt;ပင်မ&lt;/a&gt;
+    &lt;a href="/about"&gt;ကျွန်တော်အကြောင်း&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Blog Post ခေါင်းစဉ်&lt;/h2&gt;
+    &lt;p&gt;ဆောင်းပါးအကြောင်းအရာ...&lt;/p&gt;
+  &lt;/article&gt;
+  
+  &lt;aside&gt;
+    &lt;h2&gt;ဆက်စပ်လင့်ခ်များ&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#"&gt;လင့်ခ် ၁&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;© ၂၀၂၃ ကျွန်တော့် Website&lt;/p&gt;
+&lt;/footer&gt;</textarea>
+                <button class="run-button" onclick="runCode(8)">Run</button>
+            </div>
+            <div class="preview-box" id="preview8"></div>
+        </div>
+        
+        <h2>Semantic Tag အဖွဲ့:</h2>
+        <div class="tag-grid">
+            <div class="tag-card">
+                <div class="tag-name">&lt;header&gt;</div>
+                <p>မိတ်ဆက်အကြောင်းအရာ (စာမျက်နှာ သို့မဟုတ် အပိုင်းခေါင်းစဉ်)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;nav&gt;</div>
+                <p>သွားလာရန် လင့်ခ်များ</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;main&gt;</div>
+                <p>အဓိက အကြောင်းအရာ (စာမျက်နှာတစ်ခုလျှင် တစ်ခုသာ)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;article&gt;</div>
+                <p>သီးခြားဖွဲ့စည်းမှု (blog post, သတင်းအကြောင်းအရာ)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;section&gt;</div>
+                <p>အကြောင်းအရာ၏ အပိုင်းအစများ</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;aside&gt;</div>
+                <p>ဘေးထွက် အကြောင်းအရာ (sidebar ကဲ့သို့)</p>
+            </div>
+            <div class="tag-card">
+                <div class="tag-name">&lt;footer&gt;</div>
+                <p>စာမျက်နှာ သို့မဟုတ် အပိုင်းအတွက် အောက်ခြေစာသား</p>
+            </div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> Semantic HTML က ရှာဖွေရေးအင်ဂျင်တွေကို သင့်အကြောင်းအရာကို ပိုနားလည်စေပြီး website ranking ကို မြှင့်တင်နိုင်ပါတယ်!</p>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ Semantic စိန်ခေါ်မှု!</h3>
+            <p>ဒီအဟောင်း layout ကို semantic HTML အဖြစ် ပြောင်းပါ:</p>
+            <pre><code>&lt;div id="header"&gt;...&lt;/div&gt;
+&lt;div class="main"&gt;
+  &lt;div class="post"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="sidebar"&gt;...&lt;/div&gt;
+&lt;div id="footer"&gt;...&lt;/div&gt;</code></pre>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(7)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(9)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 9: Final Project -->
+    <div class="page hidden" id="page9">
+        <h1><span class="emoji">🎉</span> Website တစ်ခု တည်ဆောက်ကြမယ်!</h1>
+        <p>သင်ယူခဲ့သမျှကို ပေါင်းစပ်ပြီး ကိုယ်ပိုင် webpage တစ်ခု ဖန်တီးကြမယ်!</p>
+        
+        <div class="example">
+            <h2>ပြည့်စုံသော ဥပမာ</h2>
+            <div class="code-container">
+                <textarea class="code-editor" id="code9">&lt;!DOCTYPE html&gt;
+&lt;html lang="my"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;ကျွန်တော့်စက်ရုပ်&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;ကျွန်တော့်စက်ရုပ်မိတ်ဆွေ&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;a href="#about"&gt;အကြောင်း&lt;/a&gt; |
+            &lt;a href="#gallery"&gt;ဓာတ်ပုံများ&lt;/a&gt;
+        &lt;/nav&gt;
+    &lt;/header&gt;
+    
+    &lt;main&gt;
+        &lt;article id="about"&gt;
+            &lt;h2&gt;ကျွန်တော့်စက်ရုပ်အကြောင်း&lt;/h2&gt;
+            &lt;p&gt;ဒါက ကျွန်တော့်ရဲ့ &lt;strong&gt;အကြိုက်ဆုံး&lt;/strong&gt; စက်ရုပ်မိတ်ဆွေပါ!&lt;/p&gt;
+            
+            &lt;section&gt;
+                &lt;h3&gt;စက်ရုပ်အချက်အလက်&lt;/h3&gt;
+                &lt;table border="1"&gt;
+                    &lt;tr&gt;
+                        &lt;th&gt;နာမည်&lt;/th&gt;
+                        &lt;td&gt;Robo-3000&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;th&gt;အသက်&lt;/th&gt;
+                        &lt;td&gt;၂နှစ်&lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+            &lt;/section&gt;
+        &lt;/article&gt;
+        
+        &lt;section id="gallery"&gt;
+            &lt;h2&gt;စက်ရုပ်ဓာတ်ပုံများ&lt;/h2&gt;
+            &lt;figure&gt;
+                &lt;img src="robot1.jpg" alt="စက်ရုပ်ကစားနေပုံ" width="300"&gt;
+                &lt;figcaption&gt;ကျွန်တော့်စက်ရုပ် ပန်းခြံမှာ ကစားနေပုံ&lt;/figcaption&gt;
+            &lt;/figure&gt;
+        &lt;/section&gt;
+        
+        &lt;aside&gt;
+            &lt;h3&gt;ပျော်စရာအချက်များ&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;ကခုန်ရတာ ကြိုက်တယ်&lt;/li&gt;
+                &lt;li&gt;ဘာသာစကား ၅မျိုး ပြောတတ်တယ်&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/aside&gt;
+    &lt;/main&gt;
+    
+    &lt;footer&gt;
+        &lt;p&gt;© &lt;time datetime="2023"&gt;၂၀၂၃&lt;/time&gt; စက်ရုပ်ချစ်သူ&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+                <button class="run-button" onclick="runCode(9)">Run</button>
+            </div>
+            <div class="preview-box" id="preview9"></div>
+        </div>
+        
+        <div class="challenge">
+            <h2>🌟 နောက်ဆုံးစိန်ခေါ်မှု! 🌟</h2>
+            <p>သင်နှစ်သက်ရာ အကြောင်းအရာ (အိမ်မွေးတိရစ္ဆာန်၊ ဂိမ်း၊ အားကစား) အကြောင်း webpage တစ်ခု ဖန်တီးပါ:</p>
+            <ol>
+                <li>ခေါင်းစဉ်နှင့် navigation ပါသော header</li>
+                <li>ခေါင်းစဉ်ပါသော အပိုင်း အနည်းဆုံး ၂ခု</li>
+                <li>စာရင်းတစ်ခု (အမှတ်စဉ်ပါ/မပါ)</li>
+                <li>ဓာတ်ပုံတစ်ပုံ</li>
+                <li>ဇယားတစ်ခု</li>
+                <li>ဖောင်တစ်ခု</li>
+                <li>Footer</li>
+                <li>အပိုဆုး: Semantic tags အနည်းဆုံး ၃ခု သုံးပါ</li>
+            </ol>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>ဂုဏ်ယူပါတယ်!</strong> သင်သင်ယူခဲ့သော HTML tags အရေအတွက်: <span id="tag-count">0</span>! 🎉</p>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(8)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(1)">အစမှ စပါ <span class="emoji">🔄</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Show a specific page and hide others
+        function showPage(pageNumber) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show the requested page
+            document.getElementById('page' + pageNumber).classList.remove('hidden');
+            
+            // Update progress bar
+            updateProgress(pageNumber);
+            
+            // Update tag count on final page
+            if(pageNumber === 9) {
+                updateTagCount();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress(currentPage) {
+            const progressPercentage = (currentPage / 9) * 100;
+            document.getElementById('progress').style.width = progressPercentage + '%';
+        }
+        
+        // Run code in preview box
+        function runCode(pageNumber) {
+            const code = document.getElementById('code' + pageNumber).value;
+            const preview = document.getElementById('preview' + pageNumber);
+            preview.innerHTML = code;
+        }
+        
+        // Count all tags taught
+        function updateTagCount() {
+            const tagCards = document.querySelectorAll('.tag-card');
+            document.getElementById('tag-count').textContent = tagCards.length;
+        }
+        
+        // Initialize first page
+        showPage(1);
+    </script>
+</body>
+</html>

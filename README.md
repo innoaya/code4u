@@ -7,6 +7,7 @@ Code4U is an interactive educational web application designed to teach middle an
 ## Features
 
 - **Interactive Learning**: Hands-on coding challenges with real-time feedback
+- **Educational Content**: Standalone learning modules for HTML, CSS, and JavaScript with interactive examples
 - **Gamified Experience**: Progress tracking, badges, and a leaderboard to motivate students
 - **Multi-language Support**: Create custom journeys for any programming language or technology
 - **Flexible Curriculum**: Structured learning paths from basics to advanced concepts across various languages
@@ -37,11 +38,16 @@ Code4U/
 ├── public/                 # Static assets
 ├── src/
 │   ├── assets/             # CSS, images, and other assets
+│   │   ├── h5/                  # Interactive learning content
+│   │   │   ├── html.html        # HTML learning module with interactive examples
+│   │   │   ├── css.html         # CSS learning module with interactive examples
+│   │   │   └── javascript.html  # JavaScript learning module with interactive examples
 │   ├── components/         # Vue components
 │   │   ├── ActivityFeed.vue       # Community activity feed component
 │   │   ├── FeedbackPanel.vue      # Feedback collection form
 │   │   ├── FloatingFeedbackButton.vue # Floating button for feedback
 │   │   ├── GameEngine.vue         # Gamification integration component
+│   │   ├── HtmlContentViewer.vue  # Viewer for H5 educational content
 │   │   ├── ProfileEditor.vue      # Profile editing component
 │   │   └── ...
 │   ├── firebase/           # Firebase configuration and utilities

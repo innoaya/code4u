@@ -54,13 +54,9 @@ service cloud.firestore {
 
     // Level data - filtered by isPublished for regular users, admins and creators can modify, only admins can delete
     match /levels/{levelId} {
-      allow read: if 
-        // Regular users can only see published levels
-        (resource.data.isPublished == true) || 
-        // Admins can see all levels
-        isAdmin() ||
-        // Creators can see their own levels regardless of publish status
-        (isCreator() && resource.data.createdBy == request.auth.uid);
+      // Allow everyone (including unauthenticated users) to read published levels
+      allow read: if request.auth == null || resource.data.isPublished == true || isAdmin() || 
+                   (isCreator() && resource.data.createdBy == request.auth.uid);
       allow create: if isAdminOrCreator(); // Admins and creators can create levels
       allow update: if isAdmin() || (isCreator() && resource.data.createdBy == request.auth.uid); // Admins can edit any level, creators can only edit their own
       allow delete: if isAdmin(); // Only admins can delete levels
@@ -83,13 +79,9 @@ service cloud.firestore {
     
     // Journeys - read filtered by isPublished, admins and creators can write, only admins can delete
     match /journeys/{journeyId} {
-      allow read: if 
-        // Regular users can only see published journeys
-        (resource.data.isPublished == true) || 
-        // Admins can see all journeys
-        isAdmin() ||
-        // Creators can see their own journeys regardless of publish status
-        (isCreator() && resource.data.createdBy == request.auth.uid);
+      // Allow everyone (including unauthenticated users) to read published journeys
+      allow read: if request.auth == null || resource.data.isPublished == true || isAdmin() || 
+                   (isCreator() && resource.data.createdBy == request.auth.uid);
       allow create: if isAdminOrCreator(); // Admins and creators can create journeys
       allow update: if isAdmin() || (isCreator() && resource.data.createdBy == request.auth.uid); // Admins can edit any journey, creators can only edit their own
       allow delete: if isAdmin(); // Only admins can delete journeys

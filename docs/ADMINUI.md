@@ -205,11 +205,13 @@ Potential improvements for the Admin UI include:
 
 1. **Badge Management**: Add dedicated interface for creating and managing achievement badges
 2. **User Management**: Interface for assigning admin roles to users
-3. **Bulk Operations**: Tools for batch editing or importing/exporting data
-4. **Preview Mode**: Allow viewing content as it would appear to students
-5. **Version History**: Track changes to learning content
-6. **Media Management**: Tools for uploading and managing images or videos for levels
-7. **Analytics Dashboard**: View student progress and engagement metrics
+3. **Educational Content Management**: Interface for creating and editing interactive HTML, CSS, and JavaScript tutorials accessible via the Learn menu
+4. **Bulk Operations**: Tools for batch editing or importing/exporting data
+5. **Preview Mode**: Allow viewing content as it would appear to students
+6. **Version History**: Track changes to learning content
+7. **Media Management**: Tools for uploading and managing images or videos for levels
+8. **Analytics Dashboard**: View student progress and engagement metrics
+9. **Multi-language Support**: Interface for managing content in multiple languages
 
 ## Usage Guide
 

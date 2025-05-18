@@ -13,7 +13,9 @@ const userRole = ref(null)
 const isLoading = ref(true)
 const isMenuOpen = ref(false)
 const adminMenuOpen = ref(false)
+const learnMenuOpen = ref(false)
 const closeTimer = ref(null)
+const learnCloseTimer = ref(null)
 
 // Computed properties to check user roles
 const isAdmin = computed(() => userRole.value === 'admin')
@@ -57,6 +59,7 @@ function toggleMenu() {
 function closeMenu() {
   isMenuOpen.value = false
   adminMenuOpen.value = false
+  learnMenuOpen.value = false
 }
 
 // Handle admin menu hover interactions
@@ -79,6 +82,25 @@ function clearCloseTimer() {
   // Ensure menu stays open
   adminMenuOpen.value = true
 }
+
+// Handle Learn menu hover interactions
+function startLearnCloseTimer() {
+  if (learnCloseTimer.value) {
+    clearTimeout(learnCloseTimer.value)
+  }
+  learnCloseTimer.value = setTimeout(() => {
+    learnMenuOpen.value = false
+  }, 300)
+}
+
+function clearLearnCloseTimer() {
+  if (learnCloseTimer.value) {
+    clearTimeout(learnCloseTimer.value)
+    learnCloseTimer.value = null
+  }
+  // Ensure menu stays open
+  learnMenuOpen.value = true
+}
 </script>
 
 <template>
@@ -96,9 +118,40 @@ function clearCloseTimer() {
 
         <!-- Desktop Navigation - hidden on mobile -->
         <div class="hidden md:flex md:space-x-6">
+
           <RouterLink @click="closeMenu" to="/" class="text-text-primary hover:text-primary transition-colors duration-200">
             Home
           </RouterLink>
+
+          <!-- Learn Dropdown Menu -->
+          <div class="relative">
+            <button
+              class="text-text-primary hover:text-primary transition-colors duration-200 flex items-center space-x-1 focus:outline-none"
+              @mouseenter="learnMenuOpen = true"
+              @mouseleave="startLearnCloseTimer"
+            >
+              <span>Learn</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div
+              v-show="learnMenuOpen"
+              @mouseenter="clearLearnCloseTimer"
+              @mouseleave="startLearnCloseTimer"
+              class="absolute right-0 mt-6 w-48 bg-white shadow-lg rounded-md py-1 z-50 transition-all duration-150 origin-top-right">
+              <RouterLink @click="closeMenu" to="/learn/html" class="block px-4 py-2 text-text-primary hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                HTML
+              </RouterLink>
+              <RouterLink @click="closeMenu" to="/learn/css" class="block px-4 py-2 text-text-primary hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                CSS
+              </RouterLink>
+              <RouterLink @click="closeMenu" to="/learn/javascript" class="block px-4 py-2 text-text-primary hover:bg-gray-50 hover:text-primary transition-colors duration-200">
+                JavaScript
+              </RouterLink>
+            </div>
+          </div>
+
           <RouterLink @click="closeMenu" to="/learning-paths" class="text-text-primary hover:text-primary transition-colors duration-200">
             Journeys
           </RouterLink>
@@ -108,12 +161,14 @@ function clearCloseTimer() {
           <RouterLink @click="closeMenu" to="/activities" class="text-text-primary hover:text-primary transition-colors duration-200">
             Activities
           </RouterLink>
+
           <RouterLink v-if="!user" @click="closeMenu" to="/login" class="text-text-primary hover:text-primary transition-colors duration-200">
             Login
           </RouterLink>
           <RouterLink v-if="user" @click="closeMenu" to="/profile" class="text-text-primary hover:text-primary transition-colors duration-200">
             Profile
           </RouterLink>
+
           <!-- Admin Dropdown Menu for Desktop -->
           <div v-if="isAdminOrCreator" class="relative">
             <button
@@ -235,6 +290,23 @@ function clearCloseTimer() {
         class="md:hidden absolute w-full bg-white shadow-md border-t border-gray-100 z-20"
       >
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <!-- Learn Menu for Mobile -->
+          <div class="px-3 py-2">
+            <div class="flex items-center text-base font-medium text-gray-600 mb-1">
+              <span>Learn</span>
+            </div>
+            <div class="ml-3 border-l-2 border-gray-200 pl-3 space-y-1">
+              <RouterLink @click="closeMenu" to="/learn/html" class="block py-1 text-sm text-text-primary hover:text-primary transition-colors">
+                HTML
+              </RouterLink>
+              <RouterLink @click="closeMenu" to="/learn/css" class="block py-1 text-sm text-text-primary hover:text-primary transition-colors">
+                CSS
+              </RouterLink>
+              <RouterLink @click="closeMenu" to="/learn/javascript" class="block py-1 text-sm text-text-primary hover:text-primary transition-colors">
+                JavaScript
+              </RouterLink>
+            </div>
+          </div>
           <RouterLink @click="closeMenu" to="/" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-50 hover:text-primary">
             Home
           </RouterLink>
@@ -292,7 +364,7 @@ function clearCloseTimer() {
                   <span>Dashboard</span>
                 </div>
               </RouterLink>
-              
+
               <!-- Journey Management -->
               <RouterLink
                 @click="closeMenu"
@@ -306,7 +378,7 @@ function clearCloseTimer() {
                   <span>Journeys</span>
                 </div>
               </RouterLink>
-              
+
               <!-- Level Management -->
               <RouterLink
                 @click="closeMenu"
@@ -320,7 +392,7 @@ function clearCloseTimer() {
                   <span>Levels</span>
                 </div>
               </RouterLink>
-              
+
               <!-- Badge Management -->
               <RouterLink
                 @click="closeMenu"
@@ -334,7 +406,7 @@ function clearCloseTimer() {
                   <span>Badges</span>
                 </div>
               </RouterLink>
-              
+
               <!-- Feedback Management (admin only) -->
               <RouterLink
                 v-if="isAdmin"
@@ -349,7 +421,7 @@ function clearCloseTimer() {
                   <span>Feedbacks</span>
                 </div>
               </RouterLink>
-              
+
               <!-- User Management (admin only) -->
               <RouterLink
                 v-if="isAdmin"

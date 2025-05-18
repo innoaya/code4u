@@ -63,11 +63,11 @@ const viewJourney = (journeyId) => {
       </p>
       <div class="flex justify-center space-x-4">
         <button @click="startLearning" class="btn btn-primary text-lg px-8 py-3">
-          Explore Journeys
+          Start a Journey
         </button>
-        <a 
-          href="https://github.com/innoaya/code4u" 
-          target="_blank" 
+        <a
+          href="https://github.com/innoaya/code4u"
+          target="_blank"
           rel="noopener noreferrer"
           class="flex items-center bg-gray-800 hover:bg-gray-700 text-white text-lg px-6 py-3 rounded-md transition duration-200"
         >
@@ -81,14 +81,14 @@ const viewJourney = (journeyId) => {
 
     <!-- Journeys Section -->
     <h2 class="text-2xl font-bold mb-6 text-center">Featured Journeys</h2>
-    
+
     <div v-if="isLoading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
     </div>
-    
+
     <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
       <!-- Featured Journeys -->
-      <div v-for="journey in featuredJourneys" :key="journey.id" 
+      <div v-for="journey in featuredJourneys" :key="journey.id"
            class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between">
         <div>
           <div class="text-4xl mb-4">{{ journey.icon }}</div>
@@ -110,9 +110,9 @@ const viewJourney = (journeyId) => {
           </button>
         </div>
       </div>
-      
+
       <!-- View All Journeys Card -->
-      <div v-if="featuredJourneys.length < 3" 
+      <div v-if="featuredJourneys.length < 3"
            class="card hover:shadow-lg transition-all p-6 flex flex-col justify-between bg-gray-50 border-dashed border-2 border-gray-200">
         <div class="flex flex-col items-center justify-center h-full">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

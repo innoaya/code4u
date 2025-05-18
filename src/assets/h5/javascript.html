@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript သင်ခန်းစာ</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #a5b4fc;
+            --accent: #fbbf24;
+            --light: #f5f3ff;
+            --dark: #1e1b4b;
+        }
+        body {
+            font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        .page {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.2);
+        }
+        h1, h2, h3 {
+            color: var(--primary);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 3px dashed var(--secondary);
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        .character {
+            width: 120px;
+            float: right;
+            margin-left: 20px;
+        }
+        .example {
+            background-color: #eef2ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            margin-bottom: 20px;
+        }
+        .try-it {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 10px 5px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .try-it:hover {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .preview-box {
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+        }
+        .code-container {
+            position: relative;
+        }
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            font-family: monospace;
+            padding: 15px;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            background: #f5f5f5;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .run-button {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .fun-fact {
+            background: #fff9db;
+            border-left: 4px solid var(--accent);
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        .challenge {
+            background: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .interactive-demo {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .demo-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Welcome -->
+    <div class="page" id="page1">
+        <img src="https://cdn.pixabay.com/illustration/2016/12/27/robot-1934259_640.png" alt="Robot Helper" class="character">
+        <h1><span class="emoji">👋</span> လွယ်ကူလေ့လာ JavaScript သင်ခန်းစာ!</h1>
+        <p>မင်္ဂလာပါ! ကျွန်တော့်နာမည်က Codey the Robot 🤖 ပါ။ Website တွေကို အသက်သွင်းဖို့ JavaScript ကို အတူတူ သင်ယူကြမယ်!</p>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> JavaScript ကို ၁၉၉၅ ခုနှစ်မှာ Netscape က Brendan Eich က ၁၀ရက်အတွင်း တီထွင်ခဲ့တာပါ!</p>
+        </div>
+        
+        <h2>JavaScript ဆိုတာဘာလဲ?</h2>
+        <p><strong>JavaScript</strong> က Website တွေကို အပြုအမူတွေထည့်ပေးတဲ့ programming language ဖြစ်ပါတယ်။</p>
+        <p>HTML (အရိုးစင်) + CSS (အလှဆင်) + JS (အပြုအမူ) = ပြည့်စုံတဲ့ Website</p>
+        
+        <div class="example">
+            <h3>ပထမဆုံး JavaScript ကုဒ်:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code1">// alert box ပြမယ်
+alert('မင်္ဂလာပါ! JavaScript စတင်ပါပြီ');
+
+// console မှာ ရေးမယ်
+console.log('ဒီစာသားကို console မှာတွေ့ရမယ်');
+
+// HTML ကို ပြောင်းမယ်
+document.getElementById('demo').textContent = 'JavaScript ကနေ ပြောင်းလဲထားတဲ့စာသား';
+                </textarea>
+                <button class="run-button" onclick="runCode(1)">Run</button>
+            </div>
+            <div class="preview-box" id="preview1">
+                <p id="demo">ဒီစာသားကို JavaScript က ပြောင်းမှာပါ</p>
+            </div>
+        </div>
+        
+        <div class="try-it" onclick="showPage(2)">စသင်ကြရအောင်! <span class="emoji">🚀</span></div>
+    </div>
+
+    <!-- Page 2: Variables & Data Types -->
+    <div class="page hidden" id="page2">
+        <h1><span class="emoji">📦</span> Variables (အချက်အလက်သိုလှောင်ရာ) & Data Types (အချက်အလက်အမျိုးအစားများ)</h1>
+        
+        <div class="example">
+            <h3>Variables သတ်မှတ်နည်း (let, const, var):</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code2">// let (ပြန်ပြောင်းလို့ရ)
+let age = 20;
+age = 21; // ပြောင်းလဲနိုင်
+
+// const (ပြန်ပြောင်းလို့မရ)
+const name = "မောင်မောင်";
+// name = "အေးအေး"; // Error ဖြစ်မယ်
+
+// var (အဟောင်းသုံး - မသုံးသင့်တော့ပါ)
+var oldVariable = "အဟောင်း";
+
+// Data Types အမျိုးအစားများ
+const message = "စာသား"; // String
+const score = 100; // Number
+const isStudent = true; // Boolean
+const fruits = ["ပန်းသီး", "ငှက်ပျော", "လိမ္မော်"]; // Array
+const person = {name: "မောင်မောင်", age: 20}; // Object
+const emptyValue = null; // Null
+let undefinedValue; // Undefined
+
+// Console မှာကြည့်ကြရအောင်
+console.log("စာသား:", message);
+console.log("အရေအတွက်:", score);
+console.log("ကျောင်းသား:", isStudent);
+console.log("သစ်သီးများ:", fruits);
+console.log("လူ:", person);</textarea>
+                <button class="run-button" onclick="runCode(2)">Run</button>
+            </div>
+            <div class="preview-box" id="preview2">
+                <p>ရလဒ်ကို console မှာကြည့်ပါ (Right-click > Inspect > Console)</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Variable Demo:</h3>
+            <button onclick="variableDemo()" class="try-it">Variable Demo စမ်းကြည့်မယ်</button>
+            <div class="demo-result" id="variableDemoResult"></div>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Data Types အဓိက ၇မျိုး</h3>
+                <ol>
+                    <li>String (စာသား) - "Hello"</li>
+                    <li>Number (ဂဏန်း) - 123, 3.14</li>
+                    <li>Boolean (အမှန်/အမှား) - true/false</li>
+                    <li>Array (စာရင်း) - [1, 2, 3]</li>
+                    <li>Object (အရာဝတ္ထု) - {name: "John"}</li>
+                    <li>Null (အချည်းနှီး)</li>
+                    <li>Undefined (မသတ်မှတ်ရသေး)</li>
+                </ol>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Variable Types ၃မျိုး</h3>
+                <ul>
+                    <li><strong>let</strong> - Block scope, reassignable</li>
+                    <li><strong>const</strong> - Block scope, constant</li>
+                    <li><strong>var</strong> - Function scope, outdated</li>
+                </ul>
+                <p style="margin-top: 10px;"><em>အကြံပြုချက်: const ကိုအများဆုံးသုံးပါ၊ လိုအပ်မှ let သုံးပါ၊ var ကိုမသုံးပါနဲ့</em></p>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(1)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(3)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 3: Operators & Conditions -->
+    <div class="page hidden" id="page3">
+        <h1><span class="emoji">🔢</span> Operators (လုပ်ဆောင်ချက်များ) & Conditions (အခြေအနေများ)</h1>
+        
+        <div class="example">
+            <h3>လုပ်ဆောင်ချက်များနှင့် if-else အသုံးပြုနည်း:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code3">// သင်္ချာလုပ်ဆောင်ချက်များ
+let a = 10, b = 5;
+console.log("a + b =", a + b); // ပေါင်း
+console.log("a - b =", a - b); // နုတ်
+console.log("a * b =", a * b); // မြှောက်
+console.log("a / b =", a / b); // စား
+console.log("a % b =", a % b); // အကြွင်း
+
+// နှိုင်းယှဉ်ခြင်းများ
+console.log("a > b?", a > b); // true
+console.log("a === 10?", a === 10); // true
+console.log("a !== 10?", a !== 10); // false
+
+// if-else အသုံးပြုနည်း
+const age = 18;
+if (age >= 18) {
+    console.log("သက်ကြီးရွယ်အို မင်္ဂလာပါ");
+} else {
+    console.log("ကလေး မင်္ဂလာပါ");
+}
+
+// Ternary operator (if-else တိုတို)
+const message = age >= 18 ? "အရွယ်ရောက်ပြီ" : "ကလေး";
+console.log(message);
+
+// Logical Operators (&&, ||, !)
+const isStudent = true;
+const hasTicket = false;
+if (isStudent && hasTicket) {
+    console.log("ကျောင်းသားလျှော့စျေးနဲ့ဝင်နိုင်ပါပြီ");
+} else if (isStudent || hasTicket) {
+    console.log("ပုံမှန်ဝင်နိုင်ပါပြီ");
+} else {
+    console.log("လက်မှတ်ဝယ်ရန်လိုပါသည်");
+}</textarea>
+                <button class="run-button" onclick="runCode(3)">Run</button>
+            </div>
+            <div class="preview-box" id="preview3">
+                <p>ရလဒ်ကို console မှာကြည့်ပါ</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Age Checker:</h3>
+            <input type="number" id="ageInput" placeholder="သင့်အသက်ထည့်ပါ" style="padding: 8px; width: 200px;">
+            <button onclick="checkAge()" class="try-it">စစ်ဆေးမည်</button>
+            <div class="demo-result" id="ageCheckResult"></div>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">သင်္ချာလုပ်ဆောင်ချက်များ</h3>
+                <ul>
+                    <li>+ ပေါင်း</li>
+                    <li>- နုတ်</li>
+                    <li>* မြှောက်</li>
+                    <li>/ စား</li>
+                    <li>% အကြွင်း</li>
+                    <li>** ထပ်ကိန်း</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">နှိုင်းယှဉ်ခြင်းများ</h3>
+                <ul>
+                    <li>== တူညီမှု (တန်ဖိုး)</li>
+                    <li>=== တူညီမှု (တန်ဖိုးနှင့်အမျိုးအစား)</li>
+                    <li>!= မတူညီ</li>
+                    <li>!== တန်ဖိုးသို့မဟုတ်အမျိုးအစား မတူညီ</li>
+                    <li>&gt; ထက်ကြီး</li>
+                    <li>&lt; ထက်ငယ်</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">လုပ်ဆောင်ချက်အမျိုးအစားများ</h3>
+                <ul>
+                    <li>if - else if - else</li>
+                    <li>Ternary operator (condition ? true : false)</li>
+                    <li>&& (နှင့်)</li>
+                    <li>|| (သို့)</li>
+                    <li>! (မဟုတ်)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(2)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(4)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 4: Functions -->
+    <div class="page hidden" id="page4">
+        <h1><span class="emoji">🛠️</span> Functions (လုပ်ဆောင်ချက်များ)</h1>
+        
+        <div class="example">
+            <h3>Function အမျိုးအစားများ:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code4">// 1. Function Declaration
+function greet(name) {
+    return "မင်္ဂလာပါ " + name + "!";
+}
+
+// 2. Function Expression
+const add = function(a, b) {
+    return a + b;
+};
+
+// 3. Arrow Function (ES6)
+const multiply = (a, b) => a * b;
+
+// 4. Immediately Invoked Function (IIFE)
+(function() {
+    console.log("IIFE ကနေ မင်္ဂလာပါ");
+})();
+
+// Function တွေကို ခေါ်သုံးကြည့်မယ်
+console.log(greet("မောင်မောင်"));
+console.log("5 + 3 =", add(5, 3));
+console.log("5 * 3 =", multiply(5, 3));
+
+// Default Parameters
+function createUser(name, age = 18) {
+    return {name, age};
+}
+console.log(createUser("အေးအေး")); // age မထည့်ရင် default 18 သုံးမယ်
+
+// Rest Parameters
+function sum(...numbers) {
+    return numbers.reduce((total, num) => total + num, 0);
+}
+console.log("ပေါင်းလဒ်:", sum(1, 2, 3, 4, 5));</textarea>
+                <button class="run-button" onclick="runCode(4)">Run</button>
+            </div>
+            <div class="preview-box" id="preview4">
+                <p>ရလဒ်ကို console မှာကြည့်ပါ</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Calculator Demo:</h3>
+            <input type="number" id="num1" placeholder="ပထမဂဏန်း" style="padding: 8px; width: 100px;">
+            <input type="number" id="num2" placeholder="ဒုတိယဂဏန်း" style="padding: 8px; width: 100px;">
+            <button onclick="calculate('add')" class="try-it">+</button>
+            <button onclick="calculate('subtract')" class="try-it">-</button>
+            <button onclick="calculate('multiply')" class="try-it">×</button>
+            <button onclick="calculate('divide')" class="try-it">÷</button>
+            <div class="demo-result" id="calcResult"></div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ Function Challenge!</h3>
+            <p>BMI တွက်ချက်သည့် function တစ်ခုရေးပါ:</p>
+            <ol>
+                <li>Function ကို calculateBMI(weight, height) အဖြစ်သတ်မှတ်ပါ</li>
+                <li>BMI = weight (kg) / (height (m) * height (m))</li>
+                <li>ရလဒ်ကို return ပြန်ပေးပါ</li>
+                <li>Console.log နဲ့ BMI 18.5, 25, 30 တို့နဲ့နှိုင်းယှဉ်ပြီး အခြေအနေပြပါ</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(3)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(5)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 5: DOM Manipulation -->
+    <div class="page hidden" id="page5">
+        <h1><span class="emoji">🖥️</span> DOM Manipulation (ဝက်ဘ်စာမျက်နှာ ထိန်းချုပ်ခြင်း)</h1>
+        
+        <div class="example">
+            <h3>DOM ကို JavaScript နဲ့ ထိန်းချုပ်နည်း:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code5">// Element တွေကို ရွေးချယ်နည်းများ
+const heading = document.getElementById('domHeading');
+const paragraphs = document.querySelectorAll('.dom-paragraph');
+const container = document.querySelector('.dom-container');
+
+// Element တွေကို ပြောင်းလဲခြင်း
+heading.textContent = 'DOM Manipulation အသစ်';
+heading.style.color = 'red';
+heading.classList.add('highlight');
+
+// Element အသစ်ဖန်တီးခြင်း
+const newParagraph = document.createElement('p');
+newParagraph.textContent = 'JavaScript ကနေ ဖန်တီးထားသော စာပိုဒ်';
+container.appendChild(newParagraph);
+
+// Event Listener ထည့်ခြင်း
+const button = document.getElementById('domButton');
+button.addEventListener('click', function() {
+    alert('ခလုတ်ကိုနှိပ်လိုက်ပါပြီ!');
+    this.textContent = 'နှိပ်ပြီးသား';
+});
+
+// Form input ကိုဖတ်ခြင်း
+const form = document.getElementById('domForm');
+form.addEventListener('submit', function(e) {
+    e.preventDefault(); // Page refresh မဖြစ်အောင်
+    const name = document.getElementById('nameInput').value;
+    document.getElementById('formResult').textContent = `မင်္ဂလာပါ ${name}!`;
+});</textarea>
+                <button class="run-button" onclick="runCode(5)">Run</button>
+            </div>
+            <div class="preview-box" id="preview5">
+                <h3 id="domHeading">DOM Manipulation</h3>
+                <div class="dom-container" style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+                    <p class="dom-paragraph">ဒီစာပိုဒ်ကို JavaScript က ပြောင်းလဲမှာပါ</p>
+                </div>
+                <button id="domButton" class="try-it">ကျွန်တော်ကိုနှိပ်ပါ</button>
+                
+                <form id="domForm" style="margin-top: 20px;">
+                    <input type="text" id="nameInput" placeholder="နာမည်ထည့်ပါ" style="padding: 8px;">
+                    <button type="submit" class="try-it">ပို့မည်</button>
+                </form>
+                <div id="formResult" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">DOM Selection Methods</h3>
+                <ul>
+                    <li>document.getElementById()</li>
+                    <li>document.querySelector()</li>
+                    <li>document.querySelectorAll()</li>
+                    <li>document.getElementsByClassName()</li>
+                    <li>document.getElementsByTagName()</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">DOM Manipulation</h3>
+                <ul>
+                    <li>element.textContent</li>
+                    <li>element.innerHTML</li>
+                    <li>element.setAttribute()</li>
+                    <li>element.style.property</li>
+                    <li>element.classList</li>
+                    <li>document.createElement()</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Event Listeners</h3>
+                <ul>
+                    <li>click</li>
+                    <li>submit</li>
+                    <li>mouseover</li>
+                    <li>keydown</li>
+                    <li>load</li>
+                    <li>element.addEventListener()</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ DOM Challenge!</h3>
+            <p>ဒီ features တွေပါတဲ့ To-Do List တစ်ခုလုပ်ပါ:</p>
+            <ol>
+                <li>Input field နဲ့ Add button</li>
+                <li>Add နှိပ်ရင် list ထဲကို item အသစ်ထည့်</li>
+                <li>Item ကိုနှိပ်ရင် ဖျက်နိုင်အောင်</li>
+                <li>Clear All button နဲ့ list တစ်ခုလုံးဖျက်နိုင်အောင်</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(4)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(6)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 6: Arrays & Loops -->
+    <div class="page hidden" id="page6">
+        <h1><span class="emoji">🔄</span> Arrays (စာရင်းများ) & Loops (ထပ်ခါထပ်ခါလုပ်ဆောင်ချက်များ)</h1>
+        
+        <div class="example">
+            <h3>Arrays နှင့် Loops အသုံးပြုနည်း:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code6">// Array ဖန်တီးခြင်း
+const fruits = ['ပန်းသီး', 'ငှက်ပျော', 'လိမ္မော်'];
+
+// Array methods အသုံးပြုခြင်း
+fruits.push('သရက်သီး'); // နောက်ဆုံးမှာထည့်
+fruits.unshift('ဖရဲသီး'); // ရှေ့ဆုံးမှာထည့်
+fruits.pop(); // နောက်ဆုံးကဖျက်
+fruits.shift(); // ရှေ့ဆုံးကဖျက်
+
+// Array ကိုဖြတ်သန်းခြင်း
+// 1. for loop
+for (let i = 0; i < fruits.length; i++) {
+    console.log(fruits[i]);
+}
+
+// 2. for...of loop
+for (const fruit of fruits) {
+    console.log(fruit);
+}
+
+// 3. forEach method
+fruits.forEach(function(fruit, index) {
+    console.log(index + 1, fruit);
+});
+
+// Array methods အသုံးဝင်များ
+const numbers = [1, 2, 3, 4, 5];
+
+// map - array တစ်ခုလုံးကို ပြောင်းလဲပြီး အသစ်ထုတ်
+const doubled = numbers.map(num => num * 2);
+console.log("Doubled:", doubled);
+
+// filter - အခြေအနေနှင့်ကိုက်ညီမှုများကိုရွေး
+const evens = numbers.filter(num => num % 2 === 0);
+console.log("Even numbers:", evens);
+
+// reduce - array တစ်ခုလုံးကို တစ်ခုတည်းသို့ ချုံ့
+const sum = numbers.reduce((total, num) => total + num, 0);
+console.log("Sum:", sum);
+
+// find - အခြေအနေနှင့်ပထမဆုံးကိုက်ညီမှုကိုရှာ
+const firstEven = numbers.find(num => num % 2 === 0);
+console.log("First even:", firstEven);</textarea>
+                <button class="run-button" onclick="runCode(6)">Run</button>
+            </div>
+            <div class="preview-box" id="preview6">
+                <p>ရလဒ်ကို console မှာကြည့်ပါ</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Shopping List:</h3>
+            <input type="text" id="itemInput" placeholder="ဝယ်စရာထည့်ပါ" style="padding: 8px; width: 200px;">
+            <button onclick="addItem()" class="try-it">ထည့်မည်</button>
+            <button onclick="clearList()" class="try-it">အားလုံးဖျက်မည်</button>
+            <ul id="shoppingList" style="margin-top: 10px; padding-left: 20px;"></ul>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Array Methods</h3>
+                <ul>
+                    <li>push() / pop()</li>
+                    <li>unshift() / shift()</li>
+                    <li>map()</li>
+                    <li>filter()</li>
+                    <li>reduce()</li>
+                    <li>find() / findIndex()</li>
+                    <li>some() / every()</li>
+                    <li>sort()</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Loop Types</h3>
+                <ul>
+                    <li>for loop</li>
+                    <li>while loop</li>
+                    <li>do...while loop</li>
+                    <li>for...in (objects)</li>
+                    <li>for...of (arrays)</li>
+                    <li>forEach()</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Destructuring</h3>
+                <ul>
+                    <li>const [a, b] = [1, 2]</li>
+                    <li>const {name, age} = person</li>
+                    <li>Spread operator (...)</li>
+                    <li>Rest parameters (...)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(5)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(7)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 7: Objects & JSON -->
+    <div class="page hidden" id="page7">
+        <h1><span class="emoji">📦</span> Objects (အရာဝတ္ထုများ) & JSON</h1>
+        
+        <div class="example">
+            <h3>Objects နှင့် JSON အသုံးပြုနည်း:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code7">// Object ဖန်တီးခြင်း
+const person = {
+    name: 'မောင်မောင်',
+    age: 20,
+    isStudent: true,
+    hobbies: ['ဂစ်တာတီး', 'စာဖတ်', 'ခရီးသွား'],
+    address: {
+        street: 'မင်္ဂလာလမ်း',
+        city: 'ရန်ကုန်'
+    },
+    greet: function() {
+        return `မင်္ဂလာပါ၊ ကျွန်တော်နာမည်က ${this.name} ပါ`;
+    }
+};
+
+// Object properties များကို အသုံးပြုခြင်း
+console.log(person.name); // Dot notation
+console.log(person['age']); // Bracket notation
+console.log(person.greet());
+
+// Object ကို ပြောင်းလဲခြင်း
+person.age = 21;
+person.email = 'maungmaung@example.com';
+
+// Object destructuring
+const { name, age, address: { city } } = person;
+console.log(`${name} lives in ${city}`);
+
+// JSON (JavaScript Object Notation)
+const jsonStr = '{"name":"အေးအေး","age":19,"isStudent":true}';
+
+// JSON string ကို JavaScript object အဖြစ်ပြောင်း
+const jsonObj = JSON.parse(jsonStr);
+console.log(jsonObj.name);
+
+// JavaScript object ကို JSON string အဖြစ်ပြောင်း
+const newJsonStr = JSON.stringify(person);
+console.log(newJsonStr);</textarea>
+                <button class="run-button" onclick="runCode(7)">Run</button>
+            </div>
+            <div class="preview-box" id="preview7">
+                <p>ရလဒ်ကို console မှာကြည့်ပါ</p>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>User Profile:</h3>
+            <div id="userProfile" style="background: #f0f9ff; padding: 15px; border-radius: 8px;">
+                <p>Name: <span id="userName">-</span></p>
+                <p>Age: <span id="userAge">-</span></p>
+                <p>Hobbies: <span id="userHobbies">-</span></p>
+                <button onclick="loadUserProfile()" class="try-it">Profile ဖွင့်မည်</button>
+                <button onclick="updateUserProfile()" class="try-it">Profile ပြောင်းမည်</button>
+            </div>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Object Basics</h3>
+                <ul>
+                    <li>Properties (key-value pairs)</li>
+                    <li>Methods (functions in objects)</li>
+                    <li>this keyword</li>
+                    <li>Dot vs bracket notation</li>
+                    <li>Object constructor</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Object Features</h3>
+                <ul>
+                    <li>Object destructuring</li>
+                    <li>Spread operator (...)</li>
+                    <li>Object.assign()</li>
+                    <li>Object.keys/values/entries()</li>
+                    <li>Optional chaining (?.)</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">JSON</h3>
+                <ul>
+                    <li>JSON.stringify()</li>
+                    <li>JSON.parse()</li>
+                    <li>API data exchange</li>
+                    <li>LocalStorage သို့သိမ်းခြင်း</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h3>🛠️ Object Challenge!</h3>
+            <p>Book management system တစ်ခုလုပ်ပါ:</p>
+            <ol>
+                <li>Book objects array တစ်ခုဖန်တီးပါ (title, author, year, isRead)</li>
+                <li>အသစ်ထည့်နိုင်အောင် form တစ်ခုလုပ်ပါ</li>
+                <li>စာအုပ်စာရင်းကို HTML မှာပြပါ</li>
+                <li>စာဖတ်ပြီးခြင်း/မပြီးခြင်းကို toggle လုပ်နိုင်အောင်</li>
+                <li>LocalStorage မှာသိမ်းပါ</li>
+            </ol>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(6)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(8)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 8: Async JavaScript -->
+    <div class="page hidden" id="page8">
+        <h1><span class="emoji">⏳</span> Asynchronous JavaScript</h1>
+        
+        <div class="example">
+            <h3>Async JavaScript အသုံးပြုနည်း:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code8">// Callbacks (အဟောင်းသုံး)
+function fetchData(callback) {
+    setTimeout(() => {
+        callback('Data loaded (callback)');
+    }, 1000);
+}
+
+fetchData((result) => {
+    console.log(result);
+});
+
+// Promises
+function fetchDataPromise() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Data loaded (promise)');
+            // reject('Error loading data');
+        }, 1000);
+    });
+}
+
+fetchDataPromise()
+    .then(result => console.log(result))
+    .catch(error => console.error(error));
+
+// Async/Await (Modern)
+async function fetchDataAsync() {
+    try {
+        const result = await fetchDataPromise();
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+fetchDataAsync();
+
+// Fetch API နှင့် အမှန်တကယ် data ယူခြင်း
+async function fetchUserData() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users/1');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const user = await response.json();
+        console.log('User data:', user);
+        displayUserData(user);
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
+function displayUserData(user) {
+    document.getElementById('userData').innerHTML = `
+        <h3>${user.name}</h3>
+        <p>Email: ${user.email}</p>
+        <p>Phone: ${user.phone}</p>
+        <p>Company: ${user.company.name}</p>
+    `;
+}</textarea>
+                <button class="run-button" onclick="runCode(8)">Run</button>
+            </div>
+            <div class="preview-box" id="preview8">
+                <button onclick="fetchUserData()" class="try-it">User Data ယူမည်</button>
+                <div id="userData" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;"></div>
+            </div>
+        </div>
+        
+        <div class="tag-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Async Concepts</h3>
+                <ul>
+                    <li>Callbacks</li>
+                    <li>Callback hell</li>
+                    <li>Promises</li>
+                    <li>Promise chaining</li>
+                    <li>Async/Await</li>
+                    <li>Error handling</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Web APIs</h3>
+                <ul>
+                    <li>Fetch API</li>
+                    <li>AJAX (XMLHttpRequest)</li>
+                    <li>setTimeout/setInterval</li>
+                    <li>LocalStorage</li>
+                    <li>Geolocation API</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 2px solid var(--secondary); border-radius: 10px; padding: 15px;">
+                <h3 style="color: var(--primary);">Error Handling</h3>
+                <ul>
+                    <li>try/catch</li>
+                    <li>.catch() for promises</li>
+                    <li>Error objects</li>
+                    <li>Custom errors</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>သိပါသလား?</strong> JavaScript သည် single-threaded ဖြစ်သော်လည်း event loop နှင့် callback queue တို့ကြောင့် asynchronous operations တွေကို လုပ်ဆောင်နိုင်ပါတယ်!</p>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(7)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(9)">ရှေ့သို့ <span class="emoji">👉</span></div>
+        </div>
+    </div>
+
+    <!-- Page 9: Final Project -->
+    <div class="page hidden" id="page9">
+        <h1><span class="emoji">🎉</span> JavaScript Project - Weather App</h1>
+        <p>သင်ယူခဲ့သမျှကို ပေါင်းစပ်ပြီး Weather App တစ်ခု ဖန်တီးကြမယ်!</p>
+        
+        <div class="example">
+            <h3>Weather App Example:</h3>
+            <div class="code-container">
+                <textarea class="code-editor" id="code9">// HTML
+&lt;div class="weather-app"&gt;
+    &lt;h2&gt;Weather App&lt;/h2&gt;
+    &lt;div class="search"&gt;
+        &lt;input type="text" id="cityInput" placeholder="မြို့နာမည်ထည့်ပါ"&gt;
+        &lt;button id="searchBtn"&gt;ရာသီဥတုရှာမည်&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div id="weatherResult"&gt;
+        &lt;!-- ရလဒ်များကို JavaScript ကနေ ထည့်မည် --&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+// CSS
+.weather-app {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f3ff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.search {
+    display: flex;
+    margin-bottom: 20px;
+}
+#cityInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+}
+#searchBtn {
+    padding: 10px 15px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.weather-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+// JavaScript
+const API_KEY = 'YOUR_API_KEY'; // OpenWeatherMap API key
+const searchBtn = document.getElementById('searchBtn');
+const cityInput = document.getElementById('cityInput');
+const weatherResult = document.getElementById('weatherResult');
+
+searchBtn.addEventListener('click', fetchWeather);
+
+async function fetchWeather() {
+    const city = cityInput.value.trim();
+    if (!city) return alert('မြို့နာမည်ထည့်ပါ');
+    
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+        );
+        
+        if (!response.ok) throw new Error('မြို့ကိုရှာမတွေ့ပါ');
+        
+        const data = await response.json();
+        displayWeather(data);
+    } catch (error) {
+        weatherResult.innerHTML = `&lt;div class="error"&gt;${error.message}&lt;/div&gt;`;
+    }
+}
+
+function displayWeather(data) {
+    const { name, main, weather, wind } = data;
+    const iconUrl = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
+    
+    weatherResult.innerHTML = `
+        &lt;div class="weather-card"&gt;
+            &lt;h3&gt;${name}&lt;/h3&gt;
+            &lt;div style="display: flex; align-items: center;"&gt;
+                &lt;img src="${iconUrl}" alt="${weather[0].description}"&gt;
+                &lt;span style="font-size: 2rem; font-weight: bold;"&gt;${Math.round(main.temp)}°C&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;p&gt;${weather[0].description}&lt;/p&gt;
+            &lt;p&gt;စိုထိုင်းဆ: ${main.humidity}%&lt;/p&gt;
+            &lt;p&gt;လေတိုက်နှုန်း: ${wind.speed} m/s&lt;/p&gt;
+            &lt;p&gt;နေ့အပူချိန်: ${Math.round(main.temp_max)}°C / ညအပူချိန်: ${Math.round(main.temp_min)}°C&lt;/p&gt;
+        &lt;/div&gt;
+    `;
+}
+
+// LocalStorage မှာ နောက်ဆုံးရှာခဲ့တဲ့မြို့ကိုသိမ်းထားမယ်
+window.addEventListener('load', () => {
+    const lastCity = localStorage.getItem('lastCity');
+    if (lastCity) {
+        cityInput.value = lastCity;
+        fetchWeather();
+    }
+});
+
+searchBtn.addEventListener('click', () => {
+    localStorage.setItem('lastCity', cityInput.value.trim());
+});</textarea>
+                <button class="run-button" onclick="runCode(9)">Run</button>
+            </div>
+            <div class="preview-box" id="preview9">
+                <div class="weather-app">
+                    <h2>Weather App</h2>
+                    <div class="search">
+                        <input type="text" id="cityInput" placeholder="မြို့နာမည်ထည့်ပါ" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px 0 0 5px;">
+                        <button id="searchBtn" style="padding: 10px 15px; background: #4f46e5; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">ရာသီဥတုရှာမည်</button>
+                    </div>
+                    <div id="weatherResult"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="challenge">
+            <h2>🌟 နောက်ဆုံးစိန်ခေါ်မှု! 🌟</h2>
+            <p>သင့်ကိုယ်ပိုင် Weather App ကို တိုးတက်အောင်လုပ်ပါ:</p>
+            <ol>
+                <li>OpenWeatherMap မှ API key တစ်ခုရယူပါ (အခမဲ့)</li>
+                <li>5-day forecast ကိုပြသအောင်လုပ်ပါ</li>
+                <li>အပူချိန်ကို °C/°F ပြောင်းနိုင်အောင်လုပ်ပါ</li>
+                <li>Geolocation API သုံးပြီး user ၏တည်နေရာအလိုက် ရာသီဥတုပြပါ</li>
+                <li>UI ကိုပိုမိုလှပအောင် CSS နဲ့ပြုပြင်ပါ</li>
+            </ol>
+        </div>
+        
+        <div class="fun-fact">
+            <p><strong>ဂုဏ်ယူပါတယ်!</strong> သင်ယခု JavaScript ၏ အခြေခံများကို တတ်မြောက်ပြီဖြစ်သည်! 🎉</p>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="try-it" onclick="showPage(8)">နောက်သို့ <span class="emoji">👈</span></div>
+            <div class="try-it" onclick="showPage(1)">အစမှ စပါ <span class="emoji">🔄</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Show a specific page and hide others
+        function showPage(pageNumber) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show the requested page
+            document.getElementById('page' + pageNumber).classList.remove('hidden');
+            
+            // Update progress bar
+            updateProgress(pageNumber);
+        }
+        
+        // Update progress bar
+        function updateProgress(currentPage) {
+            const progressPercentage = (currentPage / 9) * 100;
+            document.getElementById('progress').style.width = progressPercentage + '%';
+        }
+        
+        // Run code in preview box
+        function runCode(codeId) {
+            const code = document.getElementById('code' + codeId).value;
+            const preview = document.getElementById('preview' + codeId);
+            
+            // Get the original preview content to preserve any HTML elements needed for demos
+            const originalPreviewHTML = preview.innerHTML;
+            
+            // Create a new iframe to prevent CSS/JS conflicts
+            preview.innerHTML = '<iframe style="width:100%; height:100%; border:none;"></iframe>';
+            const iframe = preview.querySelector('iframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            // Extract the HTML content from the original preview (excluding any scripts)
+            const parser = new DOMParser();
+            const previewDoc = parser.parseFromString(originalPreviewHTML, 'text/html');
+            const previewBody = previewDoc.body.innerHTML;
+            
+            iframeDoc.open();
+            iframeDoc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { 
+                            font-family: 'Pyidaungsu', sans-serif; 
+                            margin: 0; 
+                            padding: 10px;
+                            line-height: 1.6;
+                        }
+                        .error { color: red; }
+                        button { 
+                            padding: 5px 10px; 
+                            background: #4f46e5; 
+                            color: white; 
+                            border: none; 
+                            border-radius: 4px; 
+                            cursor: pointer; 
+                        }
+                        button:hover { background: #4338ca; }
+                    </style>
+                </head>
+                <body>
+                    <!-- Original preview HTML content (excluding any iframe or script) -->
+                    ${previewBody.replace(/<iframe[^>]*>[^<]*<\/iframe>/g, '').replace(/<script[^>]*>[^<]*<\/script>/g, '')}
+                    
+                    <!-- Execute the code -->
+                    ${code.includes('<html') ? '' : '<script>' + code + '<\/script>'}
+                </body>
+                </html>
+            `);
+            iframeDoc.close();
+        }
+        
+        // Interactive Demo Functions
+        function variableDemo() {
+            let count = 0;
+            count++;
+            document.getElementById('variableDemoResult').innerHTML = `
+                <p>Count: ${count}</p>
+                <p>Type of count: ${typeof count}</p>
+                <p>Current time: ${new Date().toLocaleTimeString()}</p>
+            `;
+        }
+        
+        function checkAge() {
+            const age = parseInt(document.getElementById('ageInput').value);
+            let message;
+            
+            if (isNaN(age)) {
+                message = "ကျေးဇူးပြု၍ အသက်ထည့်ပါ";
+            } else if (age < 0) {
+                message = "အသက်က အနုတ်မဖြစ်နိုင်ပါ";
+            } else if (age < 13) {
+                message = "သင်သည် ကလေးဖြစ်သည်";
+            } else if (age < 20) {
+                message = "သင်သည် ဆယ်ကျော်သက်ဖြစ်သည်";
+            } else if (age < 60) {
+                message = "သင်သည် လူကြီးဖြစ်သည်";
+            } else {
+                message = "သင်သည် သက်ကြီးရွယ်အိုဖြစ်သည်";
+            }
+            
+            document.getElementById('ageCheckResult').textContent = message;
+        }
+        
+        function calculate(operation) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById('calcResult').textContent = "ကျေးဇူးပြု၍ ဂဏန်းနှစ်ခုလုံးထည့်ပါ";
+                return;
+            }
+            
+            let result;
+            switch(operation) {
+                case 'add': result = num1 + num2; break;
+                case 'subtract': result = num1 - num2; break;
+                case 'multiply': result = num1 * num2; break;
+                case 'divide': result = num1 / num2; break;
+                default: result = "Invalid operation";
+            }
+            
+            document.getElementById('calcResult').textContent = `ရလဒ်: ${result}`;
+        }
+        
+        // Shopping List Demo
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const itemText = input.value.trim();
+            
+            if (itemText) {
+                const list = document.getElementById('shoppingList');
+                const li = document.createElement('li');
+                li.textContent = itemText;
+                li.onclick = function() {
+                    this.remove();
+                };
+                list.appendChild(li);
+                input.value = '';
+            }
+        }
+        
+        function clearList() {
+            document.getElementById('shoppingList').innerHTML = '';
+        }
+        
+        // User Profile Demo
+        function loadUserProfile() {
+            const user = {
+                name: "မောင်မောင်",
+                age: 22,
+                hobbies: ["ဂစ်တာတီး", "ပန်းချီဆွဲ", "ခရီးသွား"]
+            };
+            
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userAge').textContent = user.age;
+            document.getElementById('userHobbies').textContent = user.hobbies.join(', ');
+        }
+        
+        function updateUserProfile() {
+            const newName = prompt("နာမည်အသစ်ထည့်ပါ", "အေးအေး");
+            if (newName) {
+                document.getElementById('userName').textContent = newName;
+            }
+        }
+        
+        // Weather App Demo
+        async function fetchUserData() {
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/users/1');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const user = await response.json();
+                displayUserData(user);
+            } catch (error) {
+                document.getElementById('userData').innerHTML = `<div class="error">${error.message}</div>`;
+            }
+        }
+        
+        function displayUserData(user) {
+            document.getElementById('userData').innerHTML = `
+                <h3>${user.name}</h3>
+                <p>Email: ${user.email}</p>
+                <p>Phone: ${user.phone}</p>
+                <p>Company: ${user.company.name}</p>
+            `;
+        }
+        
+        // Initialize first page
+        showPage(1);
+    </script>
+</body>
+</html>
