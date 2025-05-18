@@ -262,6 +262,7 @@ import {
   query,
   orderBy,
   getDoc,
+  doc,
   limit,
   where,
   getCountFromServer
@@ -410,7 +411,25 @@ watch(searchTerm, () => {
 
 // Load initial feedback data
 onMounted(async () => {
-  await loadFeedbacks()
+  // Small timeout to ensure all reactivity is properly set up
+  setTimeout(async () => {
+    // Restore any saved state from localStorage
+    const savedPage = restoreFeedbackListState();
+    
+    // If we have a saved page, use it
+    if (savedPage > 1) {
+      // First load all feedbacks to get the total count
+      await loadAllFeedbacks();
+      
+      // Then navigate to the saved page
+      if (savedPage <= totalPages.value) {
+        await goToPage(savedPage);
+      }
+    } else {
+      // Otherwise just load the first page as usual
+      await loadFeedbacks();
+    }
+  }, 0);
 })
 
 // Navigate to specific page - efficient direct approach
@@ -685,10 +704,10 @@ async function loadAllFeedbacks() {
     // Process all feedbacks
     const allFeedbacks = []
 
-    for (const doc of querySnapshot.docs) {
-      const data = doc.data()
+    for (const docSnapshot of querySnapshot.docs) {
+      const data = docSnapshot.data()
       const feedback = {
-        id: doc.id,
+        id: docSnapshot.id,
         ...data,
         timestamp: data.timestamp?.toDate() || new Date(),
         user: null
@@ -705,7 +724,7 @@ async function loadAllFeedbacks() {
             }
           }
         } catch (err) {
-          console.error(`Error fetching user data for feedback ${doc.id}:`, err)
+          console.error(`Error fetching user data for feedback ${docSnapshot.id}:`, err)
         }
       }
 
@@ -800,7 +819,39 @@ async function loadFeedbacks(countTotal = true) {
 }
 
 function viewFeedback(id) {
+  // Save the current page state before navigating
+  saveFeedbackListState();
   router.push(`/admin/feedback/${id}`)
+}
+
+// Save the current state of the FeedbackList to localStorage
+function saveFeedbackListState() {
+  const stateToSave = {
+    currentPage: currentPage.value,
+    selectedStatus: selectedStatus.value,
+    searchTerm: searchTerm.value
+  };
+  localStorage.setItem('feedbackListState', JSON.stringify(stateToSave));
+}
+
+// Restore the saved state of the FeedbackList from localStorage
+function restoreFeedbackListState() {
+  try {
+    const savedState = localStorage.getItem('feedbackListState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore filters first
+      selectedStatus.value = parsedState.selectedStatus || 'all';
+      searchTerm.value = parsedState.searchTerm || '';
+      
+      // Return the saved page to navigate to
+      return parsedState.currentPage || 1;
+    }
+  } catch (error) {
+    console.error('Error restoring feedback list state:', error);
+  }
+  return 1; // Default to page 1 if no saved state or error
 }
 
 function formatDate(timestamp) {

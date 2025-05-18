@@ -127,9 +127,12 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <div class="flex space-x-3">
-                <router-link :to="`/admin/badges/${badge.id}/edit`" class="text-indigo-600 hover:text-indigo-900">
+                <button 
+                  @click="navigateToEdit(badge.id)" 
+                  class="text-indigo-600 hover:text-indigo-900"
+                >
                   Edit
-                </router-link>
+                </button>
                 <button @click="confirmDelete(badge)" class="text-red-600 hover:text-red-900">
                   Delete
                 </button>
@@ -245,6 +248,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { auth, db } from '@/firebase';
 import {
   collection,
@@ -260,6 +264,7 @@ import {
 } from 'firebase/firestore';
 import AdminBreadcrumbs from '@/components/AdminBreadcrumbs.vue';
 
+const router = useRouter();
 const badges = ref([]);
 const levels = ref([]);
 const loading = ref(true);
@@ -584,15 +589,29 @@ onMounted(async () => {
       }
     }
 
-    // First load all badges for search functionality
-    await loadAllBadges();
+    // Small timeout to ensure all reactivity is properly set up
+    setTimeout(async () => {
+      // Restore any saved state from localStorage
+      const savedPage = restoreBadgeListState();
+      
+      // First load all badges for search functionality
+      await loadAllBadges();
 
-    // Fetch levels to get their names
-    const levelsSnapshot = await getDocs(collection(db, 'levels'));
-    levels.value = levelsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+      // Fetch levels to get their names
+      const levelsSnapshot = await getDocs(collection(db, 'levels'));
+      levels.value = levelsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      // If we have a saved page, navigate to it
+      if (savedPage > 1) {
+        // Then navigate to the saved page
+        if (savedPage <= totalPages.value) {
+          await goToPage(savedPage);
+        }
+      }
+    }, 0);
   } catch (error) {
     console.error("Error loading badges:", error);
     error.value = 'Error loading badge data';
@@ -785,5 +804,40 @@ async function deleteBadge() {
     console.error('Error deleting badge:', err);
     error.value = 'Failed to delete badge';
   }
+}
+
+// Function to navigate to the edit page and save current state
+function navigateToEdit(badgeId) {
+  // Save the current state before navigating
+  saveBadgeListState();
+  router.push(`/admin/badges/${badgeId}/edit`);
+}
+
+// Save the current state of the BadgeList to localStorage
+function saveBadgeListState() {
+  const stateToSave = {
+    currentPage: currentPage.value,
+    searchTerm: searchTerm.value
+  };
+  localStorage.setItem('badgeListState', JSON.stringify(stateToSave));
+}
+
+// Restore the saved state of the BadgeList from localStorage
+function restoreBadgeListState() {
+  try {
+    const savedState = localStorage.getItem('badgeListState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore search term first
+      searchTerm.value = parsedState.searchTerm || '';
+      
+      // Return the saved page to navigate to
+      return parsedState.currentPage || 1;
+    }
+  } catch (error) {
+    console.error('Error restoring badge list state:', error);
+  }
+  return 1; // Default to page 1 if no saved state or error
 }
 </script>

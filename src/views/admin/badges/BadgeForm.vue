@@ -1,11 +1,11 @@
 <template>
   <div class="admin-badge-form">
     <!-- Breadcrumb Navigation -->
-    <AdminBreadcrumbs 
-      :itemId="badgeId" 
-      :itemTitle="isEditing ? badge.name || 'Edit Badge' : 'New Badge'" 
+    <AdminBreadcrumbs
+      :itemId="badgeId"
+      :itemTitle="isEditing ? badge.name || 'Edit Badge' : 'New Badge'"
     />
-    
+
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">{{ isEditing ? 'Edit' : 'Create' }} Badge</h1>
       <router-link to="/admin/badges" class="text-purple-600 hover:underline">
@@ -97,11 +97,9 @@
                 v-model="badge.category"
                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
               >
-                <option value="HTML">HTML</option>
-                <option value="CSS">CSS</option>
-                <option value="JavaScript">JavaScript</option>
-                <option value="Special">Special</option>
-                <option value="Achievement">Achievement</option>
+                <option v-for="category in availableCategories" :key="category" :value="category">
+                  {{ category }}
+                </option>
               </select>
             </div>
           </div>
@@ -110,20 +108,20 @@
         <!-- Requirements Section -->
         <div class="mb-8">
           <h2 class="text-lg font-medium text-gray-900 mb-4">Badge Requirements</h2>
-          
+
           <div v-if="loadingLevels" class="text-center py-4">
             <p class="text-gray-600">Loading levels...</p>
           </div>
-          
+
           <div v-else>
             <!-- Selected Levels -->
             <div class="bg-gray-50 p-4 rounded-md mb-4">
               <h3 class="text-sm font-medium text-gray-700 mb-2">Required Levels</h3>
-              
+
               <div v-if="!badge.requirements?.length" class="text-sm text-gray-500 italic">
                 No levels selected. Badge will require special achievement logic or admin assignment.
               </div>
-              
+
               <div v-else class="space-y-2">
                 <div
                   v-for="levelId in badge.requirements"
@@ -134,8 +132,8 @@
                     <span class="font-medium">{{ getLevelName(levelId) || levelId }}</span>
                     <span class="text-xs text-gray-500 ml-2">({{ getLevelCategory(levelId) }})</span>
                   </div>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     @click="removeRequirement(levelId)"
                     class="text-red-600 hover:text-red-800"
                   >
@@ -144,11 +142,11 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Available Levels -->
             <div>
               <h3 class="text-sm font-medium text-gray-700 mb-2">Available Levels</h3>
-              
+
               <div class="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
                 <div
                   v-for="level in availableLevels"
@@ -161,8 +159,8 @@
                       {{ level.category }} · Level {{ level.number }} · {{ level.difficulty }}
                     </div>
                   </div>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     @click="addRequirement(level.id)"
                     class="bg-purple-100 text-purple-800 px-3 py-1 rounded text-sm"
                   >
@@ -180,11 +178,11 @@
           <p class="text-sm text-gray-600 mb-4">
             If this badge requires earning other badges (like a "Master" badge), select them below.
           </p>
-          
+
           <div v-if="loadingBadges" class="text-center py-4">
             <p class="text-gray-600">Loading badges...</p>
           </div>
-          
+
           <div v-else>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div
@@ -199,12 +197,12 @@
                   <div class="text-xs text-gray-500">{{ otherBadge.category }}</div>
                 </div>
                 <div>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     @click="toggleRequiredBadge(otherBadge.id)"
                     class="px-2 py-1 text-sm rounded"
-                    :class="isRequiredBadge(otherBadge.id) ? 
-                      'bg-purple-200 text-purple-800' : 
+                    :class="isRequiredBadge(otherBadge.id) ?
+                      'bg-purple-200 text-purple-800' :
                       'bg-gray-200 text-gray-800'"
                   >
                     {{ isRequiredBadge(otherBadge.id) ? 'Selected' : 'Select' }}
@@ -267,6 +265,8 @@ const loadingBadges = ref(true);
 const isSaving = ref(false);
 const error = ref(null);
 
+const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Python', 'Special', 'Achievement'];
+
 // Other badges (for selecting badge requirements)
 const otherBadges = computed(() => {
   if (isEditing.value) {
@@ -298,7 +298,7 @@ onMounted(async () => {
       ...doc.data()
     }));
     loadingLevels.value = false;
-    
+
     // Load badges
     const badgesSnapshot = await getDocs(collection(db, 'badges'));
     allBadges.value = badgesSnapshot.docs.map(doc => ({
@@ -306,15 +306,15 @@ onMounted(async () => {
       ...doc.data()
     }));
     loadingBadges.value = false;
-    
+
     // If editing, load the badge
     if (isEditing.value && badgeId.value) {
       const badgeDoc = await getDoc(doc(db, 'badges', badgeId.value));
-      
+
       if (badgeDoc.exists()) {
         const badgeData = badgeDoc.data();
         badge.value = { ...badgeData, id: badgeDoc.id };
-        
+
         // Initialize arrays if they don't exist
         if (!badge.value.requirements) badge.value.requirements = [];
       } else {
@@ -342,7 +342,7 @@ function addRequirement(levelId) {
   if (!badge.value.requirements) {
     badge.value.requirements = [];
   }
-  
+
   if (!badge.value.requirements.includes(levelId)) {
     badge.value.requirements.push(levelId);
   }
@@ -361,7 +361,7 @@ function toggleRequiredBadge(badgeId) {
   if (!badge.value.requiredBadges) {
     badge.value.requiredBadges = [];
   }
-  
+
   if (isRequiredBadge(badgeId)) {
     badge.value.requiredBadges = badge.value.requiredBadges.filter(id => id !== badgeId);
   } else {
@@ -375,22 +375,22 @@ async function saveBadge() {
     alert('Badge name and ID are required');
     return;
   }
-  
+
   try {
     isSaving.value = true;
-    
+
     // Ensure badge ID is properly formatted
     badge.value.id = badge.value.id.trim().toLowerCase().replace(/\s+/g, '-');
-    
+
     // Set creator information if creating new badge
     if (!isEditing.value) {
       badge.value.createdBy = auth.currentUser?.uid || '';
       badge.value.createdAt = new Date();
     }
-    
+
     // Save to Firestore
     await setDoc(doc(db, 'badges', badge.value.id), badge.value);
-    
+
     // Navigate back to badge list
     router.push('/admin/badges');
   } catch (err) {

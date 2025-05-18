@@ -1,0 +1,909 @@
+[
+  {
+    "id": "javascript-level-1",
+    "number": 1,
+    "title": "JavaScript Basics — Start Coding with JavaScript!",
+    "description": "Begin your JavaScript journey! Learn about variables, data types, and basic operations to create simple interactive scripts.",
+    "category": "JavaScript",
+    "difficulty": "Beginner",
+    "pointsToEarn": 300,
+    "estimatedTime": "45 minutes",
+    "prerequisites": [],
+    "learningObjectives": [
+      "Understand JavaScript and its purpose",
+      "Learn basic data types and variables",
+      "Perform simple arithmetic operations"
+    ],
+    "realWorldApplications": [
+      "Building interactive web elements",
+      "Creating small calculators or tools",
+      "Manipulating data within web pages"
+    ],
+    "references": [
+      {
+        "title": "MDN JavaScript First Steps",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps"
+      },
+      {
+        "title": "W3Schools JavaScript Tutorial",
+        "url": "https://www.w3schools.com/js/js_intro.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Variables", "Data Types", "Math"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Declare JavaScript Variables",
+        "description": "Create variables for `name`, `age`, and `isStudent` using appropriate data types (string, number, boolean).",
+        "initialCode": "// Your code here:\n",
+        "solution": "let name =",
+        "expectedOutput": "Variables created successfully!",
+        "errorHint": "Use `let` or `const` to declare variables with appropriate data types."
+      },
+      {
+        "id": "task2",
+        "title": "Perform Basic Calculations",
+        "description": "Create two number variables and perform addition, subtraction, multiplication, and division. Store results in variables and print them.",
+        "initialCode": "let num1 = 10;\nlet num2 = 5;\n\n// Your code here:\n",
+        "solution": "let sum =",
+        "expectedOutput": "Calculations performed successfully!",
+        "errorHint": "Use operators +, -, *, / and store the results in variables like: let sum = num1 + num2"
+      },
+      {
+        "id": "task3",
+        "title": "Input and Output in JavaScript",
+        "description": "Prompt the user to input their name and age, then display a greeting message.",
+        "initialCode": "// Your code here:\n",
+        "solution": "let name = prompt(",
+        "expectedOutput": "Hello, [name]! You are [age] years old.",
+        "errorHint": "Use `prompt()` to get user input and `console.log()` to display the message."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-2",
+    "number": 2,
+    "title": "JavaScript Conditionals — Making Decisions",
+    "description": "Learn how to make decisions with JavaScript using if, else if, and else statements.",
+    "category": "JavaScript",
+    "difficulty": "Beginner",
+    "pointsToEarn": 350,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["JavaScript Basics — Start Coding with JavaScript!"],
+    "learningObjectives": [
+      "Understand if, else if, and else statements",
+      "Learn to compare values using comparison operators",
+      "Implement logical conditions"
+    ],
+    "realWorldApplications": [
+      "Validating form input",
+      "Creating quiz-based games",
+      "Displaying content based on user age"
+    ],
+    "references": [
+      {
+        "title": "MDN Conditional Statements",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else"
+      },
+      {
+        "title": "W3Schools JavaScript If...Else",
+        "url": "https://www.w3schools.com/js/js_if_else.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Conditionals", "Logic", "Decision Making"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Check Voting Eligibility",
+        "description": "Write a program that checks if a user is eligible to vote (age 18 or older).",
+        "initialCode": "let age = 16;\n\n// Your code here:\n",
+        "solution": "if (age >= 18)",
+        "expectedOutput": "Eligible or not message printed!",
+        "errorHint": "Use an if-else statement to check if age is greater than or equal to 18."
+      },
+      {
+        "id": "task2",
+        "title": "Grade Calculator",
+        "description": "Write a program that converts a numerical score (0-100) into a letter grade (A, B, C, D, F).",
+        "initialCode": "let score = 88;\n\n// Your code here:\n",
+        "solution": "if (score >= 90)",
+        "expectedOutput": "Correct grade assigned based on score!",
+        "errorHint": "Use if, else if, else to categorize the score into grades."
+      },
+      {
+        "id": "task3",
+        "title": "Check Even or Odd",
+        "description": "Ask the user to input a number and print whether it’s even or odd.",
+        "initialCode": "// Your code here:\n",
+        "solution": "if (num % 2 === 0)",
+        "expectedOutput": "Even or Odd result printed!",
+        "errorHint": "Use the modulus operator `%` to check divisibility by 2."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-3",
+    "number": 3,
+    "title": "JavaScript Functions — Create Reusable Code",
+    "description": "Learn how to write reusable functions to keep your code organized and efficient.",
+    "category": "JavaScript",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["JavaScript Conditionals — Making Decisions"],
+    "learningObjectives": [
+      "Define functions in JavaScript",
+      "Pass arguments to functions",
+      "Return values from functions"
+    ],
+    "realWorldApplications": [
+      "Reuse code for repeated tasks",
+      "Create calculators and interactive web pages",
+      "Simplify code with functions"
+    ],
+    "references": [
+      {
+        "title": "MDN Functions",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions"
+      },
+      {
+        "title": "W3Schools JavaScript Functions",
+        "url": "https://www.w3schools.com/js/js_functions.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Functions", "Reusability", "Modular Code"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Simple Greeting Function",
+        "description": "Define a function that takes a `name` parameter and returns a greeting message.",
+        "initialCode": "// Your code here:\n\nconsole.log(greet(\"Alex\"));",
+        "solution": "function greet(name)",
+        "expectedOutput": "Greeting message printed!",
+        "errorHint": "Define a function with `function greet(name)` and return a string."
+      },
+      {
+        "id": "task2",
+        "title": "Calculator Function",
+        "description": "Write a function that takes two numbers and an operator, and returns the result of the operation.",
+        "initialCode": "// Your code here:\n\nconsole.log(calculate(5, 3, '+'))",
+        "solution": "function calculate(num1, num2, operator)",
+        "expectedOutput": "Calculator function executed successfully!",
+        "errorHint": "Handle operations with if-else inside the function."
+      },
+      {
+        "id": "task3",
+        "title": "Return Multiple Values from a Function",
+        "description": "Create a function that takes two numbers and returns both the sum and the product.",
+        "initialCode": "// Your code here:\n\nlet results = sumAndProduct(5, 3);\nconsole.log(results);",
+        "solution": "function sumAndProduct(num1, num2)",
+        "expectedOutput": "Both sum and product returned correctly!",
+        "errorHint": "Return multiple values as an object or array from the function."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-4",
+    "number": 4,
+    "title": "JavaScript Arrays — Work with Lists of Data",
+    "description": "Master arrays for storing and manipulating lists of data in JavaScript.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 450,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["JavaScript Functions — Create Reusable Code"],
+    "learningObjectives": [
+      "Create and access elements in arrays",
+      "Modify arrays by adding/removing items",
+      "Use array methods for iteration"
+    ],
+    "realWorldApplications": [
+      "Store user data or items in a list",
+      "Process collections of data",
+      "Create dynamic content in applications"
+    ],
+    "references": [
+      {
+        "title": "MDN Arrays",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections#arrays"
+      },
+      {
+        "title": "W3Schools JavaScript Arrays",
+        "url": "https://www.w3schools.com/js/js_arrays.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Arrays", "Data Structures", "Iteration"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create an Array and Access Elements",
+        "description": "Create an array of fruits and access the first and last items.",
+        "initialCode": "let fruits = ['apple', 'banana', 'cherry'];\n\n// Your code here:\n",
+        "solution": "fruits[0]",
+        "expectedOutput": "Array accessed successfully!",
+        "errorHint": "Use index notation like fruits[0] to access array elements."
+      },
+      {
+        "id": "task2",
+        "title": "Modify an Array",
+        "description": "Add a new fruit to the beginning and end of the array, then remove one item.",
+        "initialCode": "let fruits = ['apple', 'banana'];\n\n// Your code here:\n",
+        "solution": "fruits.unshift",
+        "expectedOutput": "Array modified successfully!",
+        "errorHint": "Use `unshift()` to add an item to the beginning and `pop()` to remove an item from the end."
+      },
+      {
+        "id": "task3",
+        "title": "Iterate Over an Array",
+        "description": "Use a loop to print each item in the `fruits` array.",
+        "initialCode": "let fruits = ['apple', 'banana', 'cherry'];\n\n// Your code here:\n",
+        "solution": "for (let i = 0; i < fruits.length; i++)",
+        "expectedOutput": "Array iterated successfully!",
+        "errorHint": "Use a for loop to access each element by index."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-5",
+    "number": 5,
+    "title": "JavaScript Objects — Structure Data Efficiently",
+    "description": "Learn to work with objects to structure and store data in key-value pairs.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Arrays — Work with Lists of Data"],
+    "learningObjectives": [
+      "Create and access properties in objects",
+      "Modify object properties",
+      "Use methods inside objects"
+    ],
+    "realWorldApplications": [
+      "Store structured data (e.g., user profiles)",
+      "Organize and manipulate complex data",
+      "Create models for real-world entities"
+    ],
+    "references": [
+      {
+        "title": "MDN Objects",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects"
+      },
+      {
+        "title": "W3Schools JavaScript Objects",
+        "url": "https://www.w3schools.com/js/js_objects.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Objects", "Data Structures", "Key-Value Pairs"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create and Access Object Properties",
+        "description": "Create an object representing a car with properties like brand, model, and year, and access these properties.",
+        "initialCode": "let car = { brand: 'Toyota', model: 'Corolla', year: 2020 };\n\n// Your code here:\n",
+        "solution": "car.brand",
+        "expectedOutput": "Object properties accessed successfully!",
+        "errorHint": "Access properties with object.property notation."
+      },
+      {
+        "id": "task2",
+        "title": "Modify Object Properties",
+        "description": "Modify the year property of the car object and add a new property `color`.",
+        "initialCode": "let car = { brand: 'Toyota', model: 'Corolla', year: 2020 };\n\n// Your code here:\n",
+        "solution": "car.year = 2021",
+        "expectedOutput": "Object modified successfully!",
+        "errorHint": "Use dot notation to modify or add properties."
+      },
+      {
+        "id": "task3",
+        "title": "Use Methods Inside Objects",
+        "description": "Create a method inside the car object that returns a description of the car.",
+        "initialCode": "let car = { brand: 'Toyota', model: 'Corolla', year: 2020 };\n\n// Your code here:\n",
+        "solution": "getDescription()",
+        "expectedOutput": "Method executed successfully!",
+        "errorHint": "Define the method inside the object as: getDescription: function() {...}"
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-6",
+    "number": 6,
+    "title": "JavaScript Loops — Automate Repetitive Tasks",
+    "description": "Master the for and while loops to automate repetitive tasks and iterate over collections of data.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["JavaScript Objects — Structure Data Efficiently"],
+    "learningObjectives": [
+      "Understand for and while loops",
+      "Iterate through arrays and objects",
+      "Use loops for data processing"
+    ],
+    "realWorldApplications": [
+      "Automating repetitive data processing",
+      "Creating loops in interactive games",
+      "Processing large datasets"
+    ],
+    "references": [
+      {
+        "title": "MDN Loops",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration"
+      },
+      {
+        "title": "W3Schools JavaScript Loops",
+        "url": "https://www.w3schools.com/js/js_loop_for.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Loops", "Automation", "Data Processing"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Loop Through an Array",
+        "description": "Use a for loop to print each element of an array of numbers.",
+        "initialCode": "let numbers = [1, 2, 3, 4, 5];\n\n// Your code here:\n",
+        "solution": "for (let i = 0; i < numbers.length; i++)",
+        "expectedOutput": "Array iterated successfully!",
+        "errorHint": "Use a for loop with `i` to access each element of the array."
+      },
+      {
+        "id": "task2",
+        "title": "While Loop with Condition",
+        "description": "Write a while loop that prints numbers from 1 to 10.",
+        "initialCode": "let i = 1;\n\n// Your code here:\n",
+        "solution": "while (i <= 10)",
+        "expectedOutput": "Numbers printed successfully!",
+        "errorHint": "Use a while loop with the condition `i <= 10`."
+      },
+      {
+        "id": "task3",
+        "title": "Loop Through an Object",
+        "description": "Use a for...in loop to print all properties of a car object.",
+        "initialCode": "let car = { brand: 'Toyota', model: 'Corolla', year: 2020 };\n\n// Your code here:\n",
+        "solution": "for (let key in car)",
+        "expectedOutput": "Object properties printed successfully!",
+        "errorHint": "Use a for...in loop to iterate through object keys."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-7",
+    "number": 7,
+    "title": "JavaScript DOM Manipulation — Interact with Web Pages",
+    "description": "Learn how to use JavaScript to interact with HTML elements on the page, including event handling and dynamic content updates.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["JavaScript Loops — Automate Repetitive Tasks"],
+    "learningObjectives": [
+      "Select and modify HTML elements with JavaScript",
+      "Create event listeners to handle user actions",
+      "Update page content dynamically"
+    ],
+    "realWorldApplications": [
+      "Create interactive web pages",
+      "Build dynamic user interfaces",
+      "Respond to user input and actions"
+    ],
+    "references": [
+      {
+        "title": "MDN DOM Manipulation",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/Introduction"
+      },
+      { "title": "W3Schools JavaScript DOM", "url": "https://www.w3schools.com/js/js_htmldom.asp" }
+    ],
+    "tags": ["JavaScript", "DOM", "Event Handling", "Web Development"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Modify HTML Content",
+        "description": "Use JavaScript to change the content of a paragraph with id 'demo'.",
+        "initialCode": "<p id='demo'>This is a paragraph.</p>\n\n// Your code here:\n",
+        "solution": "document.getElementById('demo').innerHTML = 'New Content';",
+        "expectedOutput": "HTML content updated successfully!",
+        "errorHint": "Use `document.getElementById()` to select the element and `innerHTML` to change its content."
+      },
+      {
+        "id": "task2",
+        "title": "Add Event Listener",
+        "description": "Add a click event listener to a button that changes the color of a div.",
+        "initialCode": "<button id='changeColorBtn'>Click Me</button>\n<div id='colorDiv' style='width:100px;height:100px;background-color:blue;'></div>\n\n// Your code here:\n",
+        "solution": "document.getElementById('changeColorBtn').addEventListener('click', function() { document.getElementById('colorDiv').style.backgroundColor = 'red'; });",
+        "expectedOutput": "Button click successfully changes color!",
+        "errorHint": "Use `addEventListener` to detect clicks and modify styles."
+      },
+      {
+        "id": "task3",
+        "title": "Create a Dynamic List",
+        "description": "Create a function that adds a new item to an unordered list when a button is clicked.",
+        "initialCode": "<button id='addItemBtn'>Add Item</button>\n<ul id='itemList'></ul>\n\n// Your code here:\n",
+        "solution": "document.getElementById('addItemBtn').addEventListener('click', function() { let li = document.createElement('li'); li.textContent = 'New Item'; document.getElementById('itemList').appendChild(li); });",
+        "expectedOutput": "New list item added successfully!",
+        "errorHint": "Use `createElement()` to create a new list item and `appendChild()` to add it to the list."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-8",
+    "number": 8,
+    "title": "JavaScript Asynchronous Programming — Working with APIs",
+    "description": "Learn how to fetch data from web APIs asynchronously using promises and async/await.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript DOM Manipulation — Interact with Web Pages"],
+    "learningObjectives": [
+      "Understand promises and async/await",
+      "Fetch data from an API",
+      "Handle asynchronous code and errors"
+    ],
+    "realWorldApplications": [
+      "Fetch real-time data from web services",
+      "Build dynamic data-driven applications",
+      "Integrate third-party APIs"
+    ],
+    "references": [
+      {
+        "title": "MDN Promises",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises"
+      },
+      {
+        "title": "W3Schools JavaScript Fetch API",
+        "url": "https://www.w3schools.com/js/js_api_fetch.asp"
+      },
+      {
+        "title": "Real Python: JavaScript Asynchronous Programming",
+        "url": "https://realpython.com/asyncio-in-python/"
+      }
+    ],
+    "tags": ["JavaScript", "Asynchronous", "API", "Fetch"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Fetch Data from an API",
+        "description": "Use the Fetch API to retrieve data from 'https://jsonplaceholder.typicode.com/todos/1' and display it.",
+        "initialCode": "// Your code here:\n",
+        "solution": "fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json()).then(data => console.log(data));",
+        "expectedOutput": "Data fetched and displayed successfully!",
+        "errorHint": "Use `.then()` to handle the response after calling `fetch()`."
+      },
+      {
+        "id": "task2",
+        "title": "Async/Await Example",
+        "description": "Rewrite the previous task using async/await to fetch and log the data.",
+        "initialCode": "// Your code here:\n",
+        "solution": "async function getData() { let response = await fetch('https://jsonplaceholder.typicode.com/todos/1'); let data = await response.json(); console.log(data); } getData();",
+        "expectedOutput": "Data fetched and displayed using async/await!",
+        "errorHint": "Use `async` function and `await` to handle asynchronous calls."
+      },
+      {
+        "id": "task3",
+        "title": "Handle Errors in Asynchronous Code",
+        "description": "Add error handling to the previous task to catch and log any errors.",
+        "initialCode": "// Your code here:\n",
+        "solution": "async function getData() { try { let response = await fetch('https://jsonplaceholder.typicode.com/todos/1'); let data = await response.json(); console.log(data); } catch (error) { console.log('Error:', error); } } getData();",
+        "expectedOutput": "Error handling in place and displayed if any error occurs!",
+        "errorHint": "Use try-catch to handle errors in async functions."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-9",
+    "number": 9,
+    "title": "JavaScript Modules — Organize Your Code",
+    "description": "Learn how to modularize your code by dividing it into separate files and importing/exporting functions.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Asynchronous Programming — Working with APIs"],
+    "learningObjectives": [
+      "Understand JavaScript modules",
+      "Use `export` and `import` statements",
+      "Structure your code into separate files"
+    ],
+    "realWorldApplications": [
+      "Reusing code across multiple files",
+      "Organizing larger applications",
+      "Modular development with third-party libraries"
+    ],
+    "references": [
+      {
+        "title": "MDN JavaScript Modules",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+      },
+      {
+        "title": "W3Schools JavaScript Modules",
+        "url": "https://www.w3schools.com/js/js_modules.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Modules", "Code Organization", "Reusable Code"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Module",
+        "description": "Create a module that exports a function to add two numbers, then import and use it in another file.",
+        "initialCode": "// math.js\nexport function add(a, b) { return a + b; }\n\n// Your code here:\n",
+        "solution": "export function add",
+        "expectedOutput": "Function exported and used successfully!",
+        "errorHint": "Use `export` to share the function and `import` to use it in another file."
+      },
+      {
+        "id": "task2",
+        "title": "Import and Use Multiple Functions",
+        "description": "Create a module that exports multiple functions and import them into another file.",
+        "initialCode": "// math.js\nexport function add(a, b) { return a + b; }\nexport function subtract(a, b) { return a - b; }\n\n// Your code here:\n",
+        "solution": "import { add, subtract }",
+        "expectedOutput": "Multiple functions imported and used successfully!",
+        "errorHint": "Use `import { func1, func2 }` to import multiple functions from a module."
+      },
+      {
+        "id": "task3",
+        "title": "Default Exports",
+        "description": "Use `export default` to export a function and import it into another file.",
+        "initialCode": "// math.js\nexport default function multiply(a, b) { return a * b; }\n\n// Your code here:\n",
+        "solution": "import multiply",
+        "expectedOutput": "Default export imported and used successfully!",
+        "errorHint": "Use `export default` to export a single function and `import` to bring it into another file."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-10",
+    "number": 10,
+    "title": "JavaScript Date and Time — Work with Dates and Time",
+    "description": "Learn to work with JavaScript's Date object to handle date and time operations, such as getting the current date, manipulating dates, and formatting them.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["JavaScript Objects — Structure Data Efficiently"],
+    "learningObjectives": [
+      "Create Date objects and retrieve current date and time",
+      "Format and manipulate dates and times",
+      "Perform date arithmetic and comparisons"
+    ],
+    "realWorldApplications": [
+      "Building date-based applications (e.g., event planners)",
+      "Displaying real-time data and timestamps",
+      "Calculating durations and deadlines"
+    ],
+    "references": [
+      {
+        "title": "MDN JavaScript Date Object",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"
+      },
+      { "title": "W3Schools JavaScript Date", "url": "https://www.w3schools.com/js/js_dates.asp" }
+    ],
+    "tags": ["JavaScript", "Date", "Time", "Date Manipulation"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Get Current Date and Time",
+        "description": "Use the `Date` object to get the current date and time and display it in the console.",
+        "initialCode": "// Your code here:\n",
+        "solution": "let currentDate = new Date();",
+        "expectedOutput": "Current date and time displayed successfully!",
+        "errorHint": "Use `new Date()` to get the current date and time."
+      },
+      {
+        "id": "task2",
+        "title": "Format Date in a Readable Format",
+        "description": "Format the current date to display in a readable format (e.g., 'YYYY-MM-DD').",
+        "initialCode": "let currentDate = new Date();\n\n// Your code here:\n",
+        "solution": "currentDate.toISOString().split('T')[0]",
+        "expectedOutput": "Formatted date displayed successfully!",
+        "errorHint": "Use `toISOString()` to get the full date-time string, and then split it to extract the date part."
+      },
+      {
+        "id": "task3",
+        "title": "Calculate Time Difference",
+        "description": "Calculate the difference in days between two dates (e.g., current date and a specified future date).",
+        "initialCode": "let futureDate = new Date('2023-12-31');\n\n// Your code here:\n",
+        "solution": "let timeDifference = Math.floor((futureDate - currentDate) / (1000 * 60 * 60 * 24));",
+        "expectedOutput": "Time difference in days calculated successfully!",
+        "errorHint": "Use `Date.now()` or `new Date()` to get the current date and subtract the future date. Divide by the number of milliseconds in a day."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-11",
+    "number": 11,
+    "title": "JavaScript Error Handling — Handle Errors Gracefully",
+    "description": "Learn to handle errors using `try`, `catch`, `finally`, and `throw` to make your code more robust and prevent it from crashing.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 600,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Modules — Organize Your Code"],
+    "learningObjectives": [
+      "Understand the basics of error handling",
+      "Use try, catch, finally, and throw",
+      "Create custom errors"
+    ],
+    "realWorldApplications": [
+      "Catch network and user input errors",
+      "Prevent application crashes",
+      "Handle unpredictable scenarios"
+    ],
+    "references": [
+      {
+        "title": "MDN Error Handling",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling#handling_exceptions"
+      },
+      {
+        "title": "W3Schools JavaScript Try Catch",
+        "url": "https://www.w3schools.com/js/js_try_catch.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Error Handling", "Exceptions", "Robust Code"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Try/Catch Block",
+        "description": "Use a try/catch block to catch an error when parsing invalid JSON data.",
+        "initialCode": "let jsonString = '{ \"name\": \"John\"'; // Invalid JSON\n\n// Your code here:\n",
+        "solution": "try { let parsedData = JSON.parse(jsonString); } catch (error) { console.log('Error:', error.message); }",
+        "expectedOutput": "Error: Unexpected end of JSON input",
+        "errorHint": "Use try/catch to handle errors and log the error message."
+      },
+      {
+        "id": "task2",
+        "title": "Finally Block",
+        "description": "Add a finally block that runs no matter what after the try/catch block.",
+        "initialCode": "// Your code here:\n",
+        "solution": "try { let parsedData = JSON.parse(jsonString); } catch (error) { console.log('Error:', error.message); } finally { console.log('Execution completed'); }",
+        "expectedOutput": "Execution completed message printed!",
+        "errorHint": "Use finally to add code that will always run after try/catch."
+      },
+      {
+        "id": "task3",
+        "title": "Throw Custom Error",
+        "description": "Create a custom error when a user enters an invalid age value.",
+        "initialCode": "// Your code here:\n",
+        "solution": "throw new Error('Invalid age');",
+        "expectedOutput": "Custom error thrown and handled!",
+        "errorHint": "Use `throw new Error('message')` to create custom error messages."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-12",
+    "number": 12,
+    "title": "JavaScript Classes and OOP — Organize Code with Objects",
+    "description": "Learn to use JavaScript classes for object-oriented programming (OOP) to define blueprints for objects.",
+    "category": "JavaScript",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 600,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Error Handling — Handle Errors Gracefully"],
+    "learningObjectives": [
+      "Create classes and instances in JavaScript",
+      "Use constructors and methods",
+      "Learn inheritance and super"
+    ],
+    "realWorldApplications": [
+      "Structure large applications with OOP principles",
+      "Create reusable classes for modeling real-world entities",
+      "Build more maintainable code"
+    ],
+    "references": [
+      {
+        "title": "MDN JavaScript Classes",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"
+      },
+      {
+        "title": "W3Schools JavaScript Classes",
+        "url": "https://www.w3schools.com/js/js_classes.asp"
+      }
+    ],
+    "tags": ["JavaScript", "OOP", "Classes", "Object-Oriented Programming"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Simple Class",
+        "description": "Define a class `Person` with attributes `name` and `age`. Create an instance of this class.",
+        "initialCode": "// Your code here:\n",
+        "solution": "class Person { constructor(name, age) { this.name = name; this.age = age; } }",
+        "expectedOutput": "Class and instance created successfully!",
+        "errorHint": "Define the constructor method with `constructor` keyword."
+      },
+      {
+        "id": "task2",
+        "title": "Add Methods to Class",
+        "description": "Add a method to the `Person` class that returns a greeting.",
+        "initialCode": "// Your code here:\n",
+        "solution": "greet() { return `Hello, ${this.name}`; }",
+        "expectedOutput": "Greeting method added successfully!",
+        "errorHint": "Add a method inside the class definition and use `this` to access properties."
+      },
+      {
+        "id": "task3",
+        "title": "Use Inheritance",
+        "description": "Create a subclass `Employee` that extends `Person`, adding a `position` property.",
+        "initialCode": "// Your code here:\n",
+        "solution": "class Employee extends Person { constructor(name, age, position) { super(name, age); this.position = position; } }",
+        "expectedOutput": "Inheritance applied successfully!",
+        "errorHint": "Use `extends` to inherit properties and methods from the parent class."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-13",
+    "number": 13,
+    "title": "JavaScript Modules — Organize Your Code",
+    "description": "Learn how to split your code into modules and export and import functionalities between different files.",
+    "category": "JavaScript",
+    "difficulty": "Advanced",
+    "pointsToEarn": 650,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Classes and OOP — Organize Code with Objects"],
+    "learningObjectives": [
+      "Understand JavaScript modules",
+      "Export and import functions, classes, and variables",
+      "Organize code into reusable and shareable pieces"
+    ],
+    "realWorldApplications": [
+      "Share code across multiple files",
+      "Build large applications with modular structure",
+      "Maintain cleaner and more organized code"
+    ],
+    "references": [
+      {
+        "title": "MDN JavaScript Modules",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules"
+      },
+      {
+        "title": "W3Schools JavaScript Modules",
+        "url": "https://www.w3schools.com/js/js_modules.asp"
+      }
+    ],
+    "tags": ["JavaScript", "Modules", "Code Organization", "Reusability"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Export and Import a Function",
+        "description": "Create a function in a separate module, export it, and import it into another file.",
+        "initialCode": "// math.js\nexport function add(a, b) { return a + b; }\n\n// Your code here:\n",
+        "solution": "export function add",
+        "expectedOutput": "Function exported and imported successfully!",
+        "errorHint": "Use `export` to share the function and `import` to use it in another file."
+      },
+      {
+        "id": "task2",
+        "title": "Export and Import Multiple Functions",
+        "description": "Create and import multiple functions from a module in one statement.",
+        "initialCode": "// math.js\nexport function add(a, b) { return a + b; }\nexport function subtract(a, b) { return a - b; }\n\n// Your code here:\n",
+        "solution": "import { add, subtract }",
+        "expectedOutput": "Multiple functions imported successfully!",
+        "errorHint": "Use `import { func1, func2 }` to import multiple functions from a module."
+      },
+      {
+        "id": "task3",
+        "title": "Use Default Exports",
+        "description": "Use `export default` to export a function and import it into another file.",
+        "initialCode": "// math.js\nexport default function multiply(a, b) { return a * b; }\n\n// Your code here:\n",
+        "solution": "import multiply",
+        "expectedOutput": "Default export used successfully!",
+        "errorHint": "Use `export default` for the main export and `import` to bring it into another file."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-14",
+    "number": 14,
+    "title": "JavaScript Fetch API — Interact with Web Data",
+    "description": "Learn how to use the Fetch API to send requests and process data returned by web services.",
+    "category": "JavaScript",
+    "difficulty": "Advanced",
+    "pointsToEarn": 700,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Modules — Organize Your Code"],
+    "learningObjectives": [
+      "Use the Fetch API to get data from web servers",
+      "Handle and parse JSON data",
+      "Handle errors in API calls"
+    ],
+    "realWorldApplications": [
+      "Fetch real-time data from external sources",
+      "Work with public APIs like weather or social media",
+      "Display dynamic content from external services"
+    ],
+    "references": [
+      {
+        "title": "MDN Fetch API",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+      },
+      { "title": "W3Schools Fetch API", "url": "https://www.w3schools.com/js/js_api_fetch.asp" }
+    ],
+    "tags": ["JavaScript", "Fetch", "APIs", "Data"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Fetch Data from an API",
+        "description": "Use the Fetch API to retrieve JSON data from 'https://jsonplaceholder.typicode.com/todos/1'.",
+        "initialCode": "// Your code here:\n",
+        "solution": "fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json()).then(data => console.log(data));",
+        "expectedOutput": "Data fetched successfully!",
+        "errorHint": "Use `.then()` to handle the response after calling `fetch()`."
+      },
+      {
+        "id": "task2",
+        "title": "Async/Await Fetch",
+        "description": "Rewrite the previous task using async/await to handle the Fetch request.",
+        "initialCode": "// Your code here:\n",
+        "solution": "async function getData() { let response = await fetch('https://jsonplaceholder.typicode.com/todos/1'); let data = await response.json(); console.log(data); } getData();",
+        "expectedOutput": "Data fetched with async/await!",
+        "errorHint": "Use `async` and `await` to handle the Fetch API asynchronously."
+      },
+      {
+        "id": "task3",
+        "title": "Handle API Errors",
+        "description": "Add error handling to the Fetch API request.",
+        "initialCode": "// Your code here:\n",
+        "solution": "async function getData() { try { let response = await fetch('https://jsonplaceholder.typicode.com/todos/1'); let data = await response.json(); console.log(data); } catch (error) { console.log('Error:', error); } } getData();",
+        "expectedOutput": "Error handling included and logged!",
+        "errorHint": "Use `try...catch` to handle Fetch errors."
+      }
+    ]
+  },
+  {
+    "id": "javascript-level-15",
+    "number": 15,
+    "title": "JavaScript Web Storage API — Save Data on the Client",
+    "description": "Learn to use the Web Storage API (localStorage and sessionStorage) to save data on the client side.",
+    "category": "JavaScript",
+    "difficulty": "Advanced",
+    "pointsToEarn": 700,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["JavaScript Fetch API — Interact with Web Data"],
+    "learningObjectives": [
+      "Understand the difference between localStorage and sessionStorage",
+      "Use the Web Storage API to store and retrieve data",
+      "Manage data persistence across page reloads"
+    ],
+    "realWorldApplications": [
+      "Store user preferences locally",
+      "Save form data temporarily during browsing sessions",
+      "Implement basic offline functionality"
+    ],
+    "references": [
+      {
+        "title": "MDN Web Storage",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+      },
+      { "title": "W3Schools Web Storage", "url": "https://www.w3schools.com/js/js_web_storage.asp" }
+    ],
+    "tags": ["JavaScript", "Web Storage", "Client-Side Storage", "localStorage"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Store and Retrieve Data from localStorage",
+        "description": "Use `localStorage.setItem()` to store a key-value pair, and retrieve it using `localStorage.getItem()`.",
+        "initialCode": "// Your code here:\n",
+        "solution": "localStorage.setItem('name', 'John');\nlet name = localStorage.getItem('name'); console.log(name);",
+        "expectedOutput": "Data stored and retrieved from localStorage!",
+        "errorHint": "Use `setItem()` to save data and `getItem()` to retrieve it."
+      },
+      {
+        "id": "task2",
+        "title": "Session Storage",
+        "description": "Store a value in `sessionStorage` and retrieve it after page reload.",
+        "initialCode": "// Your code here:\n",
+        "solution": "sessionStorage.setItem('sessionKey', 'sessionValue');\nlet sessionData = sessionStorage.getItem('sessionKey'); console.log(sessionData);",
+        "expectedOutput": "Data stored in sessionStorage!",
+        "errorHint": "Use `sessionStorage` for temporary data that expires after the session ends."
+      },
+      {
+        "id": "task3",
+        "title": "Clear Data from Storage",
+        "description": "Remove an item from `localStorage` or `sessionStorage`.",
+        "initialCode": "// Your code here:\n",
+        "solution": "localStorage.removeItem('name');",
+        "expectedOutput": "Data removed successfully!",
+        "errorHint": "Use `removeItem()` to delete data from storage."
+      }
+    ]
+  }
+]

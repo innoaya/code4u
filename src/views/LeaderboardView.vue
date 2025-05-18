@@ -19,7 +19,7 @@ onMounted(async () => {
 const fetchBadges = async () => {
   try {
     const badgesSnapshot = await getDocs(collection(db, 'badges'))
-    
+
     // Create a map of badge ID to badge object for quick lookups
     const badgesMap = {}
     badgesSnapshot.docs.forEach(doc => {
@@ -28,7 +28,7 @@ const fetchBadges = async () => {
         ...doc.data()
       }
     })
-    
+
     allBadges.value = badgesMap
   } catch (err) {
     console.error('Error fetching badges:', err)
@@ -41,24 +41,24 @@ const fetchLeaderboard = async () => {
   try {
     isLoading.value = true
     error.value = null
-    
+
     // Create query based on selected timeframe
     let usersQuery = query(
       collection(db, 'users'),
       orderBy('points', 'desc'),
       limit(20)
     )
-    
+
     // Get users from Firestore
     const usersSnapshot = await getDocs(usersQuery)
-    
+
     // Map data and add rank
     users.value = usersSnapshot.docs.map((doc, index) => {
       const userData = doc.data()
-      
+
       // Map badge IDs to full badge objects if they exist
       let mappedBadges = []
-      
+
       if (userData.badges && Array.isArray(userData.badges)) {
         mappedBadges = userData.badges.map(badgeId => {
           // Handle both string IDs and existing badge objects
@@ -68,7 +68,7 @@ const fetchLeaderboard = async () => {
           return badgeId
         })
       }
-      
+
       return {
         id: doc.id,
         rank: index + 1,
@@ -79,7 +79,7 @@ const fetchLeaderboard = async () => {
   } catch (err) {
     console.error('Error fetching leaderboard:', err)
     error.value = 'Failed to load leaderboard data'
-    
+
     // Use mock data if there's an error
     users.value = mockUsers
   } finally {
@@ -111,43 +111,43 @@ const mockUsers = [
 <template>
   <div>
     <h1 class="text-3xl font-bold mb-8">Leaderboard</h1>
-    
+
     <!-- Timeframe selector -->
     <div class="flex space-x-2 mb-8">
-      <button 
-        @click="changeTimeframe('all-time')" 
+      <button
+        @click="changeTimeframe('all-time')"
         class="px-4 py-2 rounded-lg text-sm font-medium"
         :class="timeframe === 'all-time' ? 'bg-primary text-white' : 'bg-gray-100 text-text-secondary hover:bg-gray-200'"
       >
         All Time
       </button>
-      <button 
-        @click="changeTimeframe('monthly')" 
+      <button
+        @click="changeTimeframe('monthly')"
         class="px-4 py-2 rounded-lg text-sm font-medium"
         :class="timeframe === 'monthly' ? 'bg-primary text-white' : 'bg-gray-100 text-text-secondary hover:bg-gray-200'"
       >
         This Month
       </button>
-      <button 
-        @click="changeTimeframe('weekly')" 
+      <button
+        @click="changeTimeframe('weekly')"
         class="px-4 py-2 rounded-lg text-sm font-medium"
         :class="timeframe === 'weekly' ? 'bg-primary text-white' : 'bg-gray-100 text-text-secondary hover:bg-gray-200'"
       >
         This Week
       </button>
     </div>
-    
+
     <!-- Loading state -->
     <div v-if="isLoading" class="flex justify-center items-center h-64">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
     </div>
-    
+
     <!-- Error state -->
     <div v-else-if="error" class="card bg-danger/10 text-danger p-8 text-center">
       <h2 class="text-2xl font-bold mb-4">{{ error }}</h2>
       <p>There was a problem loading the leaderboard data.</p>
     </div>
-    
+
     <!-- Leaderboard table -->
     <div v-else class="card overflow-hidden">
       <div class="overflow-x-auto">
@@ -158,7 +158,6 @@ const mockUsers = [
               <th class="px-6 py-3 text-text-secondary font-medium">User</th>
               <th class="px-6 py-3 text-text-secondary font-medium">Level</th>
               <th class="px-6 py-3 text-text-secondary font-medium">Points</th>
-              <th class="px-6 py-3 text-text-secondary font-medium">Badges</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
@@ -180,7 +179,7 @@ const mockUsers = [
                   </div>
                 </div>
               </td>
-              
+
               <!-- User -->
               <td class="px-6 py-4">
                 <div class="flex items-center">
@@ -197,7 +196,7 @@ const mockUsers = [
                   </div>
                 </div>
               </td>
-              
+
               <!-- Level -->
               <td class="px-6 py-4">
                 <div class="flex items-center">
@@ -206,35 +205,10 @@ const mockUsers = [
                   </div>
                 </div>
               </td>
-              
+
               <!-- Points -->
               <td class="px-6 py-4 font-bold text-primary">
                 {{ user.points.toLocaleString() }}
-              </td>
-              
-              <!-- Badges -->
-              <td class="px-6 py-4">
-                <div class="flex space-x-1">
-                  <div
-                    v-for="(badge, index) in user.badges"
-                    :key="index"
-                    class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
-                    :class="{
-                      'bg-primary/20 text-primary': typeof badge === 'string' ? badge.includes('html') : badge.category === 'HTML',
-                      'bg-secondary/20 text-secondary': typeof badge === 'string' ? badge.includes('css') : badge.category === 'CSS',
-                      'bg-accent/20 text-accent': typeof badge === 'string' ? badge.includes('js') : badge.category === 'JavaScript'
-                    }"
-                    :title="typeof badge === 'string' ? badge : badge.name"
-                  >
-                    <!-- Support both string badges and badge objects -->
-                    <template v-if="typeof badge === 'string'">
-                      {{ badge.includes('html') ? 'H' : badge.includes('css') ? 'C' : 'J' }}
-                    </template>
-                    <template v-else>
-                      {{ badge.icon || (badge.category === 'HTML' ? 'H' : badge.category === 'CSS' ? 'C' : 'J') }}
-                    </template>
-                  </div>
-                </div>
               </td>
             </tr>
           </tbody>

@@ -436,7 +436,7 @@ const showJsonEditor = ref(false);
 const jsonContent = ref('');
 const jsonError = ref('');
 
-const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Web Development', 'Frontend', 'Backend', 'Python', 'PHP', "C#", "Java"];
+const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Python'];
 
 // Computed properties for level management
 const selectedLevels = computed(() => {

@@ -1,0 +1,533 @@
+[
+  {
+    "id": "html-level-1",
+    "number": 1,
+    "title": "HTML Basics — Start Building Web Pages",
+    "description": "Learn the basic structure of an HTML document and the most common HTML tags.",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "pointsToEarn": 300,
+    "estimatedTime": "45 minutes",
+    "prerequisites": [],
+    "learningObjectives": [
+      "Understand the basic structure of an HTML document",
+      "Learn how to use common tags like `<html>`, `<head>`, and `<body>`",
+      "Create a simple web page with text content"
+    ],
+    "realWorldApplications": [
+      "Building simple static web pages",
+      "Creating a basic website structure",
+      "Learning foundational HTML for further web development"
+    ],
+    "references": [
+      {
+        "title": "MDN HTML Basics",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics"
+      },
+      { "title": "W3Schools HTML Tutorial", "url": "https://www.w3schools.com/html/" }
+    ],
+    "tags": ["HTML", "Basic Structure", "Web Development"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Basic HTML Document",
+        "description": "Create a basic HTML structure with the `<!DOCTYPE html>`, `<html>`, `<head>`, and `<body>` tags.",
+        "initialCode": "<!DOCTYPE html>\n<html>\n<head>\n<title>My First Web Page</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<html>",
+        "expectedOutput": "HTML document structure created successfully!",
+        "errorHint": "Use the `<!DOCTYPE html>` declaration and wrap your content inside `<html>`, `<head>`, and `<body>` tags."
+      },
+      {
+        "id": "task2",
+        "title": "Add a Heading and Paragraph",
+        "description": "Inside the `<body>` tag, add a `<h1>` heading and a `<p>` paragraph.",
+        "initialCode": "<html>\n<head>\n<title>My First Web Page</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<h1>Welcome to My Website</h1>\n<p>This is my first webpage.</p>",
+        "expectedOutput": "Heading and paragraph added successfully!",
+        "errorHint": "Use the `<h1>` tag for the heading and the `<p>` tag for the paragraph."
+      },
+      {
+        "id": "task3",
+        "title": "View Web Page in Browser",
+        "description": "Save your HTML document and open it in a browser to see the result.",
+        "initialCode": "<html>\n<head>\n<title>My First Web Page</title>\n</head>\n<body>\n<h1>Welcome to My Website</h1>\n<p>This is my first webpage.</p>\n</body>\n</html>",
+        "solution": "Save as `index.html`",
+        "expectedOutput": "Webpage displayed successfully in browser!",
+        "errorHint": "Ensure the file is saved with the `.html` extension and opened in a browser."
+      }
+    ]
+  },
+  {
+    "id": "html-level-2",
+    "number": 2,
+    "title": "HTML Lists — Display Data in a List Format",
+    "description": "Learn how to create ordered and unordered lists using `<ol>` and `<ul>` tags.",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "pointsToEarn": 350,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["HTML Basics — Start Building Web Pages"],
+    "learningObjectives": [
+      "Learn to create unordered lists (`<ul>`) and ordered lists (`<ol>`) in HTML",
+      "Use list items (`<li>`) to define each item in a list",
+      "Understand the difference between ordered and unordered lists"
+    ],
+    "realWorldApplications": [
+      "Displaying lists of items like menu items or shopping lists",
+      "Organizing content into bullet points or numbered steps",
+      "Improving content readability on websites"
+    ],
+    "references": [
+      {
+        "title": "MDN Lists",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul"
+      },
+      { "title": "W3Schools Lists", "url": "https://www.w3schools.com/html/html_lists.asp" }
+    ],
+    "tags": ["HTML", "Lists", "Content Organization"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create an Unordered List",
+        "description": "Use the `<ul>` tag to create a list of your favorite fruits, and wrap each fruit in a `<li>` tag.",
+        "initialCode": "<html>\n<head>\n<title>My Favorite Fruits</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<ul>\n<li>Apple</li>\n<li>Banana</li>\n<li>Cherry</li>\n</ul>",
+        "expectedOutput": "Unordered list displayed successfully!",
+        "errorHint": "Use the `<ul>` tag for unordered lists and wrap each item in a `<li>` tag."
+      },
+      {
+        "id": "task2",
+        "title": "Create an Ordered List",
+        "description": "Use the `<ol>` tag to create a list of the first three steps in a process, such as making a cup of tea.",
+        "initialCode": "<html>\n<head>\n<title>Making Tea</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<ol>\n<li>Boil water</li>\n<li>Add tea leaves</li>\n<li>Steep for 5 minutes</li>\n</ol>",
+        "expectedOutput": "Ordered list displayed successfully!",
+        "errorHint": "Use the `<ol>` tag for ordered lists and wrap each item in a `<li>` tag."
+      },
+      {
+        "id": "task3",
+        "title": "Add Nested List Items",
+        "description": "Create a list of categories and under each category, create a nested list of items.",
+        "initialCode": "<html>\n<head>\n<title>Categories</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<ul>\n<li>Fruits\n<ul>\n<li>Apple</li>\n<li>Banana</li>\n</ul>\n</li>\n<li>Vegetables\n<ul>\n<li>Carrot</li>\n<li>Broccoli</li>\n</ul>\n</li>\n</ul>",
+        "expectedOutput": "Nested list displayed successfully!",
+        "errorHint": "Use nested `<ul>` tags inside `<li>` tags to create a sublist."
+      }
+    ]
+  },
+  {
+    "id": "html-level-3",
+    "number": 3,
+    "title": "HTML Links — Navigate Between Web Pages",
+    "description": "Learn how to create hyperlinks using the `<a>` tag to navigate between pages or to external websites.",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["HTML Lists — Display Data in a List Format"],
+    "learningObjectives": [
+      "Learn to use the `<a>` tag for creating links",
+      "Understand how to link to other web pages, sections, or external websites",
+      "Use the `href` attribute to define the link destination"
+    ],
+    "realWorldApplications": [
+      "Creating navigation menus",
+      "Building links to related content on other websites",
+      "Improving user experience by providing easy navigation"
+    ],
+    "references": [
+      {
+        "title": "MDN Links",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a"
+      },
+      { "title": "W3Schools Links", "url": "https://www.w3schools.com/html/html_links.asp" }
+    ],
+    "tags": ["HTML", "Links", "Navigation"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Link to Another Web Page",
+        "description": "Create a link that takes the user to a new web page (e.g., 'about.html').",
+        "initialCode": "<html>\n<head>\n<title>My Website</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<a href='about.html'>Go to About Page</a>",
+        "expectedOutput": "Link created successfully!",
+        "errorHint": "Use the `href` attribute to specify the destination of the link."
+      },
+      {
+        "id": "task2",
+        "title": "Create a Link to an External Website",
+        "description": "Create a link that takes the user to an external website (e.g., https://www.example.com).",
+        "initialCode": "<html>\n<head>\n<title>External Link</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<a href='https://www.example.com'>Visit Example Website</a>",
+        "expectedOutput": "External link created successfully!",
+        "errorHint": "Provide the full URL (including http:// or https://) in the `href` attribute."
+      },
+      {
+        "id": "task3",
+        "title": "Link to a Specific Section on the Same Page",
+        "description": "Create an anchor link that navigates to a specific section of the same page.",
+        "initialCode": "<html>\n<head>\n<title>Anchor Links</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<a href='#section1'>Go to Section 1</a>\n\n<h2 id='section1'>Section 1</h2>",
+        "expectedOutput": "Anchor link to section created successfully!",
+        "errorHint": "Use `id` on the target element and `#id` in the link's `href`."
+      }
+    ]
+  },
+  {
+    "id": "html-level-4",
+    "number": 4,
+    "title": "HTML Images — Adding Visual Content",
+    "description": "Learn how to embed images into web pages using the `<img>` tag.",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "pointsToEarn": 400,
+    "estimatedTime": "60 minutes",
+    "prerequisites": ["HTML Links — Navigate Between Web Pages"],
+    "learningObjectives": [
+      "Understand how to use the `<img>` tag to display images",
+      "Learn the role of the `src` and `alt` attributes",
+      "Make images responsive for mobile screens"
+    ],
+    "realWorldApplications": [
+      "Adding logos and icons to websites",
+      "Embedding pictures and illustrations",
+      "Building image galleries and media content"
+    ],
+    "references": [
+      {
+        "title": "MDN Images",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img"
+      },
+      { "title": "W3Schools Images", "url": "https://www.w3schools.com/html/html_images.asp" }
+    ],
+    "tags": ["HTML", "Images", "Media"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Add an Image to a Web Page",
+        "description": "Use the `<img>` tag to embed an image from your local directory.",
+        "initialCode": "<html>\n<head>\n<title>My Image Page</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<img src='image.jpg' alt='A description of the image'>",
+        "expectedOutput": "Image displayed successfully!",
+        "errorHint": "Use the `src` attribute to specify the image file path and `alt` for a description."
+      },
+      {
+        "id": "task2",
+        "title": "Display an Image from an External URL",
+        "description": "Use an image hosted on an external website by specifying the full URL in the `src` attribute.",
+        "initialCode": "<html>\n<head>\n<title>External Image</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<img src='https://www.example.com/image.jpg' alt='Image from external URL'>",
+        "expectedOutput": "External image displayed successfully!",
+        "errorHint": "Provide the full URL (including `http://` or `https://`) in the `src` attribute."
+      },
+      {
+        "id": "task3",
+        "title": "Make Image Responsive",
+        "description": "Add an image to a web page and use CSS to make the image responsive on all screen sizes.",
+        "initialCode": "<html>\n<head>\n<title>Responsive Image</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<img src='image.jpg' alt='Responsive Image' style='width: 100%; height: auto;'>",
+        "expectedOutput": "Image responsive on different screen sizes!",
+        "errorHint": "Use `width: 100%` and `height: auto` in the inline style or external CSS."
+      }
+    ]
+  },
+  {
+    "id": "html-level-5",
+    "number": 5,
+    "title": "HTML Forms — Collect User Input",
+    "description": "Learn how to create forms to collect user data, including text input, checkboxes, radio buttons, and submit buttons.",
+    "category": "HTML",
+    "difficulty": "Beginner",
+    "pointsToEarn": 450,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["HTML Images — Adding Visual Content"],
+    "learningObjectives": [
+      "Understand how to create and structure forms using `<form>`, `<input>`, `<textarea>`, `<select>`, and `<button>`",
+      "Learn how to use form elements like text fields, radio buttons, and checkboxes",
+      "Understand form submission and action attributes"
+    ],
+    "realWorldApplications": [
+      "Building contact forms",
+      "Creating surveys or quizzes",
+      "Collecting user registration and login details"
+    ],
+    "references": [
+      {
+        "title": "MDN HTML Forms",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form"
+      },
+      { "title": "W3Schools HTML Forms", "url": "https://www.w3schools.com/html/html_forms.asp" }
+    ],
+    "tags": ["HTML", "Forms", "User Input", "Data Collection"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Basic Form",
+        "description": "Create a basic form with a text input field and a submit button.",
+        "initialCode": "<html>\n<head>\n<title>Contact Form</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<form action='#'>\n<input type='text' name='username' placeholder='Enter your name'>\n<button type='submit'>Submit</button>\n</form>",
+        "expectedOutput": "Form created successfully!",
+        "errorHint": "Use the `<form>` tag for the form container and `<input>` for user inputs."
+      },
+      {
+        "id": "task2",
+        "title": "Add Checkbox and Radio Buttons",
+        "description": "Add checkboxes for selecting interests and radio buttons for gender selection in the form.",
+        "initialCode": "<html>\n<head>\n<title>Survey Form</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<input type='checkbox' name='interest' value='coding'> Coding<br>\n<input type='radio' name='gender' value='male'> Male<br>\n<input type='radio' name='gender' value='female'> Female",
+        "expectedOutput": "Checkboxes and radio buttons displayed correctly!",
+        "errorHint": "Use `type='checkbox'` for checkboxes and `type='radio'` for radio buttons."
+      },
+      {
+        "id": "task3",
+        "title": "Create a Textarea",
+        "description": "Add a `textarea` field where users can type longer comments.",
+        "initialCode": "<html>\n<head>\n<title>Feedback Form</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<textarea name='feedback' rows='4' cols='50'>Your feedback here...</textarea>",
+        "expectedOutput": "Textarea displayed successfully!",
+        "errorHint": "Use `<textarea>` to allow users to enter multiple lines of text."
+      }
+    ]
+  },
+  {
+    "id": "html-level-6",
+    "number": 6,
+    "title": "HTML Tables — Organize Data in Rows and Columns",
+    "description": "Learn how to create and structure tables to display data in rows and columns.",
+    "category": "HTML",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 500,
+    "estimatedTime": "75 minutes",
+    "prerequisites": ["HTML Forms — Collect User Input"],
+    "learningObjectives": [
+      "Learn to create tables using the `<table>`, `<tr>`, `<td>`, and `<th>` tags",
+      "Understand how to structure rows and columns in a table",
+      "Style tables for better readability"
+    ],
+    "realWorldApplications": [
+      "Displaying product lists",
+      "Presenting tabular data like schedules or prices",
+      "Creating sortable or paginated tables in web applications"
+    ],
+    "references": [
+      {
+        "title": "MDN Tables",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table"
+      },
+      { "title": "W3Schools HTML Tables", "url": "https://www.w3schools.com/html/html_tables.asp" }
+    ],
+    "tags": ["HTML", "Tables", "Data", "Organization"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Create a Simple Table",
+        "description": "Create a basic table with three rows and two columns using the `<table>`, `<tr>`, `<td>`, and `<th>` tags.",
+        "initialCode": "<html>\n<head>\n<title>My Table</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<table border='1'>\n<tr><th>Product</th><th>Price</th></tr>\n<tr><td>Apple</td><td>$1</td></tr>\n<tr><td>Banana</td><td>$0.5</td></tr>\n</table>",
+        "expectedOutput": "Table created successfully!",
+        "errorHint": "Use `<table>`, `<tr>`, `<th>`, and `<td>` tags to structure the table."
+      },
+      {
+        "id": "task2",
+        "title": "Add Table Head and Body",
+        "description": "Create a table with a `<thead>` for the header and `<tbody>` for the table body.",
+        "initialCode": "<html>\n<head>\n<title>My Table</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<table>\n<thead><tr><th>Product</th><th>Price</th></tr></thead>\n<tbody><tr><td>Apple</td><td>$1</td></tr><tr><td>Banana</td><td>$0.5</td></tr></tbody>\n</table>",
+        "expectedOutput": "Table with header and body created successfully!",
+        "errorHint": "Use `<thead>` and `<tbody>` to separate the header from the body of the table."
+      },
+      {
+        "id": "task3",
+        "title": "Add Table Footer",
+        "description": "Add a footer to the table using the `<tfoot>` tag to display summary data.",
+        "initialCode": "<html>\n<head>\n<title>My Table</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<table>\n<thead><tr><th>Product</th><th>Price</th></tr></thead>\n<tbody><tr><td>Apple</td><td>$1</td></tr><tr><td>Banana</td><td>$0.5</td></tr></tbody>\n<tfoot><tr><td>Total</td><td>$1.5</td></tr></tfoot>\n</table>",
+        "expectedOutput": "Table footer added successfully!",
+        "errorHint": "Use `<tfoot>` to add a footer section to the table."
+      }
+    ]
+  },
+  {
+    "id": "html-level-7",
+    "number": 7,
+    "title": "HTML Media — Embedding Audio and Video",
+    "description": "Learn how to embed audio and video content in a webpage using `<audio>` and `<video>` tags.",
+    "category": "HTML",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 550,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["HTML Tables — Organize Data in Rows and Columns"],
+    "learningObjectives": [
+      "Understand how to embed audio and video with the `<audio>` and `<video>` tags",
+      "Use attributes like `controls`, `autoplay`, and `loop` for media playback",
+      "Learn to link to external media files"
+    ],
+    "realWorldApplications": [
+      "Adding background music or audio clips to a website",
+      "Embedding tutorials, videos, or multimedia content",
+      "Creating interactive media elements in web applications"
+    ],
+    "references": [
+      {
+        "title": "MDN Audio",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio"
+      },
+      {
+        "title": "MDN Video",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video"
+      }
+    ],
+    "tags": ["HTML", "Audio", "Video", "Media"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Embed an Audio File",
+        "description": "Embed an audio file into the page using the `<audio>` tag with a 'play' button.",
+        "initialCode": "<html>\n<head>\n<title>My Audio</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<audio controls>\n<source src='audio.mp3' type='audio/mp3'>\nYour browser does not support the audio element.\n</audio>",
+        "expectedOutput": "Audio player displayed successfully!",
+        "errorHint": "Use the `<audio>` tag and provide the file source with `<source>`."
+      },
+      {
+        "id": "task2",
+        "title": "Embed a Video File",
+        "description": "Embed a video file into the page using the `<video>` tag with playback controls.",
+        "initialCode": "<html>\n<head>\n<title>My Video</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<video controls>\n<source src='video.mp4' type='video/mp4'>\nYour browser does not support the video element.\n</video>",
+        "expectedOutput": "Video player displayed successfully!",
+        "errorHint": "Use the `<video>` tag and provide the file source with `<source>`."
+      },
+      {
+        "id": "task3",
+        "title": "Make Video Auto Play and Loop",
+        "description": "Add attributes to the `<video>` tag to make the video autoplay and loop indefinitely.",
+        "initialCode": "<html>\n<head>\n<title>Autoplay Video</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<video autoplay loop>\n<source src='video.mp4' type='video/mp4'>\nYour browser does not support the video element.\n</video>",
+        "expectedOutput": "Video plays automatically and loops successfully!",
+        "errorHint": "Use the `autoplay` and `loop` attributes in the `<video>` tag."
+      }
+    ]
+  },
+  {
+    "id": "html-level-8",
+    "number": 8,
+    "title": "HTML Forms Validation — Validate User Input",
+    "description": "Learn how to validate user input in forms using the `required`, `pattern`, and `min`/`max` attributes.",
+    "category": "HTML",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 600,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["HTML Media — Embedding Audio and Video"],
+    "learningObjectives": [
+      "Understand form input validation",
+      "Learn to use the `required`, `pattern`, and `min`/`max` attributes for validation",
+      "Ensure proper input format for email, phone numbers, and text fields"
+    ],
+    "realWorldApplications": [
+      "Validating user input in contact forms",
+      "Ensuring proper email or phone number formatting",
+      "Building secure login and registration forms"
+    ],
+    "references": [
+      {
+        "title": "MDN Form Validation",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation"
+      },
+      {
+        "title": "W3Schools Form Validation",
+        "url": "https://www.w3schools.com/html/html_form_validation.asp"
+      }
+    ],
+    "tags": ["HTML", "Forms", "Validation", "User Input"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Make a Text Field Required",
+        "description": "Use the `required` attribute to make a text field mandatory in a form.",
+        "initialCode": "<html>\n<head>\n<title>Form Validation</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<input type='text' name='username' required>",
+        "expectedOutput": "Text field marked as required!",
+        "errorHint": "Use the `required` attribute to make the input mandatory."
+      },
+      {
+        "id": "task2",
+        "title": "Validate Email Format",
+        "description": "Use the `pattern` attribute to ensure the email input follows the proper email format.",
+        "initialCode": "<html>\n<head>\n<title>Email Form</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<input type='email' name='email' pattern='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}' required>",
+        "expectedOutput": "Email format validated successfully!",
+        "errorHint": "Use the `pattern` attribute to validate the email format."
+      },
+      {
+        "id": "task3",
+        "title": "Set Minimum Age for Registration",
+        "description": "Use the `min` attribute to set a minimum age for a user to register.",
+        "initialCode": "<html>\n<head>\n<title>Age Validation</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<input type='number' name='age' min='18' required>",
+        "expectedOutput": "Age input validated successfully with a minimum value!",
+        "errorHint": "Use the `min` attribute to set a minimum value for numerical inputs."
+      }
+    ]
+  },
+  {
+    "id": "html-level-9",
+    "number": 9,
+    "title": "HTML Semantic Elements — Improve Accessibility",
+    "description": "Learn how to use semantic elements to improve the accessibility and readability of your web pages.",
+    "category": "HTML",
+    "difficulty": "Intermediate",
+    "pointsToEarn": 650,
+    "estimatedTime": "90 minutes",
+    "prerequisites": ["HTML Forms Validation — Validate User Input"],
+    "learningObjectives": [
+      "Understand the importance of semantic HTML",
+      "Learn to use elements like `<header>`, `<footer>`, `<article>`, and `<section>`",
+      "Improve accessibility and SEO with proper semantic structure"
+    ],
+    "realWorldApplications": [
+      "Creating more readable and accessible web pages",
+      "Improving SEO for better search engine ranking",
+      "Making websites more inclusive for people with disabilities"
+    ],
+    "references": [
+      {
+        "title": "MDN Semantic HTML",
+        "url": "https://developer.mozilla.org/en-US/docs/Glossary/Semantics#semantic_html_elements"
+      },
+      {
+        "title": "W3Schools Semantic HTML",
+        "url": "https://www.w3schools.com/html/html5_semantic_elements.asp"
+      }
+    ],
+    "tags": ["HTML", "Semantic", "Accessibility", "SEO"],
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Use `<header>` and `<footer>`",
+        "description": "Wrap the header and footer content of your webpage with `<header>` and `<footer>` tags.",
+        "initialCode": "<html>\n<head>\n<title>My Page</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<header><h1>Welcome to My Page</h1></header>\n<footer><p>Footer content</p></footer>",
+        "expectedOutput": "Semantic elements `<header>` and `<footer>` used successfully!",
+        "errorHint": "Wrap the page's header and footer content in the appropriate `<header>` and `<footer>` tags."
+      },
+      {
+        "id": "task2",
+        "title": "Use `<article>` and `<section>`",
+        "description": "Use the `<article>` and `<section>` elements to organize content into logical sections.",
+        "initialCode": "<html>\n<head>\n<title>My Blog</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<article><h2>Article Title</h2><p>Article content...</p></article>\n<section><h2>Section Title</h2><p>Section content...</p></section>",
+        "expectedOutput": "Semantic elements `<article>` and `<section>` used successfully!",
+        "errorHint": "Use `<article>` to define standalone content and `<section>` to group related content."
+      },
+      {
+        "id": "task3",
+        "title": "Make Navigation More Semantic",
+        "description": "Use the `<nav>` tag to define the navigation section of your webpage.",
+        "initialCode": "<html>\n<head>\n<title>Website</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "solution": "<nav><ul><li><a href='#home'>Home</a></li><li><a href='#about'>About</a></li></ul></nav>",
+        "expectedOutput": "Semantic navigation section created with `<nav>`!",
+        "errorHint": "Use the `<nav>` element to wrap the website's primary navigation links."
+      }
+    ]
+  }
+]

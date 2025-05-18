@@ -1,11 +1,11 @@
 <template>
   <div class="admin-user-form">
     <!-- Breadcrumb Navigation -->
-    <AdminBreadcrumbs 
-      :itemId="userId" 
-      :itemTitle="isEditing ? user.displayName || 'Edit User' : 'New User'" 
+    <AdminBreadcrumbs
+      :itemId="userId"
+      :itemTitle="isEditing ? user.displayName || 'Edit User' : 'New User'"
     />
-    
+
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">{{ isEditing ? 'Edit' : 'Create' }} User</h1>
       <router-link to="/admin/users" class="text-blue-600 hover:underline">
@@ -343,9 +343,6 @@ onMounted(async () => {
       error.value = err.message;
     }
   }
-
-  // Initialize JSON content
-  jsonContent.value = JSON.stringify(user.value, null, 2);
 });
 
 // Change user role

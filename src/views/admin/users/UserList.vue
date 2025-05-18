@@ -773,7 +773,41 @@ function filterUsersBySearch(usersArray, searchText) {
 
 // View user details
 function viewUserDetails(userId) {
+  // Save the current page state before navigating
+  saveUserListState();
   router.push(`/admin/users/${userId}`);
+}
+
+// Save the current state of the UserList to localStorage
+function saveUserListState() {
+  const stateToSave = {
+    currentPage: currentPage.value,
+    selectedRole: selectedRole.value,
+    selectedStatus: selectedStatus.value,
+    searchTerm: searchTerm.value
+  };
+  localStorage.setItem('userListState', JSON.stringify(stateToSave));
+}
+
+// Restore the saved state of the UserList from localStorage
+function restoreUserListState() {
+  try {
+    const savedState = localStorage.getItem('userListState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore filters first
+      selectedRole.value = parsedState.selectedRole || 'all';
+      selectedStatus.value = parsedState.selectedStatus || 'all';
+      searchTerm.value = parsedState.searchTerm || '';
+      
+      // Return the saved page to navigate to
+      return parsedState.currentPage || 1;
+    }
+  } catch (error) {
+    console.error('Error restoring user list state:', error);
+  }
+  return 1; // Default to page 1 if no saved state or error
 }
 
 
@@ -823,8 +857,23 @@ function getUserRoleLabel(role) {
 // Load users on mount - with a slight delay to ensure reactive setup is complete
 onMounted(() => {
   // Small timeout to ensure all reactivity is properly set up
-  setTimeout(() => {
-    loadAllUsers();
+  setTimeout(async () => {
+    // Restore any saved state from localStorage
+    const savedPage = restoreUserListState();
+    
+    // If we have a saved page, use it
+    if (savedPage > 1) {
+      // First load all users to get the total count
+      await loadAllUsers();
+      
+      // Then navigate to the saved page
+      if (savedPage <= totalPages.value) {
+        await goToPage(savedPage);
+      }
+    } else {
+      // Otherwise just load the first page as usual
+      await loadAllUsers();
+    }
   }, 0);
 });
 </script>

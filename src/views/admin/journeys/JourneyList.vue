@@ -308,10 +308,27 @@ const sortedJourneys = computed(() => {
 
   // Return a sorted copy of the array
   return [...sourceArray].sort((a, b) => {
+    // Get dates from journey objects, handling both Firestore Timestamp and JS Date formats
+    const dateA = getDateFromJourney(a);
+    const dateB = getDateFromJourney(b);
+    
     // Sort by createdAt date in descending order (newest first)
-    return (b.createdAt?.toDate() || new Date()) - (a.createdAt?.toDate() || new Date());
+    return dateB - dateA;
   });
 });
+
+// Helper function to safely get Date objects from journey createdAt fields
+function getDateFromJourney(journey) {
+  if (!journey.createdAt) return new Date(0); // Default date if missing
+  
+  // If it's a Firestore Timestamp (has toDate method)
+  if (typeof journey.createdAt.toDate === 'function') {
+    return journey.createdAt.toDate();
+  }
+  
+  // If it's already a JS Date or can be converted to one
+  return journey.createdAt instanceof Date ? journey.createdAt : new Date(journey.createdAt);
+}
 
 // Watch for search term changes
 watch(searchTerm, () => {

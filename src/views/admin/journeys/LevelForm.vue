@@ -64,10 +64,9 @@
                 v-model="level.category"
                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
-                <option value="HTML">HTML</option>
-                <option value="CSS">CSS</option>
-                <option value="JavaScript">JavaScript</option>
-                <option value="Project">Project</option>
+                <option v-for="category in availableCategories" :key="category" :value="category">
+                  {{ category }}
+                </option>
               </select>
             </div>
           </div>
@@ -490,6 +489,8 @@ const level = ref({
 });
 
 const tagsInput = ref('');
+const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Python'];
+
 const availableLevels = ref([]);
 const isSaving = ref(false);
 const error = ref(null);
