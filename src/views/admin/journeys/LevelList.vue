@@ -122,9 +122,12 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <div class="flex space-x-3">
-                <router-link :to="`/admin/levels/${level.id}/edit`" class="text-indigo-600 hover:text-indigo-900">
+                <button 
+                  @click="navigateToEdit(level.id)" 
+                  class="text-indigo-600 hover:text-indigo-900"
+                >
                   Edit
-                </router-link>
+                </button>
                 <button v-if="userRole === 'admin'" @click="confirmDelete(level)" class="text-red-600 hover:text-red-900">
                   Delete
                 </button>
@@ -235,6 +238,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { auth, db } from '@/firebase';
 import AdminBreadcrumbs from '@/components/AdminBreadcrumbs.vue';
 import {
@@ -249,6 +253,7 @@ import {
   where,
   getCountFromServer
 } from 'firebase/firestore';
+const router = useRouter();
 const levels = ref([]);
 const filteredLevels = ref([]);
 const allLevelsCache = ref([]);
@@ -704,8 +709,22 @@ onMounted(async () => {
       }
     }
 
-    // Load all levels for search capability
-    await loadAllLevels();
+    // Small timeout to ensure all reactivity is properly set up
+    setTimeout(async () => {
+      // Restore any saved state from localStorage
+      const savedPage = restoreLevelListState();
+      
+      // Load all levels for search capability
+      await loadAllLevels();
+
+      // If we have a saved page, navigate to it
+      if (savedPage > 1) {
+        // Then navigate to the saved page
+        if (savedPage <= totalPages.value) {
+          await goToPage(savedPage);
+        }
+      }
+    }, 0);
   } catch (err) {
     console.error('Error fetching levels:', err);
     error.value = 'Failed to load levels';
@@ -723,17 +742,58 @@ async function deleteLevel() {
   if (!levelToDelete.value) return;
 
   try {
-    await deleteDoc(doc(db, 'levels', levelToDelete.value.id));
-    levels.value = levels.value.filter(l => l.id !== levelToDelete.value.id);
+    loading.value = true;
     showDeleteModal.value = false;
-    levelToDelete.value = null;
 
-    // Note: In a production app, you would also:
-    // 1. Update all journeys that reference this level
-    // 2. Maybe create an admin-only log of the deletion
-  } catch (err) {
-    console.error('Error deleting level:', err);
-    error.value = 'Failed to delete level';
+    // Delete the level from Firestore
+    const levelRef = doc(db, 'levels', levelToDelete.value.id);
+    deleteDoc(levelRef);
+
+    // Remove from local arrays
+    levels.value = levels.value.filter(level => level.id !== levelToDelete.value.id);
+    filteredLevels.value = filteredLevels.value.filter(level => level.id !== levelToDelete.value.id);
+    
+    // Decrease total count
+    totalCount.value--;
+  } catch (error) {
+    console.error('Error deleting level:', error);
+  } finally {
+    loading.value = false;
   }
+}
+
+// Function to navigate to the edit page and save current state
+function navigateToEdit(levelId) {
+  // Save the current state before navigating
+  saveLevelListState();
+  router.push(`/admin/levels/${levelId}/edit`);
+}
+
+// Save the current state of the LevelList to localStorage
+function saveLevelListState() {
+  const stateToSave = {
+    currentPage: currentPage.value,
+    searchTerm: searchTerm.value
+  };
+  localStorage.setItem('levelListState', JSON.stringify(stateToSave));
+}
+
+// Restore the saved state of the LevelList from localStorage
+function restoreLevelListState() {
+  try {
+    const savedState = localStorage.getItem('levelListState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore search term first
+      searchTerm.value = parsedState.searchTerm || '';
+      
+      // Return the saved page to navigate to
+      return parsedState.currentPage || 1;
+    }
+  } catch (error) {
+    console.error('Error restoring level list state:', error);
+  }
+  return 1; // Default to page 1 if no saved state or error
 }
 </script>

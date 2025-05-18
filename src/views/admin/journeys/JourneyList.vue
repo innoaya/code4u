@@ -127,9 +127,12 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
               <div class="flex space-x-3">
-                <router-link :to="`/admin/journeys/${journey.id}/edit`" class="text-indigo-600 hover:text-indigo-900">
+                <button 
+                  @click="navigateToEdit(journey.id)" 
+                  class="text-indigo-600 hover:text-indigo-900"
+                >
                   Edit
-                </router-link>
+                </button>
                 <button v-if="userRole === 'admin'" @click="confirmDelete(journey)" class="text-red-600 hover:text-red-900">
                   Delete
                 </button>
@@ -240,6 +243,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { auth, db } from '@/firebase';
 import AdminBreadcrumbs from '@/components/AdminBreadcrumbs.vue'
 import {
@@ -254,6 +258,7 @@ import {
   where,
   getCountFromServer
 } from 'firebase/firestore';
+const router = useRouter();
 const journeys = ref([]);
 const filteredJourneys = ref([]);
 const allJourneysCache = ref([]);
@@ -726,8 +731,22 @@ onMounted(async () => {
       }
     }
 
-    // Load all journeys for search capability
-    await loadAllJourneys();
+    // Small timeout to ensure all reactivity is properly set up
+    setTimeout(async () => {
+      // Restore any saved state from localStorage
+      const savedPage = restoreJourneyListState();
+      
+      // Load all journeys for search capability
+      await loadAllJourneys();
+
+      // If we have a saved page, navigate to it
+      if (savedPage > 1) {
+        // Then navigate to the saved page
+        if (savedPage <= totalPages.value) {
+          await goToPage(savedPage);
+        }
+      }
+    }, 0);
   } catch (err) {
     console.error('Error fetching journeys:', err);
     error.value = 'Failed to load journeys';
@@ -745,13 +764,56 @@ async function deleteJourney() {
   if (!journeyToDelete.value) return;
 
   try {
-    await deleteDoc(doc(db, 'journeys', journeyToDelete.value.id));
-    journeys.value = journeys.value.filter(j => j.id !== journeyToDelete.value.id);
+    loading.value = true;
     showDeleteModal.value = false;
-    journeyToDelete.value = null;
-  } catch (err) {
-    console.error('Error deleting journey:', err);
-    error.value = 'Failed to delete journey';
+
+    // Delete the journey from Firestore
+    const journeyRef = doc(db, 'journeys', journeyToDelete.value.id);
+    deleteDoc(journeyRef);
+
+    // Update the UI
+    journeys.value = journeys.value.filter(journey => journey.id !== journeyToDelete.value.id);
+    // Also update filtered results if applicable
+    filteredJourneys.value = filteredJourneys.value.filter(journey => journey.id !== journeyToDelete.value.id);
+  } catch (error) {
+    console.error('Error deleting journey:', error);
+  } finally {
+    loading.value = false;
   }
+}
+
+// Function to navigate to the edit page and save current state
+function navigateToEdit(journeyId) {
+  // Save the current state before navigating
+  saveJourneyListState();
+  router.push(`/admin/journeys/${journeyId}/edit`);
+}
+
+// Save the current state of the JourneyList to localStorage
+function saveJourneyListState() {
+  const stateToSave = {
+    currentPage: currentPage.value,
+    searchTerm: searchTerm.value
+  };
+  localStorage.setItem('journeyListState', JSON.stringify(stateToSave));
+}
+
+// Restore the saved state of the JourneyList from localStorage
+function restoreJourneyListState() {
+  try {
+    const savedState = localStorage.getItem('journeyListState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore search term first
+      searchTerm.value = parsedState.searchTerm || '';
+      
+      // Return the saved page to navigate to
+      return parsedState.currentPage || 1;
+    }
+  } catch (error) {
+    console.error('Error restoring journey list state:', error);
+  }
+  return 1; // Default to page 1 if no saved state or error
 }
 </script>

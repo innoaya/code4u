@@ -18,23 +18,6 @@
         <!-- Basic Journey Information -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div class="space-y-6">
-            <!-- ID -->
-            <div>
-              <label for="journey-id" class="block text-sm font-medium text-gray-700">Journey ID</label>
-              <div class="mt-1 flex rounded-md shadow-sm">
-                <input
-                  type="text"
-                  name="journey-id"
-                  id="journey-id"
-                  v-model="journey.id"
-                  :disabled="isEditing"
-                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm"
-                  :class="{ 'bg-gray-100': isEditing }"
-                  placeholder="web-fundamentals"
-                />
-              </div>
-            </div>
-
             <!-- Title -->
             <div>
               <label for="journey-title" class="block text-sm font-medium text-gray-700">Title</label>
@@ -48,6 +31,28 @@
                   placeholder="Web Development Fundamentals"
                 />
               </div>
+            </div>
+
+            <!-- ID -->
+            <div>
+              <label for="journey-id" class="block text-sm font-medium text-gray-700">Journey ID</label>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <input
+                  type="text"
+                  name="journey-id"
+                  id="journey-id"
+                  v-model="journey.id"
+                  :disabled="isEditing"
+                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm"
+                  placeholder="web-fundamentals"
+                  @input="checkJourneyIdAvailability"
+                />
+              </div>
+              <p v-if="!isEditing" class="mt-1 text-sm">
+                <span v-if="!idChecked" class="text-gray-500">ID will be automatically generated from title if empty</span>
+                <span v-else-if="idAvailable" class="text-green-600">✓ This ID is available</span>
+                <span v-else class="text-red-600">✗ This ID is already taken</span>
+              </p>
             </div>
 
             <!-- Icon -->
@@ -431,6 +436,11 @@ const loadingLevels = ref(true);
 const isSaving = ref(false);
 const error = ref(null);
 
+// ID availability checking
+const idChecked = ref(false);
+const idAvailable = ref(true);
+const existingJourneyIds = ref([]);
+
 // JSON Editor functionality
 const showJsonEditor = ref(false);
 const jsonContent = ref('');
@@ -515,44 +525,114 @@ async function copyJsonToClipboard() {
   }
 }
 
+// Generate a journey ID from the title
+function generateIdFromTitle(title) {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+}
+
+// Check if journey ID is available
+async function checkJourneyIdAvailability() {
+  if (!journey.value.id || isEditing.value) {
+    idChecked.value = false;
+    return;
+  }
+
+  idChecked.value = true;
+  
+  // Ensure ID is properly formatted
+  journey.value.id = generateIdFromTitle(journey.value.id);
+  
+  // Check if ID exists in our loaded list
+  idAvailable.value = !existingJourneyIds.value.includes(journey.value.id);
+}
+
+// Debounced function to update ID from title
+let titleDebounceTimeout = null;
+function updateIdFromTitleDebounced(newTitle) {
+  // Clear any existing timeout
+  if (titleDebounceTimeout) {
+    clearTimeout(titleDebounceTimeout);
+  }
+  
+  // Set a new timeout to update the ID after 800ms
+  titleDebounceTimeout = setTimeout(() => {
+    // Only auto-generate if ID is empty or hasn't been manually edited
+    if (!isEditing.value && (!journey.value.id || !idChecked.value)) {
+      journey.value.id = generateIdFromTitle(newTitle);
+      if (journey.value.id) {
+        checkJourneyIdAvailability();
+      }
+    }
+  }, 800); // 800ms debounce delay
+}
+
+// Watch for title changes to auto-generate ID with debouncing
+watch(() => journey.value.title, (newTitle) => {
+  updateIdFromTitleDebounced(newTitle);
+});
+
 // Load badges and levels on mount
 onMounted(async () => {
   // Initialize JSON content
   jsonContent.value = JSON.stringify(journey.value, null, 2);
-  try {
-    // Load badges
-    const badgesSnapshot = await getDocs(collection(db, 'badges'));
-    badges.value = badgesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
 
-    // Load levels
-    const levelsSnapshot = await getDocs(collection(db, 'levels'));
-    allLevels.value = levelsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+  try {
+    // Load all existing journey IDs for availability checking
+    const journeysSnapshot = await getDocs(collection(db, 'journeys'));
+    existingJourneyIds.value = journeysSnapshot.docs.map(doc => doc.id);
 
     // If editing, load the journey
     if (isEditing.value && journeyId.value) {
       const journeyDoc = await getDoc(doc(db, 'journeys', journeyId.value));
-
       if (journeyDoc.exists()) {
-        const journeyData = journeyDoc.data();
-        journey.value = { ...journeyData, id: journeyDoc.id };
-
-        // Set tags input from array
-        if (journeyData.tags && Array.isArray(journeyData.tags)) {
-          tagsInput.value = journeyData.tags.join(', ');
-        }
+        journey.value = journeyDoc.data();
+        journey.value.id = journeyId.value; // Ensure ID is set
+        // Process tags for the input field
+        tagsInput.value = journey.value.tags ? journey.value.tags.join(', ') : '';
       } else {
+        console.error('Journey not found');
         error.value = 'Journey not found';
       }
+    } else if (!isEditing.value && journey.value.title) {
+      // For new journeys with a title, generate ID suggestion
+      journey.value.id = generateIdFromTitle(journey.value.title);
+      checkJourneyIdAvailability();
     }
+
+    // Load all levels
+    loadingLevels.value = true;
+    const levelsSnapshot = await getDocs(collection(db, 'levels'));
+    const levelData = [];
+
+    levelsSnapshot.forEach(doc => {
+      const level = doc.data();
+      level.id = doc.id;
+      levelData.push(level);
+    });
+
+    allLevels.value = levelData;
+    loadingLevels.value = false;
+
+    // Load badges
+    const badgesSnapshot = await getDocs(collection(db, 'badges'));
+    const badgeData = [];
+
+    badgesSnapshot.forEach(doc => {
+      const badge = doc.data();
+      badge.id = doc.id;
+      badgeData.push(badge);
+    });
+
+    badges.value = badgeData;
   } catch (err) {
     console.error('Error loading journey data:', err);
-    error.value = 'Failed to load journey data';
+    error.value = 'Error loading journey data';
   } finally {
     loadingLevels.value = false;
   }

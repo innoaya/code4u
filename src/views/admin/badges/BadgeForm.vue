@@ -18,23 +18,6 @@
         <!-- Basic Badge Information -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div class="space-y-6">
-            <!-- ID -->
-            <div>
-              <label for="badge-id" class="block text-sm font-medium text-gray-700">Badge ID</label>
-              <div class="mt-1 flex rounded-md shadow-sm">
-                <input
-                  type="text"
-                  name="badge-id"
-                  id="badge-id"
-                  v-model="badge.id"
-                  :disabled="isEditing"
-                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-purple-500 focus:border-purple-500 block w-full min-w-0 rounded-md sm:text-sm"
-                  :class="{ 'bg-gray-100': isEditing }"
-                  placeholder="html-apprentice"
-                />
-              </div>
-              <p class="mt-1 text-sm text-gray-500">Unique identifier (e.g., html-apprentice, css-master)</p>
-            </div>
 
             <!-- Name -->
             <div>
@@ -49,6 +32,36 @@
                   placeholder="HTML Apprentice"
                 />
               </div>
+              <p class="mt-1 text-sm text-gray-500">Enter Your Badge Name</p>
+            </div>
+
+            <!-- ID -->
+            <div>
+              <label for="badge-id" class="block text-sm font-medium text-gray-700">Badge ID</label>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <input
+                  type="text"
+                  name="badge-id"
+                  id="badge-id"
+                  v-model="badge.id"
+                  :disabled="isEditing"
+                  class="flex-1 py-2 px-3 border focus:ring-purple-500 focus:border-purple-500 block w-full min-w-0 rounded-md sm:text-sm"
+                  :class="{
+                    'border-gray-300 bg-gray-100': isEditing,
+                    'border-gray-300': !idChecked && !isEditing,
+                    'border-green-500 bg-green-50': idAvailable && idChecked && !isEditing,
+                    'border-red-500 bg-red-50': !idAvailable && idChecked && !isEditing
+                  }"
+                  placeholder="html-apprentice"
+                  @input="checkBadgeIdAvailability"
+                />
+              </div>
+              <div v-if="!isEditing" class="mt-1 text-sm">
+                <span v-if="!idChecked" class="text-gray-500">ID will be automatically generated from name if empty</span>
+                <span v-else-if="idAvailable" class="text-green-600">✓ This ID is available</span>
+                <span v-else class="text-red-600">✗ This ID is already taken</span>
+              </div>
+              <p v-else class="mt-1 text-sm text-gray-500">Unique identifier (e.g., html-apprentice, css-master)</p>
             </div>
 
             <!-- Description -->
@@ -82,9 +95,9 @@
                   placeholder="📄"
                 />
               </div>
-              <div class="mt-2 text-center">
+              <!-- <div class="mt-2 text-center">
                 <span class="text-4xl">{{ badge.icon || '🏆' }}</span>
-              </div>
+              </div> -->
               <p class="mt-1 text-sm text-gray-500">Use a single emoji character</p>
             </div>
 
@@ -235,7 +248,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { auth, db } from '@/firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
@@ -265,7 +278,64 @@ const loadingBadges = ref(true);
 const isSaving = ref(false);
 const error = ref(null);
 
+// ID availability checking
+const idChecked = ref(false);
+const idAvailable = ref(true);
+const existingBadgeIds = ref([]);
+
 const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Python', 'Special', 'Achievement'];
+
+// Generate a badge ID from the name
+function generateIdFromName(name) {
+  if (!name) return '';
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+}
+
+// Check if badge ID is available
+function checkBadgeIdAvailability() {
+  if (!badge.value.id || isEditing.value) {
+    idChecked.value = false;
+    return;
+  }
+
+  idChecked.value = true;
+
+  // Ensure ID is properly formatted
+  badge.value.id = generateIdFromName(badge.value.id);
+
+  // Check if ID exists in our loaded list
+  idAvailable.value = !existingBadgeIds.value.includes(badge.value.id);
+}
+
+// Debounced function to update ID from name
+let nameDebounceTimeout = null;
+function updateIdFromNameDebounced(newName) {
+  // Clear any existing timeout
+  if (nameDebounceTimeout) {
+    clearTimeout(nameDebounceTimeout);
+  }
+
+  // Set a new timeout to update the ID after 800ms
+  nameDebounceTimeout = setTimeout(() => {
+    // Only auto-generate if ID is empty or hasn't been manually edited
+    if (!isEditing.value && (!badge.value.id || !idChecked.value)) {
+      badge.value.id = generateIdFromName(newName);
+      if (badge.value.id) {
+        checkBadgeIdAvailability();
+      }
+    }
+  }, 800); // 800ms debounce delay
+}
+
+// Watch for name changes to auto-generate ID with debouncing
+watch(() => badge.value.name, (newName) => {
+  updateIdFromNameDebounced(newName);
+});
 
 // Other badges (for selecting badge requirements)
 const otherBadges = computed(() => {
@@ -301,6 +371,10 @@ onMounted(async () => {
 
     // Load badges
     const badgesSnapshot = await getDocs(collection(db, 'badges'));
+
+    // Extract all existing badge IDs for availability checking
+    existingBadgeIds.value = badgesSnapshot.docs.map(doc => doc.id);
+
     allBadges.value = badgesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -320,6 +394,10 @@ onMounted(async () => {
       } else {
         error.value = 'Badge not found';
       }
+    } else if (!isEditing.value && badge.value.name) {
+      // For new badges with a name, generate ID suggestion
+      badge.value.id = generateIdFromName(badge.value.name);
+      checkBadgeIdAvailability();
     }
   } catch (err) {
     console.error('Error loading data:', err);

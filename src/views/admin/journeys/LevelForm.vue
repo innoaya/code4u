@@ -1,11 +1,11 @@
 <template>
   <div class="admin-level-form">
     <!-- Breadcrumb Navigation -->
-    <AdminBreadcrumbs 
-      :itemId="levelId" 
-      :itemTitle="isEditing ? level.title || 'Edit Level' : 'New Level'" 
+    <AdminBreadcrumbs
+      :itemId="levelId"
+      :itemTitle="isEditing ? level.title || 'Edit Level' : 'New Level'"
     />
-    
+
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">{{ isEditing ? 'Edit' : 'Create' }} Level</h1>
       <router-link to="/admin/levels" class="text-blue-600 hover:underline">
@@ -17,6 +17,39 @@
       <form @submit.prevent="saveLevel">
         <div class="p-6 border-b border-gray-200">
           <h2 class="text-lg font-medium mb-4">Level Information</h2>
+
+          <!-- Title and Description -->
+          <div class="space-y-6 mb-6">
+            <!-- Title -->
+            <div>
+              <label for="level-title" class="block text-sm font-medium text-gray-700">Title</label>
+              <div class="mt-1">
+                <input
+                  type="text"
+                  name="level-title"
+                  id="level-title"
+                  v-model="level.title"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
+                  placeholder="HTML Fundamentals: Your First Web Page"
+                />
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="level-description" class="block text-sm font-medium text-gray-700">Description</label>
+              <div class="mt-1">
+                <textarea
+                  name="level-description"
+                  id="level-description"
+                  v-model="level.description"
+                  rows="3"
+                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
+                  placeholder="Learn the basic building blocks of every website..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
 
           <!-- Basic Information -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -30,12 +63,23 @@
                   id="level-id"
                   v-model="level.id"
                   :disabled="isEditing"
-                  class="flex-1 py-2 px-3 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm"
-                  :class="{ 'bg-gray-100': isEditing }"
+                  class="flex-1 py-2 px-3 border focus:ring-blue-500 focus:border-blue-500 block w-full min-w-0 rounded-md sm:text-sm"
+                  :class="{
+                    'border-gray-300 bg-gray-100': isEditing,
+                    'border-gray-300': !idChecked && !isEditing,
+                    'border-green-500 bg-green-50': idAvailable && idChecked && !isEditing,
+                    'border-red-500 bg-red-50': !idAvailable && idChecked && !isEditing
+                  }"
                   placeholder="level-1"
+                  @input="checkLevelIdAvailability"
                 />
               </div>
-              <p class="mt-1 text-sm text-gray-500">Unique identifier (e.g., level-1)</p>
+              <div v-if="!isEditing" class="mt-1 text-sm">
+                <span v-if="!idChecked" class="text-gray-500">ID will be automatically generated from title if empty</span>
+                <span v-else-if="idAvailable" class="text-green-600">✓ This ID is available</span>
+                <span v-else class="text-red-600">✗ This ID is already taken</span>
+              </div>
+              <p v-else class="mt-1 text-sm text-gray-500">Unique identifier (e.g., level-1)</p>
             </div>
 
             <!-- Level Number -->
@@ -68,39 +112,6 @@
                   {{ category }}
                 </option>
               </select>
-            </div>
-          </div>
-
-          <!-- Title and Description -->
-          <div class="space-y-6 mb-6">
-            <!-- Title -->
-            <div>
-              <label for="level-title" class="block text-sm font-medium text-gray-700">Title</label>
-              <div class="mt-1">
-                <input
-                  type="text"
-                  name="level-title"
-                  id="level-title"
-                  v-model="level.title"
-                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
-                  placeholder="HTML Fundamentals: Your First Web Page"
-                />
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div>
-              <label for="level-description" class="block text-sm font-medium text-gray-700">Description</label>
-              <div class="mt-1">
-                <textarea
-                  name="level-description"
-                  id="level-description"
-                  v-model="level.description"
-                  rows="3"
-                  class="py-2 px-3 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm rounded-md"
-                  placeholder="Learn the basic building blocks of every website..."
-                ></textarea>
-              </div>
             </div>
           </div>
 
@@ -485,7 +496,7 @@ const level = ref({
   tasks: [],
   createdBy: '',
   createdAt: new Date(),
-  isPublished: true // Default to published for new levels
+  isPublished: false // Default to published for new levels
 });
 
 const tagsInput = ref('');
@@ -494,6 +505,63 @@ const availableCategories = ['HTML', 'CSS', 'JavaScript', 'Python'];
 const availableLevels = ref([]);
 const isSaving = ref(false);
 const error = ref(null);
+
+// ID availability checking
+const idChecked = ref(false);
+const idAvailable = ref(true);
+const existingLevelIds = ref([]);
+
+// Generate a level ID from the title
+function generateIdFromTitle(title) {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+}
+
+// Check if level ID is available
+function checkLevelIdAvailability() {
+  if (!level.value.id || isEditing.value) {
+    idChecked.value = false;
+    return;
+  }
+
+  idChecked.value = true;
+
+  // Ensure ID is properly formatted
+  level.value.id = generateIdFromTitle(level.value.id);
+
+  // Check if ID exists in our loaded list
+  idAvailable.value = !existingLevelIds.value.includes(level.value.id);
+}
+
+// Debounced function to update ID from title
+let titleDebounceTimeout = null;
+function updateIdFromTitleDebounced(newTitle) {
+  // Clear any existing timeout
+  if (titleDebounceTimeout) {
+    clearTimeout(titleDebounceTimeout);
+  }
+
+  // Set a new timeout to update the ID after 800ms
+  titleDebounceTimeout = setTimeout(() => {
+    // Only auto-generate if ID is empty or hasn't been manually edited
+    if (!isEditing.value && (!level.value.id || !idChecked.value)) {
+      level.value.id = generateIdFromTitle(newTitle);
+      if (level.value.id) {
+        checkLevelIdAvailability();
+      }
+    }
+  }, 800); // 800ms debounce delay
+}
+
+// Watch for title changes to auto-generate ID with debouncing
+watch(() => level.value.title, (newTitle) => {
+  updateIdFromTitleDebounced(newTitle);
+});
 
 // Watch for changes to tagsInput and update level.tags
 watch(tagsInput, (newVal) => {
@@ -506,8 +574,13 @@ watch(tagsInput, (newVal) => {
 // Load level data if editing
 onMounted(async () => {
   try {
-    // Load available levels for prerequisites
+    // Load available levels for prerequisites and ID validation
     const levelsSnapshot = await getDocs(collection(db, 'levels'));
+
+    // Extract all existing level IDs for availability checking
+    existingLevelIds.value = levelsSnapshot.docs.map(doc => doc.id);
+
+    // Process level data for prerequisites dropdown
     availableLevels.value = levelsSnapshot.docs.map(doc => ({
       id: doc.id,
       title: doc.data().title,
@@ -541,6 +614,12 @@ onMounted(async () => {
       level.value.realWorldApplications = [''];
       level.value.references = [{ title: '', url: '' }];
       level.value.tasks = [];
+
+      // For new levels with a title, generate ID suggestion
+      if (!isEditing.value && level.value.title) {
+        level.value.id = generateIdFromTitle(level.value.title);
+        checkLevelIdAvailability();
+      }
     }
   } catch (err) {
     console.error('Error loading data:', err);
